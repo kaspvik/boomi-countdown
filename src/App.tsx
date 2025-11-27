@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePlayers, useRoom } from "./hooks";
 import {
   createRoom,
   findRoomByCode,
@@ -8,86 +9,174 @@ import {
 
 function App() {
   const [status, setStatus] = useState<string | null>(null);
-  const [lastRoomId, setLastRoomId] = useState<string | null>(null);
-  const [lastRoomCode, setLastRoomCode] = useState<string | null>(null);
+  const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+  const [lastCreatedRoomCode, setLastCreatedRoomCode] = useState<string | null>(
+    null
+  );
+  const [roomCodeInput, setRoomCodeInput] = useState("");
+  const [playerNameInput, setPlayerNameInput] = useState("");
+
+  const {
+    room,
+    loading: roomLoading,
+    error: roomError,
+  } = useRoom(activeRoomId);
+  const {
+    players,
+    loading: playersLoading,
+    error: playersError,
+  } = usePlayers(activeRoomId);
 
   const handleCreateRoom = async () => {
-    setStatus("Skapar rum...");
+    setStatus("Creating room...");
 
     try {
       const code = generateRoomCode();
-      const room = await createRoom(code);
+      const createdRoom = await createRoom(code);
 
-      setLastRoomId(room.id);
-      setLastRoomCode(room.code);
+      setActiveRoomId(createdRoom.id);
+      setLastCreatedRoomCode(createdRoom.code);
+      setRoomCodeInput(createdRoom.code);
 
-      setStatus(`Rum skapat! Kod: ${room.code}, id: ${room.id}`);
-      console.log("Room created:", room);
+      setStatus(
+        `Room created! Code: ${createdRoom.code}. Share the code with your friends.`
+      );
+      console.log("Room created:", createdRoom);
     } catch (error) {
       console.error("Error creating room: ", error);
-      setStatus("Kunde inte skapa rum 😭");
+      setStatus("Could not create room 😭");
     }
   };
 
-  const handleFindRoom = async () => {
-    if (!lastRoomCode) {
-      setStatus("Ingen rumskod sparad ännu – skapa ett rum först.");
+  const handleJoinByCode = async () => {
+    const trimmedCode = roomCodeInput.trim();
+    const trimmedName = playerNameInput.trim();
+
+    if (!trimmedCode || !trimmedName) {
+      setStatus("Please fill in both room code and name first.");
       return;
     }
 
-    setStatus(`Söker efter rum med kod ${lastRoomCode}...`);
+    setStatus(`Searching for room with code ${trimmedCode}...`);
 
     try {
-      const room = await findRoomByCode(lastRoomCode);
+      const foundRoom = await findRoomByCode(trimmedCode);
 
-      if (!room) {
-        setStatus(`Inget rum hittades med kod ${lastRoomCode}`);
+      if (!foundRoom) {
+        setStatus(`No room was found with code ${trimmedCode}.`);
         return;
       }
 
-      setLastRoomId(room.id);
-      setStatus(`Hittade rum! Kod: ${room.code}, id: ${room.id}`);
-      console.log("Room found:", room);
-    } catch (error) {
-      console.error("Error finding room: ", error);
-      setStatus("Kunde inte hitta rum 😭");
-    }
-  };
+      setStatus(`Room found! Joining as ${trimmedName}...`);
 
-  const handleJoinRoom = async () => {
-    if (!lastRoomId) {
-      setStatus("Inget roomId sparat ännu – skapa eller hitta ett rum först.");
-      return;
-    }
+      const player = await joinRoom(foundRoom.id, trimmedName);
 
-    setStatus("Joinar rum...");
+      setActiveRoomId(foundRoom.id);
 
-    try {
-      // just nu hårdkodat namn, vi kan bygga riktig input sen
-      const player = await joinRoom(lastRoomId, "Kasper");
       setStatus(
-        `Spelare "${player.name}" joinade rum ${lastRoomId}. Player-id: ${player.id}`
+        `You have now joined room ${foundRoom.code} as "${player.name}". Player id: ${player.id}`
       );
-      console.log("Player joined:", { roomId: lastRoomId, player });
+      console.log("Player joined:", { roomId: foundRoom.id, player });
     } catch (error) {
-      console.error("Error joining room: ", error);
-      setStatus("Kunde inte joina rum 😭");
+      console.error("Error joining room by code: ", error);
+      setStatus("Could not join room 😭");
     }
   };
 
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1>Boomi Countdown – Funktions-test</h1>
+    <main style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
+      <h1>Boomi Countdown – Lobby / Realtime test</h1>
 
-      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-        <button onClick={handleCreateRoom}>Skapa rum</button>
-        <button onClick={handleFindRoom}>Hitta rum via kod</button>
-        <button onClick={handleJoinRoom}>Joina rum som "Kasper"</button>
-      </div>
+      <section style={{ marginBottom: "1.5rem" }}>
+        <h2>Start new game</h2>
+        <button onClick={handleCreateRoom}>Create new room</button>
 
-      {lastRoomCode && <p>Senast skapade rumskod: {lastRoomCode}</p>}
-      {lastRoomId && <p>Senast skapade roomId: {lastRoomId}</p>}
-      {status && <p>{status}</p>}
+        {lastCreatedRoomCode && (
+          <p style={{ marginTop: "0.5rem" }}>
+            <strong>Room code:</strong> {lastCreatedRoomCode} <br />
+            Share this code with your friends so they can join the game.
+          </p>
+        )}
+      </section>
+
+      <section style={{ marginBottom: "1.5rem" }}>
+        <h2>Join game</h2>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            maxWidth: "260px",
+          }}>
+          <label>
+            Room code:
+            <input
+              value={roomCodeInput}
+              onChange={(e) => setRoomCodeInput(e.target.value)}
+              placeholder="e.g. 482143"
+              style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
+            />
+          </label>
+
+          <label>
+            Your name:
+            <input
+              value={playerNameInput}
+              onChange={(e) => setPlayerNameInput(e.target.value)}
+              placeholder="e.g. Kasper"
+              style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
+            />
+          </label>
+
+          <button onClick={handleJoinByCode}>Join game</button>
+        </div>
+      </section>
+
+      {status && (
+        <section style={{ marginBottom: "1.5rem" }}>
+          <h2>Status</h2>
+          <p>{status}</p>
+        </section>
+      )}
+
+      <section style={{ marginBottom: "1.5rem" }}>
+        <h2>Active room (useRoom)</h2>
+        {!activeRoomId && <p>No room selected yet.</p>}
+        {roomLoading && <p>Loading room...</p>}
+        {roomError && <p style={{ color: "red" }}>{roomError}</p>}
+        {room && (
+          <div>
+            <p>
+              <strong>Room code:</strong> {room.code}
+            </p>
+            <p>
+              <strong>Status:</strong> {room.status}
+            </p>
+          </div>
+        )}
+      </section>
+
+      <section>
+        <h2>Players in room (usePlayers)</h2>
+        {!activeRoomId && <p>No room selected yet.</p>}
+        {playersLoading && <p>Loading players...</p>}
+        {playersError && <p style={{ color: "red" }}>{playersError}</p>}
+
+        {activeRoomId && !playersLoading && players.length === 0 && (
+          <p>No players in the room yet.</p>
+        )}
+
+        {players.length > 0 && (
+          <ul>
+            {players.map((player) => (
+              <li key={player.id}>
+                {player.name}
+                {player.isHost && " (host)"}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   );
 }
