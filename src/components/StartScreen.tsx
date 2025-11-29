@@ -1,40 +1,63 @@
 import React from "react";
+import { StartActions } from "./StartActions";
+import { StartNameStep } from "./StartNameStep";
+
+export type PendingAction = "idle" | "join" | "create";
 
 interface StartScreenProps {
   roomCode: string;
+  playerName: string;
+  pendingAction: PendingAction;
   onRoomCodeChange: (value: string) => void;
-  onCreateRoom: () => void;
-  onJoinRoom: () => void;
+  onPlayerNameChange: (value: string) => void;
+  onClickJoin: () => void;
+  onClickCreate: () => void;
+  onConfirmName: () => void;
+  onCancelName: () => void;
 }
 
 export const StartScreen: React.FC<StartScreenProps> = ({
   roomCode,
+  playerName,
+  pendingAction,
   onRoomCodeChange,
-  onCreateRoom,
-  onJoinRoom,
+  onPlayerNameChange,
+  onClickJoin,
+  onClickCreate,
+  onConfirmName,
+  onCancelName,
 }) => {
+  const isAskingForName =
+    pendingAction === "join" || pendingAction === "create";
+
   return (
-    <main style={{ padding: "2rem" }}>
+    <main
+      style={{
+        padding: "2rem",
+        fontFamily: "system-ui, sans-serif",
+        minHeight: "100vh",
+      }}>
       <h1>Boomi Countdown</h1>
 
-      <section style={{ marginTop: "1.5rem" }}>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>
-            Room code
-            <input
-              value={roomCode}
-              onChange={(e) => onRoomCodeChange(e.target.value)}
-              placeholder="Enter room code"
-              style={{ display: "block", marginTop: "0.25rem" }}
-            />
-          </label>
-        </div>
+      {!isAskingForName && (
+        <StartActions
+          roomCode={roomCode}
+          onRoomCodeChange={onRoomCodeChange}
+          onClickJoin={onClickJoin}
+          onClickCreate={onClickCreate}
+        />
+      )}
 
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <button onClick={onJoinRoom}>Join room</button>
-          <button onClick={onCreateRoom}>Create room!</button>
-        </div>
-      </section>
+      {isAskingForName && (
+        <StartNameStep
+          action={pendingAction === "join" ? "join" : "create"}
+          playerName={playerName}
+          roomCode={roomCode}
+          onPlayerNameChange={onPlayerNameChange}
+          onConfirmName={onConfirmName}
+          onCancelName={onCancelName}
+        />
+      )}
     </main>
   );
 };

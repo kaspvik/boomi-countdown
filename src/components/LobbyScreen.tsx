@@ -1,24 +1,32 @@
 import React from "react";
-import { usePlayers, useRoom } from "../hooks";
+import type { Player, Room } from "../types/game";
 
 interface LobbyScreenProps {
-  roomId: string;
+  room: Room | null;
+  roomLoading: boolean;
+  roomError: string | null;
+  players: Player[];
+  playersLoading: boolean;
+  playersError: string | null;
   onLeave: () => void;
 }
 
 export const LobbyScreen: React.FC<LobbyScreenProps> = ({
-  roomId,
+  room,
+  roomLoading,
+  roomError,
+  players,
+  playersLoading,
+  playersError,
   onLeave,
 }) => {
-  const { room, loading: roomLoading, error: roomError } = useRoom(roomId);
-  const {
-    players,
-    loading: playersLoading,
-    error: playersError,
-  } = usePlayers(roomId);
-
   return (
-    <main style={{ padding: "2rem" }}>
+    <main
+      style={{
+        padding: "2rem",
+        fontFamily: "system-ui, sans-serif",
+        minHeight: "100vh",
+      }}>
       <h1>Boomi Countdown – Lobby</h1>
 
       <button onClick={onLeave} style={{ marginBottom: "1rem" }}>
@@ -29,6 +37,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         <h2>Room</h2>
         {roomLoading && <p>Loading room...</p>}
         {roomError && <p style={{ color: "red" }}>{roomError}</p>}
+        {!roomLoading && !room && !roomError && <p>No room data available.</p>}
         {room && (
           <>
             <p>
@@ -45,7 +54,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         <h2>Players</h2>
         {playersLoading && <p>Loading players...</p>}
         {playersError && <p style={{ color: "red" }}>{playersError}</p>}
-        {!playersLoading && players.length === 0 && (
+        {!playersLoading && players.length === 0 && !playersError && (
           <p>No players in this room yet.</p>
         )}
         {players.length > 0 && (
