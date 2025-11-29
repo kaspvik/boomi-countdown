@@ -1,6 +1,6 @@
 import React from "react";
 import { StartActions } from "./StartActions";
-import { StartNameStep } from "./StartNameStep";
+import { StartNameField } from "./StartNameField";
 
 export type PendingAction = "idle" | "join" | "create";
 
@@ -49,7 +49,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
       )}
 
       {isAskingForName && (
-        <StartNameStep
+        <StartNameField
           action={pendingAction === "join" ? "join" : "create"}
           playerName={playerName}
           roomCode={roomCode}

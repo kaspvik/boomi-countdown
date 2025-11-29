@@ -2,7 +2,7 @@ import React from "react";
 
 type ActionKind = "join" | "create";
 
-interface StartNameStepProps {
+interface StartNameFieldProps {
   action: ActionKind;
   playerName: string;
   roomCode: string;
@@ -11,7 +11,7 @@ interface StartNameStepProps {
   onCancelName: () => void;
 }
 
-export const StartNameStep: React.FC<StartNameStepProps> = ({
+export const StartNameField: React.FC<StartNameFieldProps> = ({
   action,
   playerName,
   roomCode,

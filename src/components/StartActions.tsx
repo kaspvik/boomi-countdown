@@ -34,8 +34,15 @@ export const StartActions: React.FC<StartActionsProps> = ({
         </label>
       </div>
 
-      <div style={{ display: "flex", gap: "0.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <button onClick={onClickJoin}>Join room</button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "4rem",
+        }}>
         <button onClick={onClickCreate}>Create room!</button>
       </div>
     </section>
