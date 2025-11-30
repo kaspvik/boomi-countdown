@@ -24,7 +24,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
       }}>
       <div style={{ marginBottom: "1rem" }}>
         <label>
-          Room code
+          Join a room
           <input
             value={roomCode}
             onChange={(e) => onRoomCodeChange(e.target.value)}
@@ -35,7 +35,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <button onClick={onClickJoin}>Join room</button>
+        <button onClick={onClickJoin}>Enter</button>
       </div>
       <div
         style={{
@@ -43,7 +43,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
           justifyContent: "center",
           marginTop: "4rem",
         }}>
-        <button onClick={onClickCreate}>Create room!</button>
+        <button onClick={onClickCreate}>Create a room!</button>
       </div>
     </section>
   );
