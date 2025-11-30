@@ -1,0 +1,21 @@
+.gameLayout {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  background-image: url("/bg-tile.png");
+  background-repeat: repeat;
+  background-position: center center;
+  background-size: auto;
+
+  color: var(--color-text, #ffffff);
+  font-family: var(--font-main, system-ui, sans-serif);
+}
+
+.content {
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem;
+}

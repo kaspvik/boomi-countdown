@@ -1,6 +1,8 @@
+// src/App.tsx
 import { useState } from "react";
 import { LobbyScreenContainer } from "./containers/LobbyScreenContainer";
 import { StartScreenContainer } from "./containers/StartScreenContainer";
+import { GameLayout } from "./layout/GameLayout";
 
 type Screen = "start" | "lobby";
 
@@ -18,13 +20,18 @@ function App() {
     setScreen("start");
   };
 
-  if (screen === "lobby" && activeRoomId) {
-    return (
-      <LobbyScreenContainer roomId={activeRoomId} onLeave={handleLeaveLobby} />
-    );
-  }
-
-  return <StartScreenContainer onEnterLobby={handleEnterLobby} />;
+  return (
+    <GameLayout>
+      {screen === "lobby" && activeRoomId ? (
+        <LobbyScreenContainer
+          roomId={activeRoomId}
+          onLeave={handleLeaveLobby}
+        />
+      ) : (
+        <StartScreenContainer onEnterLobby={handleEnterLobby} />
+      )}
+    </GameLayout>
+  );
 }
 
 export default App;
