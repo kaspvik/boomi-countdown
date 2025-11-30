@@ -1,5 +1,6 @@
 import React from "react";
 import type { Player, Room } from "../types/game";
+import { PixelButton } from "./ui/PixelButton";
 import { PixelFrame } from "./ui/PixelFrame";
 
 interface LobbyScreenProps {
@@ -30,9 +31,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
       }}>
       <h1>Boomi Countdown – Lobby</h1>
 
-      <button onClick={onLeave} style={{ marginBottom: "1rem" }}>
-        Back to start
-      </button>
+      <PixelButton onClick={onLeave}>Back to start</PixelButton>
 
       <PixelFrame>
         <h2>Room</h2>

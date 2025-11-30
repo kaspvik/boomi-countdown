@@ -1,4 +1,5 @@
 import React from "react";
+import { PixelButton } from "./ui/PixelButton";
 import { PixelFrame } from "./ui/PixelFrame";
 
 type ActionKind = "join" | "create";
@@ -52,10 +53,8 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
       </label>
 
       <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
-        <button onClick={onConfirmName}>Continue</button>
-        <button type="button" onClick={onCancelName}>
-          Cancel
-        </button>
+        <PixelButton onClick={onConfirmName}>Continue</PixelButton>
+        <PixelButton onClick={onCancelName}>Go Back</PixelButton>
       </div>
     </PixelFrame>
   );

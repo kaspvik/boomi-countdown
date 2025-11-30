@@ -1,4 +1,5 @@
 import React from "react";
+import { PixelButton } from "./ui/PixelButton";
 import { PixelFrame } from "./ui/PixelFrame";
 
 interface StartActionsProps {
@@ -29,7 +30,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <button onClick={onClickJoin}>Enter</button>
+        <PixelButton onClick={onClickJoin}>Enter</PixelButton>
       </div>
       <div
         style={{
@@ -37,7 +38,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
           justifyContent: "center",
           marginTop: "4rem",
         }}>
-        <button onClick={onClickCreate}>Create a room!</button>
+        <PixelButton onClick={onClickCreate}>Create a room!</PixelButton>
       </div>
     </PixelFrame>
   );
