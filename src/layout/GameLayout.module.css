@@ -1,21 +1,31 @@
-.gameLayout {
-  min-height: 100vh;
+.outside {
+  position: relative;
   width: 100%;
+  height: 100vh;
+
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 
-  background-image: url("/bg-tile.png");
-  background-repeat: repeat;
+  background-image: url("/pixel-fireflies.gif");
   background-position: center center;
-  background-size: auto;
-
-  color: var(--color-text, #ffffff);
-  font-family: var(--font-main, system-ui, sans-serif);
+  background-size: cover;
 }
 
-.content {
+.greenhouse {
+  position: relative;
   width: 100%;
-  max-width: 480px;
-  padding: 2rem;
+  max-width: auto;
+  aspect-ratio: 16 / 9;
+
+  background-image: url("/bg-tile.svg");
+  background-repeat: repeat-x;
+  background-position: center center;
+  background-size: contain;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+

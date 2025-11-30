@@ -7,8 +7,10 @@ interface GameLayoutProps {
 
 export const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
   return (
-    <div className={styles.gameLayout}>
-      <div className={styles.content}>{children}</div>
+    <div className={styles.outside}>
+      <div className={styles.greenhouse}>
+        <div className={styles.content}>{children}</div>
+      </div>
     </div>
   );
 };

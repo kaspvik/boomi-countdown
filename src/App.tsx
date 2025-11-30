@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useState } from "react";
 import { LobbyScreenContainer } from "./containers/LobbyScreenContainer";
 import { StartScreenContainer } from "./containers/StartScreenContainer";
