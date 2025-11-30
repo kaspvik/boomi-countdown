@@ -1,5 +1,6 @@
 import React from "react";
 import type { Player, Room } from "../types/game";
+import { PixelFrame } from "./ui/PixelFrame";
 
 interface LobbyScreenProps {
   room: Room | null;
@@ -33,7 +34,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         Back to start
       </button>
 
-      <section style={{ marginBottom: "1.5rem" }}>
+      <PixelFrame>
         <h2>Room</h2>
         {roomLoading && <p>Loading room...</p>}
         {roomError && <p style={{ color: "red" }}>{roomError}</p>}
@@ -48,9 +49,9 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
             </p>
           </>
         )}
-      </section>
+      </PixelFrame>
 
-      <section>
+      <PixelFrame>
         <h2>Players</h2>
         {playersLoading && <p>Loading players...</p>}
         {playersError && <p style={{ color: "red" }}>{playersError}</p>}
@@ -67,7 +68,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
             ))}
           </ul>
         )}
-      </section>
+      </PixelFrame>
     </main>
   );
 };

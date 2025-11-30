@@ -1,4 +1,5 @@
 import React from "react";
+import { PixelFrame } from "./ui/PixelFrame";
 
 interface StartActionsProps {
   roomCode: string;
@@ -14,14 +15,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
   onClickCreate,
 }) => {
   return (
-    <section
-      style={{
-        marginTop: "1.5rem",
-        padding: "1rem",
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        maxWidth: "300px",
-      }}>
+    <PixelFrame>
       <div style={{ marginBottom: "1rem" }}>
         <label>
           Join a room
@@ -45,6 +39,6 @@ export const StartActions: React.FC<StartActionsProps> = ({
         }}>
         <button onClick={onClickCreate}>Create a room!</button>
       </div>
-    </section>
+    </PixelFrame>
   );
 };

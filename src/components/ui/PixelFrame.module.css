@@ -1,0 +1,19 @@
+.pixelFrame {
+  display: inline-block;
+  box-sizing: border-box;
+
+  width: 100%;
+  max-width: 780px;
+  
+  border-width: 30px; 
+  border-style: solid;
+  border-image-source: url("/pixel-frame.png");
+  border-image-slice: 50 fill;
+}
+
+.content {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1.5rem;
+  box-sizing: border-box;
+  color: #000000;
+}
