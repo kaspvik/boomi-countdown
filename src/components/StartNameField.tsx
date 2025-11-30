@@ -1,4 +1,5 @@
 import React from "react";
+import { PixelFrame } from "./ui/PixelFrame";
 
 type ActionKind = "join" | "create";
 
@@ -22,14 +23,7 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
   const isJoin = action === "join";
 
   return (
-    <section
-      style={{
-        marginTop: "1.5rem",
-        padding: "1rem",
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        maxWidth: "300px",
-      }}>
+    <PixelFrame>
       <p style={{ marginTop: 0, marginBottom: "0.75rem" }}>
         {isJoin
           ? "Enter your name to join the room:"
@@ -63,6 +57,6 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
           Cancel
         </button>
       </div>
-    </section>
+    </PixelFrame>
   );
 };
