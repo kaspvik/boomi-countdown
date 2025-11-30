@@ -1,37 +1,35 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
-import { db } from "./firebase";
+import { LobbyScreenContainer } from "./containers/LobbyScreenContainer";
+import { StartScreenContainer } from "./containers/StartScreenContainer";
+import { GameLayout } from "./layout/GameLayout";
+
+type Screen = "start" | "lobby";
 
 function App() {
-  const [status, setStatus] = useState<string | null>(null);
+  const [screen, setScreen] = useState<Screen>("start");
+  const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
 
-  const handleAddTestDoc = async () => {
-    setStatus("Sparar dokument...");
+  const handleEnterLobby = (roomId: string) => {
+    setActiveRoomId(roomId);
+    setScreen("lobby");
+  };
 
-    try {
-      const docRef = await addDoc(collection(db, "testCollection"), {
-        message: "Hello from Boomi!",
-        createdAt: serverTimestamp(),
-        randomValue: Math.random(),
-      });
-
-      setStatus(`Dokument sparat! ID: ${docRef.id}`);
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      setStatus("Något gick fel när dokumentet skulle sparas");
-    }
+  const handleLeaveLobby = () => {
+    setActiveRoomId(null);
+    setScreen("start");
   };
 
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1>Boomi Countdown</h1>
-
-      <button onClick={handleAddTestDoc}>
-        Skapa test-dokument i Firestore
-      </button>
-
-      {status && <p>{status}</p>}
-    </main>
+    <GameLayout>
+      {screen === "lobby" && activeRoomId ? (
+        <LobbyScreenContainer
+          roomId={activeRoomId}
+          onLeave={handleLeaveLobby}
+        />
+      ) : (
+        <StartScreenContainer onEnterLobby={handleEnterLobby} />
+      )}
+    </GameLayout>
   );
 }
 
