@@ -1,0 +1,19 @@
+.title {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.roomInfo {
+  margin-bottom: 0.75rem;
+}
+
+.nameLabel {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.buttonsRow {
+  display: flex;
+  margin-top: 0.75rem;
+  justify-content: flex-start;
+}
