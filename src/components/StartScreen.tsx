@@ -32,10 +32,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
     pendingAction === "join" || pendingAction === "create";
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-      }}>
+    <main>
       <GameLogo />
 
       {!isAskingForName && (

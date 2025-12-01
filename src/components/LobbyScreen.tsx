@@ -25,7 +25,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
   onLeave,
 }) => {
   return (
-    <main className={styles.main}>
+    <main>
       <section className={styles.frameSection}>
         <GameLogo />
         <div className={styles.roomBox}>
