@@ -5,6 +5,7 @@
 .label {
   display: block;
   margin-bottom: 0.35rem;
+  color: #fff;
   font-family: var(--font-main);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);

@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem; /* luft mellan logga och resten av innehållet */
+  margin-top: 2rem;
+}
+
+.frame {
+  display: inline-block;
+  box-sizing: border-box;
+
+  width: 100%;
+  max-width: 280px;
+  
+  border-width: 30px; 
+  border-style: solid;
+  border-image-source: url("/pixel-frame.png");
+  border-image-slice: 50 fill;
+}
+
+/* H1:an inuti */
+.title {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  color: #000000;
+}

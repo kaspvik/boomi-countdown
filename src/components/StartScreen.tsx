@@ -1,6 +1,7 @@
 import React from "react";
 import { StartActions } from "./StartActions";
 import { StartNameField } from "./StartNameField";
+import { GameLogo } from "./ui/GameLogo";
 
 export type PendingAction = "idle" | "join" | "create";
 
@@ -33,11 +34,9 @@ export const StartScreen: React.FC<StartScreenProps> = ({
   return (
     <main
       style={{
-        padding: "2rem",
-        fontFamily: "var(--font-main)",
         minHeight: "100vh",
       }}>
-      <h1 className="text-display">Boomi Countdown</h1>
+      <GameLogo />
 
       {!isAskingForName && (
         <StartActions
