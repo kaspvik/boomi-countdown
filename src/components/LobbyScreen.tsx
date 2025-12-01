@@ -29,38 +29,37 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         fontFamily: "system-ui, sans-serif",
         minHeight: "100vh",
       }}>
-      <h1>Boomi Countdown – Lobby</h1>
+      <h2 className="text-display">Boomi Countdown – Lobby</h2>
 
-      <PixelButton onClick={onLeave}>Back to start</PixelButton>
+      <PixelButton onClick={onLeave} className="text-button">
+        Back to start
+      </PixelButton>
 
       <PixelFrame>
-        <h2>Room</h2>
-        {roomLoading && <p>Loading room...</p>}
+        <h2 className="text-title">Room:</h2>
+        {roomLoading && <p className="text-subtitle">Loading room...</p>}
         {roomError && <p style={{ color: "red" }}>{roomError}</p>}
         {!roomLoading && !room && !roomError && <p>No room data available.</p>}
         {room && (
           <>
-            <p>
-              <strong>Code:</strong> {room.code}
-            </p>
-            <p>
-              <strong>Status:</strong> {room.status}
+            <p className="text-subtitle">
+              <strong className="text-subtitle">Code:</strong> {room.code}
             </p>
           </>
         )}
       </PixelFrame>
 
       <PixelFrame>
-        <h2>Players</h2>
-        {playersLoading && <p>Loading players...</p>}
+        <h2 className="text-title">Players:</h2>
+        {playersLoading && <p className="text-subtitle">Loading players...</p>}
         {playersError && <p style={{ color: "red" }}>{playersError}</p>}
         {!playersLoading && players.length === 0 && !playersError && (
-          <p>No players in this room yet.</p>
+          <p className="text-subtitle">No players in this room yet.</p>
         )}
         {players.length > 0 && (
           <ul>
             {players.map((player) => (
-              <li key={player.id}>
+              <li key={player.id} className="text-body">
                 {player.name}
                 {player.isHost && " (host)"}
               </li>

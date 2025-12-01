@@ -25,10 +25,12 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
 
   return (
     <PixelFrame>
-      <p style={{ marginTop: 0, marginBottom: "0.75rem" }}>
+      <p
+        style={{ marginTop: 0, marginBottom: "0.75rem" }}
+        className="text-title">
         {isJoin
-          ? "Enter your name to join the room:"
-          : "Choose a name before creating the room:"}
+          ? "Enter your name to join the room!"
+          : "Choose a name before creating the room!"}
       </p>
 
       {isJoin && roomCode && (
@@ -42,19 +44,24 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
         </p>
       )}
 
-      <label>
-        Your name
+      <label className="text-subtitle">
+        Your name:
         <input
           value={playerName}
           onChange={(e) => onPlayerNameChange(e.target.value)}
           placeholder="e.g. Kasper"
           style={{ display: "block", marginTop: "0.25rem", width: "100%" }}
+          className="text-input"
         />
       </label>
 
       <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
-        <PixelButton onClick={onConfirmName}>Continue</PixelButton>
-        <PixelButton onClick={onCancelName}>Go Back</PixelButton>
+        <PixelButton onClick={onConfirmName} className="text-button">
+          Continue
+        </PixelButton>
+        <PixelButton onClick={onCancelName} className="text-button">
+          Go Back
+        </PixelButton>
       </div>
     </PixelFrame>
   );
