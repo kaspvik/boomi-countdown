@@ -1,5 +1,7 @@
 import React from "react";
 import type { Player, Room } from "../types/game";
+import { PixelButton } from "./ui/PixelButton";
+import { PixelFrame } from "./ui/PixelFrame";
 
 interface LobbyScreenProps {
   room: Room | null;
@@ -24,50 +26,46 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
     <main
       style={{
         padding: "2rem",
-        fontFamily: "system-ui, sans-serif",
         minHeight: "100vh",
       }}>
-      <h1>Boomi Countdown – Lobby</h1>
+      <h2 className="text-display">Boomi Countdown – Lobby</h2>
 
-      <button onClick={onLeave} style={{ marginBottom: "1rem" }}>
+      <PixelButton onClick={onLeave} className="text-button">
         Back to start
-      </button>
+      </PixelButton>
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2>Room</h2>
-        {roomLoading && <p>Loading room...</p>}
+      <PixelFrame>
+        <h2 className="text-title">Room:</h2>
+        {roomLoading && <p className="text-subtitle">Loading room...</p>}
         {roomError && <p style={{ color: "red" }}>{roomError}</p>}
         {!roomLoading && !room && !roomError && <p>No room data available.</p>}
         {room && (
           <>
-            <p>
-              <strong>Code:</strong> {room.code}
-            </p>
-            <p>
-              <strong>Status:</strong> {room.status}
+            <p className="text-subtitle">
+              <strong className="text-subtitle">Code:</strong> {room.code}
             </p>
           </>
         )}
-      </section>
+      </PixelFrame>
 
-      <section>
-        <h2>Players</h2>
-        {playersLoading && <p>Loading players...</p>}
+      <PixelFrame>
+        <h2 className="text-title">Players:</h2>
+        {playersLoading && <p className="text-subtitle">Loading players...</p>}
         {playersError && <p style={{ color: "red" }}>{playersError}</p>}
         {!playersLoading && players.length === 0 && !playersError && (
-          <p>No players in this room yet.</p>
+          <p className="text-subtitle">No players in this room yet.</p>
         )}
         {players.length > 0 && (
           <ul>
             {players.map((player) => (
-              <li key={player.id}>
+              <li key={player.id} className="text-body">
                 {player.name}
                 {player.isHost && " (host)"}
               </li>
             ))}
           </ul>
         )}
-      </section>
+      </PixelFrame>
     </main>
   );
 };

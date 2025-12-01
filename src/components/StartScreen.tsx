@@ -34,10 +34,10 @@ export const StartScreen: React.FC<StartScreenProps> = ({
     <main
       style={{
         padding: "2rem",
-        fontFamily: "system-ui, sans-serif",
+        fontFamily: "var(--font-main)",
         minHeight: "100vh",
       }}>
-      <h1>Boomi Countdown</h1>
+      <h1 className="text-display">Boomi Countdown</h1>
 
       {!isAskingForName && (
         <StartActions

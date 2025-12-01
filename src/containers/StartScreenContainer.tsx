@@ -113,9 +113,7 @@ export const StartScreenContainer: React.FC<StartScreenContainerProps> = ({
         onCancelName={handleCancelName}
       />
       {status && (
-        <p style={{ padding: "0 2rem", fontFamily: "system-ui, sans-serif" }}>
-          {status}
-        </p>
+        <p style={{ padding: "0 2rem", fontFamily: "handjet" }}>{status}</p>
       )}
     </>
   );

@@ -1,4 +1,7 @@
 import React from "react";
+import { PixelButton } from "./ui/PixelButton";
+import { PixelFrame } from "./ui/PixelFrame";
+import { PixelInputField } from "./ui/PixelInputField";
 
 type ActionKind = "join" | "create";
 
@@ -22,18 +25,13 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
   const isJoin = action === "join";
 
   return (
-    <section
-      style={{
-        marginTop: "1.5rem",
-        padding: "1rem",
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        maxWidth: "300px",
-      }}>
-      <p style={{ marginTop: 0, marginBottom: "0.75rem" }}>
+    <PixelFrame>
+      <p
+        style={{ marginTop: 0, marginBottom: "0.75rem" }}
+        className="text-title">
         {isJoin
-          ? "Enter your name to join the room:"
-          : "Choose a name before creating the room:"}
+          ? "Enter your name to join the room!"
+          : "Choose a name before creating the room!"}
       </p>
 
       {isJoin && roomCode && (
@@ -47,9 +45,9 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
         </p>
       )}
 
-      <label>
-        Your name
-        <input
+      <label className="text-subtitle">
+        Your name:
+        <PixelInputField
           value={playerName}
           onChange={(e) => onPlayerNameChange(e.target.value)}
           placeholder="e.g. Kasper"
@@ -58,11 +56,13 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
       </label>
 
       <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
-        <button onClick={onConfirmName}>Continue</button>
-        <button type="button" onClick={onCancelName}>
-          Cancel
-        </button>
+        <PixelButton onClick={onConfirmName} className="text-button">
+          Continue
+        </PixelButton>
+        <PixelButton onClick={onCancelName} className="text-button">
+          Go Back
+        </PixelButton>
       </div>
-    </section>
+    </PixelFrame>
   );
 };

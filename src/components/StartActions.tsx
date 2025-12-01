@@ -1,4 +1,7 @@
 import React from "react";
+import { PixelButton } from "./ui/PixelButton";
+import { PixelFrame } from "./ui/PixelFrame";
+import { PixelInputField } from "./ui/PixelInputField";
 
 interface StartActionsProps {
   roomCode: string;
@@ -14,28 +17,20 @@ export const StartActions: React.FC<StartActionsProps> = ({
   onClickCreate,
 }) => {
   return (
-    <section
-      style={{
-        marginTop: "1.5rem",
-        padding: "1rem",
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        maxWidth: "300px",
-      }}>
-      <div style={{ marginBottom: "1rem" }}>
-        <label>
-          Join a room
-          <input
-            value={roomCode}
-            onChange={(e) => onRoomCodeChange(e.target.value)}
-            placeholder="Enter room code"
-            style={{ display: "block", marginTop: "0.25rem", width: "100%" }}
-          />
-        </label>
+    <PixelFrame>
+      <div style={{ marginBottom: "1.5rem" }}>
+        <PixelInputField
+          label="Join a room:"
+          placeholder="Enter room code"
+          value={roomCode}
+          onChange={(e) => onRoomCodeChange(e.target.value)}
+        />
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <button onClick={onClickJoin}>Enter</button>
+        <PixelButton onClick={onClickJoin} className="text-button">
+          Enter
+        </PixelButton>
       </div>
       <div
         style={{
@@ -43,8 +38,10 @@ export const StartActions: React.FC<StartActionsProps> = ({
           justifyContent: "center",
           marginTop: "4rem",
         }}>
-        <button onClick={onClickCreate}>Create a room!</button>
+        <PixelButton onClick={onClickCreate} className="text-button">
+          Create a room!
+        </PixelButton>
       </div>
-    </section>
+    </PixelFrame>
   );
 };
