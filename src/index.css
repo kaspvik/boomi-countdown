@@ -1,21 +1,67 @@
 :root {
   /* Bas-typografi */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: "Handjet", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 700;
 
-  /* Färger / tokens (kan finjusteras sen) */
+  /* Färger / tokens */
   --color-text: #ffffff;
   --color-bg: #000000;
 
-  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  --font-main: "Handjet", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 
-  /* Lite rendering-finslipning */
+  /* TYPO: storlekar (kan tweakas) */
+  --font-size-display: 3rem;  /* t.ex. stora rubriken "Boomi Countdown" */
+  --font-size-title: 1.5rem;    /* sektionstitlar */
+  --font-size-body: 1.2rem;     /* brödtext */
+  --font-size-caption: 0.85rem;
+
+  /* TYPO: vikter */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+
+  /* Renderingsfix */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Stora spelets titel */
+.text-display {
+  font-family: var(--font-main);
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Vanliga rubriker */
+.text-title {
+  font-family: var(--font-main);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Brödtext */
+.text-body {
+  font-family: var(--font-main);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+}
+
+/* Knapptexter */
+.text-button {
+  font-family: var(--font-main);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Textinput-fält */
+ .text-input {
+  font-family: var(--font-main);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
 }
 
 /* Se till att hela appen är exakt lika hög som viewporten */

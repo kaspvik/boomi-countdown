@@ -18,19 +18,22 @@ export const StartActions: React.FC<StartActionsProps> = ({
   return (
     <PixelFrame>
       <div style={{ marginBottom: "1rem" }}>
-        <label>
-          Join a room
+        <label className="text-body">
+          Join a room:
           <input
             value={roomCode}
             onChange={(e) => onRoomCodeChange(e.target.value)}
             placeholder="Enter room code"
+            className="text-input"
             style={{ display: "block", marginTop: "0.25rem", width: "100%" }}
           />
         </label>
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <PixelButton onClick={onClickJoin}>Enter</PixelButton>
+        <PixelButton onClick={onClickJoin} className="text-button">
+          Enter
+        </PixelButton>
       </div>
       <div
         style={{
@@ -38,7 +41,9 @@ export const StartActions: React.FC<StartActionsProps> = ({
           justifyContent: "center",
           marginTop: "4rem",
         }}>
-        <PixelButton onClick={onClickCreate}>Create a room!</PixelButton>
+        <PixelButton onClick={onClickCreate} className="text-button">
+          Create a room!
+        </PixelButton>
       </div>
     </PixelFrame>
   );
