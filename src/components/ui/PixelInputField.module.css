@@ -1,0 +1,31 @@
+.wrapper {
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-main);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 0.6rem 0.9rem;
+
+  font-family: var(--font-main);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+
+  border: 2px solid #8E8E8E;
+
+  outline: none;
+}
+
+/* HOVER */
+.input:hover {
+  border-color: #4B4B4B;
+}
