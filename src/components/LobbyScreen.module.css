@@ -1,0 +1,75 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.frameSection {
+    width: 100%;
+    max-width: 780px;
+    margin-bottom: 1rem;
+}
+
+.roomBox {
+  background: #ffffff;
+  color: #000000;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.roomCodeText {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.roomCodeLabel {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-medium);
+}
+
+.roomCodeValue {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+}
+
+.roomContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.playersGrid {
+  list-style: none;
+  margin: 0;
+  margin-top: 0.75rem;
+  margin-bottom: 2rem;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  gap: 0.75rem 1rem;
+}
+
+.playerItem {
+  background: #ffffff;       /* varje spelare = eget vitt block */
+  color: #000000;
+  padding: 0.5rem 3rem;
+  box-sizing: border-box;
+
+  font-family: var(--font-main);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  text-align: center;
+
+  box-shadow: 0 2px 0 #c4c4c4;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}

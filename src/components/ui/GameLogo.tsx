@@ -5,7 +5,9 @@ export const GameLogo: React.FC = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.frame}>
-        <h1 className={styles.title}>Boomi Countdown</h1>
+        <h1 className={styles.title}>
+          BOOMI <span className={styles.subTitle}>COUNTDOWN</span>
+        </h1>
       </div>
     </div>
   );

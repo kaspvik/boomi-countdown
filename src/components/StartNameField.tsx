@@ -35,14 +35,7 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
       </p>
 
       {isJoin && roomCode && (
-        <p
-          style={{
-            marginTop: 0,
-            marginBottom: "0.75rem",
-            fontSize: "0.9rem",
-          }}>
-          Joining room with code: <strong>{roomCode}</strong>
-        </p>
+        <p className="text-subtitle">Joining room with code: {roomCode}</p>
       )}
 
       <label className="text-subtitle">
