@@ -68,12 +68,15 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
           )}
         </PixelFrame>
       </section>
-
-      <div className="buttonRow">
-        <PixelButton onClick={onLeave} className="text-button">
-          Back to start
-        </PixelButton>
-        <PixelButton className="text-button">Start Game</PixelButton>
+      <div className={styles.buttonRow}>
+        <div>
+          <PixelButton onClick={onLeave} className="text-button">
+            Back to start
+          </PixelButton>
+        </div>
+        <div>
+          <PixelButton className="text-button">Start Game</PixelButton>
+        </div>
       </div>
     </main>
   );

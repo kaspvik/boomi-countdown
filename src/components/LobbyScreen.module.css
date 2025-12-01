@@ -69,6 +69,8 @@
 
 .buttonRow {
   display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }

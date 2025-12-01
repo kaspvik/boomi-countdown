@@ -9,7 +9,6 @@
 
   padding: 0;
   border: none;
-  margin: 0;
   box-sizing: border-box;
 
   background: transparent;
@@ -19,17 +18,11 @@
   outline: none;
 
   background-image: url("/pixel-button.png");
-  background-repeat: no-repeat;
+
   background-position: center;
   background-size: contain;
 
   image-rendering: pixelated;
-}
-
-.label {
-  position: relative;
-  z-index: 1;
-  color: #000000;
 }
 
 .pixelButton:hover:not(.disabled):not(:disabled) {
