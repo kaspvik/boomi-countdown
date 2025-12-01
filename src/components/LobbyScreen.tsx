@@ -26,7 +26,6 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
     <main
       style={{
         padding: "2rem",
-        fontFamily: "system-ui, sans-serif",
         minHeight: "100vh",
       }}>
       <h2 className="text-display">Boomi Countdown – Lobby</h2>

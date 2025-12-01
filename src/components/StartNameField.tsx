@@ -1,6 +1,7 @@
 import React from "react";
 import { PixelButton } from "./ui/PixelButton";
 import { PixelFrame } from "./ui/PixelFrame";
+import { PixelInputField } from "./ui/PixelInputField";
 
 type ActionKind = "join" | "create";
 
@@ -46,12 +47,11 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
 
       <label className="text-subtitle">
         Your name:
-        <input
+        <PixelInputField
           value={playerName}
           onChange={(e) => onPlayerNameChange(e.target.value)}
           placeholder="e.g. Kasper"
           style={{ display: "block", marginTop: "0.25rem", width: "100%" }}
-          className="text-input"
         />
       </label>
 
