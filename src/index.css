@@ -15,6 +15,7 @@
   /* TYPO: storlekar (kan tweakas) */
   --font-size-display: 3rem;  /* t.ex. stora rubriken "Boomi Countdown" */
   --font-size-title: 1.5rem;    /* sektionstitlar */
+  --font-size-subtitle: 1.25rem; /* mindre rubriker */
   --font-size-body: 1.2rem;     /* brödtext */
   --font-size-caption: 0.85rem;
 
@@ -40,6 +41,13 @@
 .text-title {
   font-family: var(--font-main);
   font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Vanliga subrubriker */
+.text-subtitle {
+  font-family: var(--font-main);
+  font-size: var(--font-size-subtitle);
   font-weight: var(--font-weight-bold);
 }
 
