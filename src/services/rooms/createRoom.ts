@@ -8,6 +8,8 @@ export async function createRoom(code: string): Promise<Room> {
   const docRef = await addDoc(roomsRef, {
     code,
     status: "lobby",
+    round: 0,
+    currentBombHolder: null,
     createdAt: serverTimestamp(),
   });
 
@@ -15,6 +17,8 @@ export async function createRoom(code: string): Promise<Room> {
     id: docRef.id,
     code,
     status: "lobby",
+    round: 0,
+    currentBombHolder: null,
     createdAt: null,
   };
 }
