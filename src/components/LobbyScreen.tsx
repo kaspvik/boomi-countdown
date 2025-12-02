@@ -12,6 +12,7 @@ interface LobbyScreenProps {
   playersLoading: boolean;
   playersError: string | null;
   onLeave: () => void;
+  onStartGame: () => void;
 }
 
 export const LobbyScreen: React.FC<LobbyScreenProps> = ({
@@ -22,6 +23,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
   playersLoading,
   playersError,
   onLeave,
+  onStartGame,
 }) => {
   return (
     <main className={styles.main}>
@@ -58,6 +60,13 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
                 <li key={player.id} className={styles.playerItem}>
                   {player.name}
                   {player.isHost && " (host)"}
+                  {player.role && (
+                    <>
+                      {" "}
+                      – {player.role === "imposter" ? "Imposter" : "Civilian"}
+                    </>
+                  )}
+                  {!player.alive && " (out)"}
                 </li>
               ))}
             </ul>
@@ -69,7 +78,9 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         <PixelButton onClick={onLeave} className="text-button">
           Back to start
         </PixelButton>
-        <PixelButton className="text-button">Start Game</PixelButton>
+        <PixelButton onClick={onStartGame} className="text-button">
+          Start Game
+        </PixelButton>
       </div>
     </main>
   );

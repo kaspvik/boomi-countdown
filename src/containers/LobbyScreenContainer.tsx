@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { LobbyScreen } from "../components/LobbyScreen";
 import { usePlayers, useRoom } from "../hooks";
+import { startGame } from "../services/rooms";
 
 interface LobbyScreenContainerProps {
   roomId: string;
@@ -18,6 +19,14 @@ export const LobbyScreenContainer: React.FC<LobbyScreenContainerProps> = ({
     error: playersError,
   } = usePlayers(roomId);
 
+  const handleStartGame = useCallback(async () => {
+    try {
+      await startGame(roomId);
+    } catch (err) {
+      console.error("Failed to start game", err);
+    }
+  }, [roomId]);
+
   return (
     <LobbyScreen
       room={room}
@@ -27,6 +36,7 @@ export const LobbyScreenContainer: React.FC<LobbyScreenContainerProps> = ({
       playersLoading={playersLoading}
       playersError={playersError}
       onLeave={onLeave}
+      onStartGame={handleStartGame}
     />
   );
 };
