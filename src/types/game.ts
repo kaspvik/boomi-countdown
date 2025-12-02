@@ -1,11 +1,16 @@
 import type { Timestamp } from "firebase/firestore";
 
-export type Role = "bomber" | "civilian";
+export type RoomStatus = "lobby" | "in_progress" | "finished";
+
+export type Role = "imposter" | "civilian";
 
 export interface Room {
   id: string;
   code: string;
-  status: "lobby" | "running" | "finished";
+
+  status: RoomStatus;
+  round: number;
+  currentBombHolder: string | null;
   createdAt?: Timestamp | null;
 }
 
@@ -14,5 +19,6 @@ export interface Player {
   name: string;
   role?: Role | null;
   isHost: boolean;
+  alive: boolean;
   joinedAt?: Timestamp | null;
 }

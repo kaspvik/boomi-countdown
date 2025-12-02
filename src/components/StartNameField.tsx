@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./StartNameField.module.css";
 import { PixelButton } from "./ui/PixelButton";
 import { PixelFrame } from "./ui/PixelFrame";
 import { PixelInputField } from "./ui/PixelInputField";
@@ -26,36 +27,23 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
 
   return (
     <PixelFrame>
-      <p
-        style={{ marginTop: 0, marginBottom: "0.75rem" }}
-        className="text-title">
+      <p className={`${styles.title} text-title`}>
         {isJoin
           ? "Enter your name to join the room!"
           : "Choose a name before creating the room!"}
       </p>
-
       {isJoin && roomCode && (
-        <p
-          style={{
-            marginTop: 0,
-            marginBottom: "0.75rem",
-            fontSize: "0.9rem",
-          }}>
-          Joining room with code: <strong>{roomCode}</strong>
+        <p className={`text-subtitle ${styles.roomInfo}`}>
+          Joining room with code: {roomCode}
         </p>
       )}
-
-      <label className="text-subtitle">
-        Your name:
-        <PixelInputField
-          value={playerName}
-          onChange={(e) => onPlayerNameChange(e.target.value)}
-          placeholder="e.g. Kasper"
-          style={{ display: "block", marginTop: "0.25rem", width: "100%" }}
-        />
-      </label>
-
-      <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
+      <PixelInputField
+        label="Your name:"
+        value={playerName}
+        onChange={(e) => onPlayerNameChange(e.target.value)}
+        placeholder="e.g. Kasper"
+      />
+      <div className={styles.buttonsRow}>
         <PixelButton onClick={onConfirmName} className="text-button">
           Continue
         </PixelButton>

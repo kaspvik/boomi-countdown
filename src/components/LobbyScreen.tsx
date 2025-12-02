@@ -1,5 +1,6 @@
 import React from "react";
 import type { Player, Room } from "../types/game";
+import styles from "./LobbyScreen.module.css";
 import { PixelButton } from "./ui/PixelButton";
 import { PixelFrame } from "./ui/PixelFrame";
 
@@ -11,6 +12,7 @@ interface LobbyScreenProps {
   playersLoading: boolean;
   playersError: string | null;
   onLeave: () => void;
+  onStartGame: () => void;
 }
 
 export const LobbyScreen: React.FC<LobbyScreenProps> = ({
@@ -21,51 +23,65 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
   playersLoading,
   playersError,
   onLeave,
+  onStartGame,
 }) => {
   return (
-    <main
-      style={{
-        padding: "2rem",
-        minHeight: "100vh",
-      }}>
-      <h2 className="text-display">Boomi Countdown – Lobby</h2>
+    <main className={styles.main}>
+      <section className={styles.frameSection}>
+        <PixelFrame>
+          <div className={styles.roomHeader}>
+            {roomLoading && <p className="text-subtitle">Loading room...</p>}
+            {roomError && <p style={{ color: "red" }}>{roomError}</p>}
+            {!roomLoading && !room && !roomError && (
+              <p className="text-subtitle">No room data available.</p>
+            )}
 
-      <PixelButton onClick={onLeave} className="text-button">
-        Back to start
-      </PixelButton>
+            {room && (
+              <p className={styles.roomCodeText}>
+                <span className={styles.roomCodeLabel}>Game Pin:</span>
+                <span className={styles.roomCodeValue}>{room.code}</span>
+              </p>
+            )}
+          </div>
 
-      <PixelFrame>
-        <h2 className="text-title">Room:</h2>
-        {roomLoading && <p className="text-subtitle">Loading room...</p>}
-        {roomError && <p style={{ color: "red" }}>{roomError}</p>}
-        {!roomLoading && !room && !roomError && <p>No room data available.</p>}
-        {room && (
-          <>
-            <p className="text-subtitle">
-              <strong className="text-subtitle">Code:</strong> {room.code}
-            </p>
-          </>
-        )}
-      </PixelFrame>
+          <p className={styles.playersHeader}>Players:</p>
 
-      <PixelFrame>
-        <h2 className="text-title">Players:</h2>
-        {playersLoading && <p className="text-subtitle">Loading players...</p>}
-        {playersError && <p style={{ color: "red" }}>{playersError}</p>}
-        {!playersLoading && players.length === 0 && !playersError && (
-          <p className="text-subtitle">No players in this room yet.</p>
-        )}
-        {players.length > 0 && (
-          <ul>
-            {players.map((player) => (
-              <li key={player.id} className="text-body">
-                {player.name}
-                {player.isHost && " (host)"}
-              </li>
-            ))}
-          </ul>
-        )}
-      </PixelFrame>
+          {playersLoading && (
+            <p className="text-subtitle">Loading players...</p>
+          )}
+          {playersError && <p style={{ color: "red" }}>{playersError}</p>}
+          {!playersLoading && players.length === 0 && !playersError && (
+            <p className="text-subtitle">No players in this room yet.</p>
+          )}
+
+          {players.length > 0 && (
+            <ul className={styles.playersGrid}>
+              {players.map((player) => (
+                <li key={player.id} className={styles.playerItem}>
+                  {player.name}
+                  {player.isHost && " (host)"}
+                  {player.role && (
+                    <>
+                      {" "}
+                      – {player.role === "imposter" ? "Imposter" : "Civilian"}
+                    </>
+                  )}
+                  {!player.alive && " (out)"}
+                </li>
+              ))}
+            </ul>
+          )}
+        </PixelFrame>
+      </section>
+
+      <div className={styles.buttonRow}>
+        <PixelButton onClick={onLeave} className="text-button">
+          Back to start
+        </PixelButton>
+        <PixelButton onClick={onStartGame} className="text-button">
+          Start Game
+        </PixelButton>
+      </div>
     </main>
   );
 };

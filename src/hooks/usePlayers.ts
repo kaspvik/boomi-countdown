@@ -33,6 +33,7 @@ export function usePlayers(roomId: string | null): UsePlayersResult {
             name: data.name,
             role: data.role ?? null,
             isHost: data.isHost ?? false,
+            alive: data.alive ?? true,
             joinedAt: data.joinedAt ?? null,
           };
         });
