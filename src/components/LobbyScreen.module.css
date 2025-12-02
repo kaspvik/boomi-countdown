@@ -5,15 +5,19 @@
 }
 
 .frameSection {
-    width: 100%;
-    max-width: 780px;
-    margin-bottom: 1rem;
+  width: 100%;
+  max-width: 780px;
+  margin-bottom: 1rem;
+  margin-top: 8rem;
 }
 
-.roomBox {
+.roomHeader {
   background: #ffffff;
   color: #000000;
   box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+
   display: flex;
   justify-content: center;
 }
@@ -26,20 +30,20 @@
 }
 
 .roomCodeLabel {
-  font-size: var(--font-size-display);
+  font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);
 }
 
 .roomCodeValue {
-  font-size: var(--font-size-display);
+  font-size: var(--font-size-title);
   font-weight: var(--font-weight-bold);
 }
 
-.roomContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+  .playersHeader{
+    margin-bottom: 0rem;
+    font-size: 1.25rem;
+    color: #ffffff;
+  }
 
 .playersGrid {
   list-style: none;
@@ -49,12 +53,12 @@
   padding: 0;
 
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem 1rem;
 }
 
 .playerItem {
-  background: #ffffff;       /* varje spelare = eget vitt block */
+  background: #ffffff;
   color: #000000;
   padding: 0.5rem 3rem;
   box-sizing: border-box;
@@ -73,4 +77,57 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .frameSection {
+    max-width: 100%;
+    padding: 0 1rem;
+    margin-top: 10rem;
+  }
+
+  .roomHeader {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .roomCodeText {
+    gap: 0.25rem;
+  }
+
+  .roomCodeLabel {
+    font-size: var(--font-size-body);
+  }
+
+  .roomCodeValue {
+    font-size: 1.4rem;
+  }
+
+  .playersHeader{
+    margin-bottom: 0rem;
+    font-size: 1.25rem;
+    color: #ffffff;
+  }
+
+  .playersGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 0rem;
+  }
+
+  .playerItem {
+    padding: 0.4rem 0.75rem;
+    box-shadow: 0 1px 0 #c4c4c4;
+    font-size: 0.95rem;
+  }
+
+  .buttonRow {
+    flex-direction: row;      /* 🔹 knappar under varandra */
+    align-items: stretch;
+    padding: 0 1rem;
+  }
+
+  .buttonRow > * {
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+  }
 }

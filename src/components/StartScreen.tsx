@@ -1,6 +1,7 @@
 import React from "react";
 import { StartActions } from "./StartActions";
 import { StartNameField } from "./StartNameField";
+import styles from "./StartScreen.module.css";
 import { GameLogo } from "./ui/GameLogo";
 
 export type PendingAction = "idle" | "join" | "create";
@@ -32,28 +33,31 @@ export const StartScreen: React.FC<StartScreenProps> = ({
     pendingAction === "join" || pendingAction === "create";
 
   return (
-    <main>
-      <GameLogo />
+    <main className={styles.main}>
+      <div className={styles.logo}>
+        <GameLogo />
+      </div>
+      <section className={styles.actionsSection}>
+        {!isAskingForName && (
+          <StartActions
+            roomCode={roomCode}
+            onRoomCodeChange={onRoomCodeChange}
+            onClickJoin={onClickJoin}
+            onClickCreate={onClickCreate}
+          />
+        )}
 
-      {!isAskingForName && (
-        <StartActions
-          roomCode={roomCode}
-          onRoomCodeChange={onRoomCodeChange}
-          onClickJoin={onClickJoin}
-          onClickCreate={onClickCreate}
-        />
-      )}
-
-      {isAskingForName && (
-        <StartNameField
-          action={pendingAction === "join" ? "join" : "create"}
-          playerName={playerName}
-          roomCode={roomCode}
-          onPlayerNameChange={onPlayerNameChange}
-          onConfirmName={onConfirmName}
-          onCancelName={onCancelName}
-        />
-      )}
+        {isAskingForName && (
+          <StartNameField
+            action={pendingAction === "join" ? "join" : "create"}
+            playerName={playerName}
+            roomCode={roomCode}
+            onPlayerNameChange={onPlayerNameChange}
+            onConfirmName={onConfirmName}
+            onCancelName={onCancelName}
+          />
+        )}
+      </section>
     </main>
   );
 };
