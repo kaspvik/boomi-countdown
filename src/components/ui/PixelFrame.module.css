@@ -1,5 +1,5 @@
 .pixelFrame {
-  display: inline-block;
+  display: block;
   box-sizing: border-box;
 
   width: 100%;
@@ -12,8 +12,8 @@
 }
 
 .content {
-  background: rgba(255, 255, 255, 0.6);
-  padding: 1.5rem;
+  background: #32524F;
+  padding: 0.8rem;
   box-sizing: border-box;
   color: #000000;
 }

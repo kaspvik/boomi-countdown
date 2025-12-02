@@ -36,7 +36,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          marginTop: "4rem",
+          marginTop: "2rem",
         }}>
         <PixelButton onClick={onClickCreate} className="text-button">
           Create a room!

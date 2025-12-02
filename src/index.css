@@ -23,6 +23,7 @@
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 600;
+  --font-weight-bolder: 900;
 
   /* Renderingsfix */
   text-rendering: optimizeLegibility;
@@ -42,6 +43,7 @@
   font-family: var(--font-main);
   font-size: var(--font-size-title);
   font-weight: var(--font-weight-bold);
+  color: var(--color-text);
 }
 
 /* Vanliga subrubriker */
@@ -49,6 +51,7 @@
   font-family: var(--font-main);
   font-size: var(--font-size-subtitle);
   font-weight: var(--font-weight-bold);
+  color: var(--color-text);
 }
 
 /* Brödtext */
