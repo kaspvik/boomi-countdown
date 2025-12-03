@@ -18,6 +18,8 @@ interface LobbyScreenProps {
   canStartGame: boolean;
   gameStarted: boolean;
   currentPlayer: Player | null;
+  allPlayersReady: boolean;
+  onAcknowledgeRole: () => void;
 }
 
 export const LobbyScreen: React.FC<LobbyScreenProps> = ({
@@ -32,9 +34,12 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
   canStartGame,
   gameStarted,
   currentPlayer,
+  allPlayersReady,
+  onAcknowledgeRole,
 }) => {
   if (gameStarted && currentPlayer) {
     const role = currentPlayer.role ?? "civilian";
+    const hasAcknowledged = !!currentPlayer.hasAcknowledgedRole;
 
     return (
       <main className={styles.main}>
@@ -42,9 +47,9 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
           <GameLogo />
           <RoleScreen
             role={role}
-            onContinue={() => {
-              console.log("Role acknowledged:", role);
-            }}
+            hasAcknowledged={hasAcknowledged}
+            allReady={allPlayersReady}
+            onAcknowledge={onAcknowledgeRole}
           />
         </section>
       </main>

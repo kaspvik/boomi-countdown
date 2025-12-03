@@ -1,5 +1,7 @@
+import { doc, updateDoc } from "firebase/firestore";
 import React, { useCallback } from "react";
 import { LobbyScreen } from "../components/LobbyScreen";
+import { db } from "../firebase";
 import { usePlayers, useRoom } from "../hooks";
 import { startGame } from "../services/rooms";
 import type { Player } from "../types/game";
@@ -38,6 +40,24 @@ export const LobbyScreenContainer: React.FC<LobbyScreenContainerProps> = ({
     }
   }, [roomId, currentPlayerId, isCurrentPlayerHost]);
 
+  const alivePlayers = players.filter((p) => p.alive !== false);
+  const allPlayersReady =
+    alivePlayers.length > 0 && alivePlayers.every((p) => p.hasAcknowledgedRole);
+
+  const handleAcknowledgeRole = useCallback(async () => {
+    if (!currentPlayerId) return;
+
+    const playerRef = doc(db, "rooms", roomId, "players", currentPlayerId);
+
+    try {
+      await updateDoc(playerRef, {
+        hasAcknowledgedRole: true,
+      });
+    } catch (err) {
+      console.error("Failed to acknowledge role", err);
+    }
+  }, [roomId, currentPlayerId]);
+
   return (
     <LobbyScreen
       room={room}
@@ -51,6 +71,8 @@ export const LobbyScreenContainer: React.FC<LobbyScreenContainerProps> = ({
       canStartGame={isCurrentPlayerHost && room?.status === "lobby"}
       gameStarted={gameStarted}
       currentPlayer={currentPlayer}
+      allPlayersReady={allPlayersReady}
+      onAcknowledgeRole={handleAcknowledgeRole}
     />
   );
 };

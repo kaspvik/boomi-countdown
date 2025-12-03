@@ -62,6 +62,7 @@ export async function startGame(
       updateDoc(pRef, {
         role,
         alive: true,
+        hasAcknowledgedRole: false,
       })
     );
   }

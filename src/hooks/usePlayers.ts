@@ -35,6 +35,7 @@ export function usePlayers(roomId: string | null): UsePlayersResult {
             isHost: data.isHost ?? false,
             alive: data.alive ?? true,
             joinedAt: data.joinedAt ?? null,
+            hasAcknowledgedRole: data.hasAcknowledgedRole ?? false,
           };
         });
 
