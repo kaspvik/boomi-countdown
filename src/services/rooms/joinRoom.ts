@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
 import type { Player } from "../../types/game";
 
@@ -14,6 +14,7 @@ export async function joinRoom(
     isHost,
     alive: true,
     role: null,
+    joinedAt: serverTimestamp(),
   });
 
   return {
