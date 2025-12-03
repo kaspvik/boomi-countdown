@@ -1,6 +1,6 @@
 import React from "react";
-import { PixelButton } from "../components/ui/PixelButton";
-import { PixelFrame } from "../components/ui/PixelFrame";
+import { PixelButton } from "../ui/PixelButton/PixelButton";
+import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
 import styles from "./RoleScreen.module.css";
 
 interface RoleScreenProps {

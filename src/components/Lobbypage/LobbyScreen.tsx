@@ -1,10 +1,10 @@
 import React from "react";
-import { RoleScreen } from ".././Role/RoleScreen";
-import type { Player, Room } from ".././types/game";
+import type { Player, Room } from "../../types/game";
+import { RoleScreen } from "../Role/RoleScreen";
+import { GameLogo } from "../ui/GameLogo/GameLogo";
+import { PixelButton } from "../ui/PixelButton/PixelButton";
+import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
 import styles from "./LobbyScreen.module.css";
-import { GameLogo } from "./ui/GameLogo";
-import { PixelButton } from "./ui/PixelButton";
-import { PixelFrame } from "./ui/PixelFrame";
 
 interface LobbyScreenProps {
   room: Room | null;

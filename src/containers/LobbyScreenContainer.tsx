@@ -1,6 +1,6 @@
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useCallback } from "react";
-import { LobbyScreen } from "../components/LobbyScreen";
+import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import { db } from "../firebase";
 import { usePlayers, useRoom } from "../hooks";
 import { startGame } from "../services/rooms";
