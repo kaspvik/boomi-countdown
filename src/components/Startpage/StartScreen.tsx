@@ -1,8 +1,8 @@
 import React from "react";
+import { GameLogo } from "../ui/GameLogo/GameLogo";
 import { StartActions } from "./StartActions";
 import { StartNameField } from "./StartNameField";
 import styles from "./StartScreen.module.css";
-import { GameLogo } from "./ui/GameLogo";
 
 export type PendingAction = "idle" | "join" | "create";
 
