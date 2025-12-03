@@ -8,14 +8,17 @@ type Screen = "start" | "lobby";
 function App() {
   const [screen, setScreen] = useState<Screen>("start");
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+  const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
 
-  const handleEnterLobby = (roomId: string) => {
+  const handleEnterLobby = (roomId: string, playerId: string) => {
     setActiveRoomId(roomId);
+    setCurrentPlayerId(playerId);
     setScreen("lobby");
   };
 
   const handleLeaveLobby = () => {
     setActiveRoomId(null);
+    setCurrentPlayerId(null);
     setScreen("start");
   };
 
@@ -24,6 +27,7 @@ function App() {
       {screen === "lobby" && activeRoomId ? (
         <LobbyScreenContainer
           roomId={activeRoomId}
+          currentPlayerId={currentPlayerId}
           onLeave={handleLeaveLobby}
         />
       ) : (

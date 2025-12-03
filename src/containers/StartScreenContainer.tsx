@@ -8,7 +8,7 @@ import {
 } from "../services/rooms";
 
 interface StartScreenContainerProps {
-  onEnterLobby: (roomId: string) => void;
+  onEnterLobby: (roomId: string, playerId: string) => void;
 }
 
 export const StartScreenContainer: React.FC<StartScreenContainerProps> = ({
@@ -59,9 +59,10 @@ export const StartScreenContainer: React.FC<StartScreenContainerProps> = ({
       const code = generateRoomCode();
       const room = await createRoom(code);
 
-      await joinRoom(room.id, playerName);
+      const player = await joinRoom(room.id, playerName, true);
 
-      onEnterLobby(room.id);
+      onEnterLobby(room.id, player.id);
+
       setStatus(
         `Room created with code ${room.code}. You joined as ${playerName}.`
       );
@@ -89,9 +90,10 @@ export const StartScreenContainer: React.FC<StartScreenContainerProps> = ({
         return;
       }
 
-      await joinRoom(room.id, playerName);
+      const player = await joinRoom(room.id, playerName, false);
 
-      onEnterLobby(room.id);
+      onEnterLobby(room.id, player.id);
+
       setStatus(`You joined room ${room.code} as ${playerName}.`);
     } catch (error) {
       console.error("Error joining room: ", error);

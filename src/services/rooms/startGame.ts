@@ -1,4 +1,10 @@
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import type { Role } from "../../types/game";
 
@@ -8,7 +14,22 @@ function getImposterCount(playerCount: number): number {
   return 3;
 }
 
-export async function startGame(roomId: string): Promise<void> {
+export async function startGame(
+  roomId: string,
+  currentPlayerId: string
+): Promise<void> {
+  const playerRef = doc(db, "rooms", roomId, "players", currentPlayerId);
+  const playerSnap = await getDoc(playerRef);
+
+  if (!playerSnap.exists()) {
+    throw new Error("Player not found.");
+  }
+
+  const playerData = playerSnap.data();
+  if (!playerData.isHost) {
+    throw new Error("Only the host can start the game.");
+  }
+
   const playersCol = collection(db, "rooms", roomId, "players");
   const snapshot = await getDocs(playersCol);
 
@@ -17,8 +38,8 @@ export async function startGame(roomId: string): Promise<void> {
     ...d.data(),
   }));
 
-  if (players.length < 4) {
-    throw new Error("Need at least 4 players to start the game.");
+  if (players.length < 2) {
+    throw new Error("Need at least 2 players to start the game.");
   }
 
   const imposterCount = Math.min(
@@ -27,7 +48,6 @@ export async function startGame(roomId: string): Promise<void> {
   );
 
   const shuffled = [...players].sort(() => Math.random() - 0.5);
-
   const imposterIds = new Set(
     shuffled.slice(0, imposterCount).map((p) => p.id)
   );
@@ -35,12 +55,11 @@ export async function startGame(roomId: string): Promise<void> {
   const updates: Promise<void>[] = [];
 
   for (const player of players) {
-    const playerRef = doc(db, "rooms", roomId, "players", player.id);
-
     const role: Role = imposterIds.has(player.id) ? "imposter" : "civilian";
 
+    const pRef = doc(db, "rooms", roomId, "players", player.id);
     updates.push(
-      updateDoc(playerRef, {
+      updateDoc(pRef, {
         role,
         alive: true,
       })
