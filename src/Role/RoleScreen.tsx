@@ -1,7 +1,7 @@
 import React from "react";
+import { PixelButton } from "../components/ui/PixelButton";
+import { PixelFrame } from "../components/ui/PixelFrame";
 import styles from "./RoleScreen.module.css";
-import { PixelButton } from "./ui/PixelButton";
-import { PixelFrame } from "./ui/PixelFrame";
 
 interface RoleScreenProps {
   role: "civilian" | "imposter";
