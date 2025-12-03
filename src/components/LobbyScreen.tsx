@@ -1,6 +1,8 @@
 import React from "react";
-import type { Player, Room } from "../types/game";
+import { RoleScreen } from ".././Role/RoleScreen";
+import type { Player, Room } from ".././types/game";
 import styles from "./LobbyScreen.module.css";
+import { GameLogo } from "./ui/GameLogo";
 import { PixelButton } from "./ui/PixelButton";
 import { PixelFrame } from "./ui/PixelFrame";
 
@@ -14,6 +16,8 @@ interface LobbyScreenProps {
   onLeave: () => void;
   onStartGame: () => void;
   canStartGame: boolean;
+  gameStarted: boolean;
+  currentPlayer: Player | null;
 }
 
 export const LobbyScreen: React.FC<LobbyScreenProps> = ({
@@ -26,10 +30,32 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
   onLeave,
   onStartGame,
   canStartGame,
+  gameStarted,
+  currentPlayer,
 }) => {
+  if (gameStarted && currentPlayer) {
+    const role = currentPlayer.role ?? "civilian";
+
+    return (
+      <main className={styles.main}>
+        <section className={styles.frameSection}>
+          <GameLogo />
+          <RoleScreen
+            role={role}
+            onContinue={() => {
+              console.log("Role acknowledged:", role);
+            }}
+          />
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className={styles.main}>
       <section className={styles.frameSection}>
+        <GameLogo />
+
         <PixelFrame>
           <div className={styles.roomHeader}>
             {roomLoading && <p className="text-subtitle">Loading room...</p>}
@@ -46,7 +72,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
             )}
           </div>
 
-          <p className={styles.playersHeader}>Players:</p>
+          <h2 className="text-title">Players:</h2>
 
           {playersLoading && (
             <p className="text-subtitle">Loading players...</p>
@@ -62,13 +88,6 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
                 <li key={player.id} className={styles.playerItem}>
                   {player.name}
                   {player.isHost && " (host)"}
-                  {player.role && (
-                    <>
-                      {" "}
-                      – {player.role === "imposter" ? "Imposter" : "Civilian"}
-                    </>
-                  )}
-                  {!player.alive && " (out)"}
                 </li>
               ))}
             </ul>
