@@ -1,5 +1,5 @@
 import { doc, updateDoc } from "firebase/firestore";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import { db } from "../firebase";
 import { usePlayers, useRoom } from "../hooks";
@@ -57,6 +57,30 @@ export const LobbyScreenContainer: React.FC<LobbyScreenContainerProps> = ({
       console.error("Failed to acknowledge role", err);
     }
   }, [roomId, currentPlayerId]);
+
+  useEffect(() => {
+    if (
+      !room ||
+      room.phase !== "role_reveal" ||
+      !gameStarted ||
+      !allPlayersReady ||
+      !isCurrentPlayerHost
+    ) {
+      return;
+    }
+
+    const roomRef = doc(db, "rooms", roomId);
+
+    (async () => {
+      try {
+        await updateDoc(roomRef, {
+          phase: "round",
+        });
+      } catch (err) {
+        console.error("Failed to set phase=round", err);
+      }
+    })();
+  }, [room, roomId, gameStarted, allPlayersReady, isCurrentPlayerHost]);
 
   return (
     <LobbyScreen

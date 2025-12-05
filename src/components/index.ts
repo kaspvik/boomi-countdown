@@ -1,3 +1,4 @@
+export * from "./Game/GameScreen";
 export * from "./Lobbypage/LobbyScreen";
 export * from "./Role/RoleScreen";
 export * from "./Startpage/StartActions";
