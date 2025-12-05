@@ -38,6 +38,8 @@ export function useRoom(roomId: string | null): UseRoomResult {
           code: data.code,
           status: data.status,
           createdAt: data.createdAt ?? null,
+          round: data.round,
+          currentBombHolder: data.currentBombHolder ?? null,
         });
         setError(null);
         setLoading(false);

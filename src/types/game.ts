@@ -21,4 +21,5 @@ export interface Player {
   isHost: boolean;
   alive: boolean;
   joinedAt?: Timestamp | null;
+  hasAcknowledgedRole?: boolean;
 }

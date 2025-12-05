@@ -1,14 +1,21 @@
 import React from "react";
+import { PixelButton } from "../ui/PixelButton/PixelButton";
+import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
 import styles from "./RoleScreen.module.css";
-import { PixelButton } from "./ui/PixelButton";
-import { PixelFrame } from "./ui/PixelFrame";
 
 interface RoleScreenProps {
   role: "civilian" | "imposter";
-  onContinue: () => void;
+  hasAcknowledged: boolean;
+  allReady: boolean;
+  onAcknowledge: () => void;
 }
 
-export const RoleScreen: React.FC<RoleScreenProps> = ({ role, onContinue }) => {
+export const RoleScreen: React.FC<RoleScreenProps> = ({
+  role,
+  hasAcknowledged,
+  allReady,
+  onAcknowledge,
+}) => {
   const isCivilian = role === "civilian";
 
   return (
@@ -35,11 +42,25 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({ role, onContinue }) => {
           )}
         </div>
 
-        <div className={styles.buttonRow}>
-          <PixelButton onClick={onContinue} className="text-button">
-            Got it!
-          </PixelButton>
-        </div>
+        {!hasAcknowledged && (
+          <div className={styles.buttonRow}>
+            <PixelButton onClick={onAcknowledge} className="text-button">
+              Got it!
+            </PixelButton>
+          </div>
+        )}
+
+        {hasAcknowledged && !allReady && (
+          <p className={styles.waitingText}>
+            Waiting for other players to confirm their role...
+          </p>
+        )}
+
+        {allReady && (
+          <p className={styles.allReadyText}>
+            Everyone is ready! The round will start...
+          </p>
+        )}
       </div>
     </PixelFrame>
   );

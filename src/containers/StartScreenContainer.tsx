@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { StartScreen, type PendingAction } from "../components/StartScreen";
+import {
+  StartScreen,
+  type PendingAction,
+} from "../components/Startpage/StartScreen";
 import {
   createRoom,
   findRoomByCode,
