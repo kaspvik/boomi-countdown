@@ -1,5 +1,6 @@
 import React from "react";
 import type { Player, Room } from "../../types/game";
+import { GameScreen } from "../Game/GameScreen";
 import { RoleScreen } from "../Role/RoleScreen";
 import { GameLogo } from "../ui/GameLogo/GameLogo";
 import { PixelButton } from "../ui/PixelButton/PixelButton";
@@ -22,22 +23,34 @@ interface LobbyScreenProps {
   onAcknowledgeRole: () => void;
 }
 
-export const LobbyScreen: React.FC<LobbyScreenProps> = ({
-  room,
-  roomLoading,
-  roomError,
-  players,
-  playersLoading,
-  playersError,
-  onLeave,
-  onStartGame,
-  canStartGame,
-  gameStarted,
-  currentPlayer,
-  allPlayersReady,
-  onAcknowledgeRole,
-}) => {
-  if (gameStarted && currentPlayer) {
+export const LobbyScreen: React.FC<LobbyScreenProps> = (props) => {
+  const {
+    room,
+    roomLoading,
+    roomError,
+    players,
+    playersLoading,
+    playersError,
+    onLeave,
+    onStartGame,
+    canStartGame,
+    gameStarted,
+    currentPlayer,
+    allPlayersReady,
+    onAcknowledgeRole,
+  } = props;
+
+  // vänta tills room och currentPlayer är laddade
+  if (roomLoading || playersLoading || !room) {
+    return (
+      <main className={styles.main}>
+        <p className="text-subtitle">Loading...</p>
+      </main>
+    );
+  }
+
+  // 1) ROLE REVEAL
+  if (gameStarted && room.phase === "role_reveal" && currentPlayer) {
     const role = currentPlayer.role ?? "civilian";
     const hasAcknowledged = !!currentPlayer.hasAcknowledgedRole;
 
@@ -53,6 +66,18 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
           />
         </section>
       </main>
+    );
+  }
+
+  // 2) MAIN ROUND / GAME
+  if (gameStarted && room.phase === "round" && currentPlayer) {
+    return (
+      <GameScreen
+        room={room}
+        players={players}
+        currentPlayer={currentPlayer}
+        onLeave={onLeave}
+      />
     );
   }
 

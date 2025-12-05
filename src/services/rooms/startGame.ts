@@ -76,6 +76,7 @@ export async function startGame(
       status: "in_progress",
       round: 1,
       currentBombHolder: randomBombHolder,
+      phase: "role_reveal",
     })
   );
 

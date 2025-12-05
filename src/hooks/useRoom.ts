@@ -40,6 +40,7 @@ export function useRoom(roomId: string | null): UseRoomResult {
           createdAt: data.createdAt ?? null,
           round: data.round,
           currentBombHolder: data.currentBombHolder ?? null,
+          phase: data.phase ?? null,
         });
         setError(null);
         setLoading(false);
