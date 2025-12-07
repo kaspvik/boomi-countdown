@@ -7,6 +7,7 @@ import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
 interface GameScreenProps {
   room: Room;
   players: Player[];
+  currentPlayer: Player | null;
   onLeave: () => void;
 }
 
