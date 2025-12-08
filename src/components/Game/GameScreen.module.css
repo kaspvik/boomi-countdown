@@ -2,35 +2,47 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  box-sizing: border-box;
-  padding: 1rem 2rem;
+
+
+  width: 100vh;  max-width: 600px;
+  padding: 0 2rem;
 }
 
 .topBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
 .leaveButton {
-  
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .timer {
-  text-align: center;
+  flex: 0;
+  display: flex;
+  justify-content: center;
 }
 
-
 .emptyBlock {
-  width: 6rem; 
+  flex: 1;
+  width: 9.5rem;;
 }
 
 .content {
-  flex: 1;                  
+  flex: 1;
   display: flex;
-  justify-content: center;    
-  align-items: center;     
+  justify-content: center;  
+  align-items: center;
+}
+
+.contentInner {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  justify-content: center;
 }
 
 .header {
@@ -43,26 +55,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 1rem;
 }
 
 .bottomBar p {
   margin: 0;
   text-align: center;
-  flex: 0 1 auto;
 }
 
-
 @media (max-width: 600px) {
-  .main {
-    padding: 0.75rem 1rem;
+
+  .contentInner {
+    max-width: 260px;
   }
 
   .bottomBar {
-    gap: 0.5rem;
-  }
-
-  .emptyBlock {
-    width: 4rem;
+    gap: 1rem;
   }
 }
