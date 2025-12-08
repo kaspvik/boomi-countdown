@@ -1,55 +1,68 @@
 .main {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 1rem 2rem;
+}
+
+.topBar {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.leaveButton {
+  
+}
+
+.timer {
+  text-align: center;
+}
+
+
+.emptyBlock {
+  width: 6rem; 
+}
+
+.content {
+  flex: 1;                  
+  display: flex;
+  justify-content: center;    
+  align-items: center;     
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.roleBox {
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
   gap: 0.5rem;
 }
 
-.playersBox {
-  margin-bottom: 1.5rem;
-}
-
-.playersList {
-  list-style: none;
-  margin: 0.5rem 0 0;
-  padding: 0;
+.bottomBar {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.playerItem {
-  background: #ffffff;
-  color: #000000;
-  padding: 0.25rem 0.75rem;
-  box-shadow: 0 1px 0 #c4c4c4;
-}
-
-.playerItem.bombHolder {
-  border: 2px solid #ff4444;
-}
-
-.playerItem.dead {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-
-.footer {
-  display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 1rem;
-  gap: 1rem;
+}
+
+.bottomBar p {
+  margin: 0;
+  text-align: center;
+  flex: 0 1 auto;
+}
+
+
+@media (max-width: 600px) {
+  .main {
+    padding: 0.75rem 1rem;
+  }
+
+  .bottomBar {
+    gap: 0.5rem;
+  }
+
+  .emptyBlock {
+    width: 4rem;
+  }
 }
