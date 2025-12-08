@@ -63,16 +63,18 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       </section>
 
       <section className={styles.content}>
-        <PixelFrame>
-          <div className={styles.header}>
-            <p className="text-subtitle">Round {room.round}</p>
-            {bombHolder && (
-              <p className="text-subtitle">
-                Current bomb holder: <strong>{bombHolder.name}</strong>
-              </p>
-            )}
-          </div>
-        </PixelFrame>
+        <div className={styles.contentInner}>
+          <PixelFrame>
+            <div className={styles.header}>
+              <p className="text-subtitle">Round {room.round}</p>
+              {bombHolder && (
+                <p className="text-subtitle">
+                  Current bomb holder: <strong>{bombHolder.name}</strong>
+                </p>
+              )}
+            </div>
+          </PixelFrame>
+        </div>
       </section>
 
       <section className={styles.bottomBar}>
