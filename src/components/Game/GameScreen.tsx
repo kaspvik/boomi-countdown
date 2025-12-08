@@ -20,22 +20,36 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   return (
     <main className={styles.main}>
-      <PixelFrame>
-        <div className={styles.header}>
-          <p className="text-subtitle">Round {room.round}</p>
-          {bombHolder && (
-            <p className="text-subtitle">
-              Current bomb holder: <strong>{bombHolder.name}</strong>
-            </p>
-          )}
+      <section className={styles.topBar}>
+        <div className={styles.leaveButton}>
+          <PixelButton onClick={onLeave} className="text-button">
+            Leave game
+          </PixelButton>
         </div>
-      </PixelFrame>
+        <div className={styles.timer}>
+          <p>*Timer*</p>
+        </div>
+        <div className={styles.emptyBlock}></div>
+      </section>
 
-      <div className={styles.footer}>
-        <PixelButton onClick={onLeave} className="text-button">
-          Leave game
-        </PixelButton>
-      </div>
+      <section className={styles.content}>
+        <PixelFrame>
+          <div className={styles.header}>
+            <p className="text-subtitle">Round {room.round}</p>
+            {bombHolder && (
+              <p className="text-subtitle">
+                Current bomb holder: <strong>{bombHolder.name}</strong>
+              </p>
+            )}
+          </div>
+        </PixelFrame>
+      </section>
+
+      <section className={styles.bottomBar}>
+        <PixelButton></PixelButton>
+        <p>*BORDET*</p>
+        <PixelButton></PixelButton>
+      </section>
     </main>
   );
 };
