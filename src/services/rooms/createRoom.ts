@@ -10,6 +10,7 @@ export async function createRoom(code: string): Promise<Room> {
     status: "lobby",
     round: 0,
     currentBombHolder: null,
+    phase: null,
     createdAt: serverTimestamp(),
   });
 
