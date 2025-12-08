@@ -1,22 +1,46 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { killPlayer } from "../../services/rooms/killPlayer";
 import type { Player, Room } from "../../types/game";
 import styles from "../Game/GameScreen.module.css";
 import { PixelButton } from "../ui/PixelButton/PixelButton";
 import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
+import { GameTimer } from "./GameTimer";
 
 interface GameScreenProps {
   room: Room;
   players: Player[];
   currentPlayer: Player | null;
+  roomId: string;
   onLeave: () => void;
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({
   room,
   players,
+  currentPlayer,
+  roomId,
   onLeave,
 }) => {
-  const bombHolder = players.find((p) => p.id === room.currentBombHolder);
+  const bombHolder =
+    players.find((p) => p.id === room.currentBombHolder) || null;
+
+  const isCurrentHolder =
+    currentPlayer != null && currentPlayer.id === room.currentBombHolder;
+  const isAlive = currentPlayer?.alive ?? true;
+
+  const handleTimerTimeout = useCallback(() => {
+    if (!currentPlayer || !isCurrentHolder || !isAlive) return;
+
+    (async () => {
+      try {
+        await killPlayer(roomId, currentPlayer.id);
+      } catch (err) {
+        console.error("Failed to kill player on timeout", err);
+      }
+    })();
+  }, [currentPlayer, isCurrentHolder, isAlive, roomId]);
+
+  const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
 
   return (
     <main className={styles.main}>
@@ -26,10 +50,16 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             Leave game
           </PixelButton>
         </div>
+
         <div className={styles.timer}>
-          <p>*Timer*</p>
+          <GameTimer
+            key={timerKey}
+            durationSeconds={30}
+            onTimeout={handleTimerTimeout}
+          />
         </div>
-        <div className={styles.emptyBlock}></div>
+
+        <div className={styles.emptyBlock} />
       </section>
 
       <section className={styles.content}>
