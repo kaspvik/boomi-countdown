@@ -1,7 +1,7 @@
 import type { Timestamp } from "firebase/firestore";
 
 export type RoomStatus = "lobby" | "in_progress" | "finished";
-export type RoomPhase = "role_reveal" | "round";
+export type RoomPhase = "role_reveal" | "question" | "round";
 export type Role = "imposter" | "civilian";
 
 export interface Room {
