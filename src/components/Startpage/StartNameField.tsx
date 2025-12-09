@@ -1,7 +1,7 @@
 import React from "react";
-import { PixelButton } from "../ui/PixelButton/PixelButton";
-import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
-import { PixelInputField } from "../ui/PixelInputField/PixelInputField";
+import { PixelButton } from "../../layout/PixelButton/PixelButton";
+import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { PixelInputField } from "../../layout/PixelInputField/PixelInputField";
 import styles from "./StartNameField.module.css";
 
 type ActionKind = "join" | "create";

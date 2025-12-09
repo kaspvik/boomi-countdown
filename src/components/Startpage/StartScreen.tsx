@@ -1,5 +1,5 @@
 import React from "react";
-import { GameLogo } from "../ui/GameLogo/GameLogo";
+import { GameLogo } from "../../layout/GameLogo/GameLogo";
 import { StartActions } from "./StartActions";
 import { StartNameField } from "./StartNameField";
 import styles from "./StartScreen.module.css";
