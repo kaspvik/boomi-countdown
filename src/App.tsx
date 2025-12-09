@@ -7,12 +7,7 @@ function App() {
   const screen = useGameStore((s) => s.screen);
   const activeRoomId = useGameStore((s) => s.activeRoomId);
   const currentPlayerId = useGameStore((s) => s.currentPlayerId);
-  const enterLobby = useGameStore((s) => s.enterLobby);
   const leaveLobby = useGameStore((s) => s.leaveLobby);
-
-  const handleEnterLobby = (roomId: string, playerId: string) => {
-    enterLobby(roomId, playerId);
-  };
 
   return (
     <GameLayout>
@@ -23,7 +18,7 @@ function App() {
           onLeave={leaveLobby}
         />
       ) : (
-        <StartScreenContainer onEnterLobby={handleEnterLobby} />
+        <StartScreenContainer />
       )}
     </GameLayout>
   );

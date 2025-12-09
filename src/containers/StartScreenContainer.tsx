@@ -9,34 +9,34 @@ import {
   generateRoomCode,
   joinRoom,
 } from "../services/rooms";
+import { useGameStore } from "../store/gameStore";
 
-interface StartScreenContainerProps {
-  onEnterLobby: (roomId: string, playerId: string) => void;
-}
-
-export const StartScreenContainer: React.FC<StartScreenContainerProps> = ({
-  onEnterLobby,
-}) => {
+export const StartScreenContainer: React.FC = () => {
   const [roomCodeInput, setRoomCodeInput] = useState("");
   const [playerNameInput, setPlayerNameInput] = useState("");
   const [pendingAction, setPendingAction] = useState<PendingAction>("idle");
   const [status, setStatus] = useState<string | null>(null);
+
+  const enterLobby = useGameStore((s) => s.enterLobby);
 
   const handleClickCreate = () => {
     setStatus(null);
     setPlayerNameInput("");
     setPendingAction("create");
   };
+
   const handleClickJoin = () => {
     setStatus(null);
     setPlayerNameInput("");
     setPendingAction("join");
   };
+
   const handleCancelName = () => {
     setPendingAction("idle");
     setPlayerNameInput("");
     setStatus(null);
   };
+
   const handleConfirmName = async () => {
     const trimmedName = playerNameInput.trim();
 
@@ -64,7 +64,7 @@ export const StartScreenContainer: React.FC<StartScreenContainerProps> = ({
 
       const player = await joinRoom(room.id, playerName, true);
 
-      onEnterLobby(room.id, player.id);
+      enterLobby(room.id, player.id);
 
       setStatus(
         `Room created with code ${room.code}. You joined as ${playerName}.`
@@ -95,7 +95,7 @@ export const StartScreenContainer: React.FC<StartScreenContainerProps> = ({
 
       const player = await joinRoom(room.id, playerName, false);
 
-      onEnterLobby(room.id, player.id);
+      enterLobby(room.id, player.id);
 
       setStatus(`You joined room ${room.code} as ${playerName}.`);
     } catch (error) {
