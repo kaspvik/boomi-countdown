@@ -74,6 +74,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = (props) => {
     return (
       <GameScreen
         room={room}
+        roomId={room.id}
         players={players}
         currentPlayer={currentPlayer}
         onLeave={onLeave}
