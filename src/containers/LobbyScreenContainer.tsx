@@ -2,7 +2,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import React, { useCallback, useEffect } from "react";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import { db } from "../firebase";
-import { usePlayers, useRoom } from "../hooks";
+import { usePlayers, useRoom } from "../firestore-hooks";
 import { startGame } from "../services/rooms";
 import type { Player } from "../types/game";
 
