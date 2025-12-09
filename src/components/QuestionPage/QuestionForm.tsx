@@ -27,9 +27,6 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     ? "Choose who should secretly receive Boomi this round."
     : "Who do you suspect the most this round?";
 
-  const descriptionText =
-    "Everyone votes at the same time. Civilians discuss and suspect, imposters secretly choose who should get Boomi.";
-
   const possibleTargets = useMemo(
     () => players.filter((p) => p.alive !== false && p.id !== currentPlayer.id),
     [players, currentPlayer.id]
@@ -55,27 +52,39 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     }
   };
 
+  const handleSelectPlayer = (playerId: string) => {
+    if (hasVoted || isSubmitting) return;
+    setSelectedTargetId(playerId);
+  };
+
   return (
     <div className={styles.wrapper}>
       <p className="text-title">{questionText}</p>
-      <p className="text-body">{descriptionText}</p>
 
-      <label className="text-subtitle">
-        Choose a player:
-        <select
-          className={styles.select}
-          value={selectedTargetId}
-          onChange={(e) => setSelectedTargetId(e.target.value)}
-          disabled={hasVoted || isSubmitting}>
-          <option value="">Select...</option>
-          {possibleTargets.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-              {p.isHost ? " (host)" : ""}
-            </option>
-          ))}
-        </select>
-      </label>
+      <p className="text-subtitle">Tap the player you want to vote for:</p>
+
+      <ul className={styles.playersList}>
+        {possibleTargets.map((p) => {
+          const isSelected = p.id === selectedTargetId;
+
+          return (
+            <li key={p.id}>
+              <button
+                type="button"
+                className={`${styles.playerItem} ${
+                  isSelected ? styles.playerItemSelected : ""
+                }`}
+                onClick={() => handleSelectPlayer(p.id)}
+                disabled={hasVoted || isSubmitting}>
+                <span className={styles.playerName}>
+                  {p.name}
+                  {p.isHost ? " (host)" : ""}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
 
       <div className={styles.buttonRow}>
         <PixelButton
