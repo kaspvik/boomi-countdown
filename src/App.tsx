@@ -1,25 +1,17 @@
-import { useState } from "react";
 import { LobbyScreenContainer } from "./containers/LobbyScreenContainer";
 import { StartScreenContainer } from "./containers/StartScreenContainer";
 import { GameLayout } from "./layout/GameLayout";
-
-type Screen = "start" | "lobby";
+import { useGameStore } from "./store/gameStore";
 
 function App() {
-  const [screen, setScreen] = useState<Screen>("start");
-  const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
-  const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
+  const screen = useGameStore((s) => s.screen);
+  const activeRoomId = useGameStore((s) => s.activeRoomId);
+  const currentPlayerId = useGameStore((s) => s.currentPlayerId);
+  const enterLobby = useGameStore((s) => s.enterLobby);
+  const leaveLobby = useGameStore((s) => s.leaveLobby);
 
   const handleEnterLobby = (roomId: string, playerId: string) => {
-    setActiveRoomId(roomId);
-    setCurrentPlayerId(playerId);
-    setScreen("lobby");
-  };
-
-  const handleLeaveLobby = () => {
-    setActiveRoomId(null);
-    setCurrentPlayerId(null);
-    setScreen("start");
+    enterLobby(roomId, playerId);
   };
 
   return (
@@ -28,7 +20,7 @@ function App() {
         <LobbyScreenContainer
           roomId={activeRoomId}
           currentPlayerId={currentPlayerId}
-          onLeave={handleLeaveLobby}
+          onLeave={leaveLobby}
         />
       ) : (
         <StartScreenContainer onEnterLobby={handleEnterLobby} />
