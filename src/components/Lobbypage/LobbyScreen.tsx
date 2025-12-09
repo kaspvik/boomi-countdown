@@ -1,87 +1,29 @@
 import React from "react";
+import { GameLogo } from "../../layout/GameLogo/GameLogo";
+import { PixelButton } from "../../layout/PixelButton/PixelButton";
+import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import type { Player, Room } from "../../types/game";
-import { GameScreen } from "../Game/GameScreen";
-import { RoleScreen } from "../Role/RoleScreen";
-import { GameLogo } from "../ui/GameLogo/GameLogo";
-import { PixelButton } from "../ui/PixelButton/PixelButton";
-import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
 import styles from "./LobbyScreen.module.css";
 
 interface LobbyScreenProps {
-  room: Room | null;
-  roomLoading: boolean;
-  roomError: string | null;
+  room: Room;
   players: Player[];
   playersLoading: boolean;
   playersError: string | null;
   onLeave: () => void;
   onStartGame: () => void;
   canStartGame: boolean;
-  gameStarted: boolean;
-  currentPlayer: Player | null;
-  allPlayersReady: boolean;
-  onAcknowledgeRole: () => void;
 }
 
-export const LobbyScreen: React.FC<LobbyScreenProps> = (props) => {
-  const {
-    room,
-    roomLoading,
-    roomError,
-    players,
-    playersLoading,
-    playersError,
-    onLeave,
-    onStartGame,
-    canStartGame,
-    gameStarted,
-    currentPlayer,
-    allPlayersReady,
-    onAcknowledgeRole,
-  } = props;
-
-  // vänta tills room och currentPlayer är laddade
-  if (roomLoading || playersLoading || !room) {
-    return (
-      <main className={styles.main}>
-        <p className="text-subtitle">Loading...</p>
-      </main>
-    );
-  }
-
-  // 1) ROLE REVEAL
-  if (gameStarted && room.phase === "role_reveal" && currentPlayer) {
-    const role = currentPlayer.role ?? "civilian";
-    const hasAcknowledged = !!currentPlayer.hasAcknowledgedRole;
-
-    return (
-      <main className={styles.main}>
-        <section className={styles.frameSection}>
-          <GameLogo />
-          <RoleScreen
-            role={role}
-            hasAcknowledged={hasAcknowledged}
-            allReady={allPlayersReady}
-            onAcknowledge={onAcknowledgeRole}
-          />
-        </section>
-      </main>
-    );
-  }
-
-  // 2) MAIN ROUND / GAME
-  if (gameStarted && room.phase === "round" && currentPlayer) {
-    return (
-      <GameScreen
-        room={room}
-        roomId={room.id}
-        players={players}
-        currentPlayer={currentPlayer}
-        onLeave={onLeave}
-      />
-    );
-  }
-
+export const LobbyScreen: React.FC<LobbyScreenProps> = ({
+  room,
+  players,
+  playersLoading,
+  playersError,
+  onLeave,
+  onStartGame,
+  canStartGame,
+}) => {
   return (
     <main className={styles.main}>
       <section className={styles.frameSection}>
@@ -89,18 +31,10 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = (props) => {
 
         <PixelFrame>
           <div className={styles.roomHeader}>
-            {roomLoading && <p className="text-subtitle">Loading room...</p>}
-            {roomError && <p style={{ color: "red" }}>{roomError}</p>}
-            {!roomLoading && !room && !roomError && (
-              <p className="text-subtitle">No room data available.</p>
-            )}
-
-            {room && (
-              <p className={styles.roomCodeText}>
-                <span className={styles.roomCodeLabel}>Game Pin:</span>
-                <span className={styles.roomCodeValue}>{room.code}</span>
-              </p>
-            )}
+            <p className={styles.roomCodeText}>
+              <span className={styles.roomCodeLabel}>Game Pin:</span>
+              <span className={styles.roomCodeValue}>{room.code}</span>
+            </p>
           </div>
 
           <h2 className="text-title">Players:</h2>

@@ -1,0 +1,170 @@
+import { doc, updateDoc } from "firebase/firestore";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { db } from "../firebase";
+import { startGame } from "../services/startGame";
+import { useGameStore } from "../store/gameStore";
+import type { Player } from "../types/game";
+
+import { GameScreen } from "../components/GamePage/GameScreen";
+import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
+import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
+import { RoleScreen } from "../components/RolePage/RoleScreen";
+import { usePlayers } from "../firestore-hooks/usePlayers";
+import { useRoom } from "../firestore-hooks/useRoom";
+import { GameLogo } from "../layout/GameLogo/GameLogo";
+
+interface RoomScreenContainerProps {
+  roomId: string;
+  onLeave: () => void;
+}
+
+export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
+  roomId,
+  onLeave,
+}) => {
+  const { room, loading: roomLoading, error: roomError } = useRoom(roomId);
+  const {
+    players,
+    loading: playersLoading,
+    error: playersError,
+  } = usePlayers(roomId);
+
+  const currentPlayerId = useGameStore((s) => s.currentPlayerId);
+
+  const currentPlayer: Player | null = useMemo(
+    () => players.find((p) => p.id === currentPlayerId) ?? null,
+    [players, currentPlayerId]
+  );
+
+  const isCurrentPlayerHost = currentPlayer?.isHost ?? false;
+  const gameStarted = room?.status === "in_progress";
+
+  const alivePlayers = players.filter((p) => p.alive !== false);
+  const allPlayersReady =
+    alivePlayers.length > 0 && alivePlayers.every((p) => p.hasAcknowledgedRole);
+
+  const handleStartGame = useCallback(async () => {
+    if (!isCurrentPlayerHost || !currentPlayerId) return;
+
+    try {
+      await startGame(roomId, currentPlayerId);
+    } catch (err) {
+      console.error("Failed to start game", err);
+    }
+  }, [roomId, currentPlayerId, isCurrentPlayerHost]);
+
+  const handleAcknowledgeRole = useCallback(async () => {
+    if (!currentPlayerId) return;
+
+    const playerRef = doc(db, "rooms", roomId, "players", currentPlayerId);
+
+    try {
+      await updateDoc(playerRef, {
+        hasAcknowledgedRole: true,
+      });
+    } catch (err) {
+      console.error("Failed to acknowledge role", err);
+    }
+  }, [roomId, currentPlayerId]);
+
+  // När alla har tryckt "Got it!" och hosten är inne:
+  useEffect(() => {
+    if (
+      !room ||
+      room.phase !== "role_reveal" ||
+      !gameStarted ||
+      !allPlayersReady ||
+      !isCurrentPlayerHost
+    ) {
+      return;
+    }
+
+    const roomRef = doc(db, "rooms", roomId);
+
+    (async () => {
+      try {
+        await updateDoc(roomRef, {
+          phase: "round",
+        });
+      } catch (err) {
+        console.error("Failed to set phase=round", err);
+      }
+    })();
+  }, [room, roomId, gameStarted, allPlayersReady, isCurrentPlayerHost]);
+
+  // --- Loading / error-state ---
+
+  if (roomLoading || playersLoading) {
+    return (
+      <main className={lobbyStyles.main}>
+        <p className="text-subtitle">Loading...</p>
+      </main>
+    );
+  }
+
+  if (roomError || playersError) {
+    return (
+      <main className={lobbyStyles.main}>
+        <p style={{ color: "red" }}>
+          {roomError || playersError || "Something went wrong."}
+        </p>
+      </main>
+    );
+  }
+
+  if (!room) {
+    return (
+      <main className={lobbyStyles.main}>
+        <p className="text-subtitle">Room not found.</p>
+      </main>
+    );
+  }
+
+  // --- 1) ROLE REVEAL ---
+  if (gameStarted && room.phase === "role_reveal" && currentPlayer) {
+    const role = currentPlayer.role ?? "civilian";
+    const hasAcknowledged = !!currentPlayer.hasAcknowledgedRole;
+
+    return (
+      <main className={lobbyStyles.main}>
+        <section className={lobbyStyles.frameSection}>
+          <GameLogo />
+          <RoleScreen
+            role={role}
+            hasAcknowledged={hasAcknowledged}
+            allReady={allPlayersReady}
+            onAcknowledge={handleAcknowledgeRole}
+          />
+        </section>
+      </main>
+    );
+  }
+
+  // --- 2) MAIN ROUND / GAME ---
+  if (gameStarted && room.phase === "round" && currentPlayer) {
+    return (
+      <GameScreen
+        room={room}
+        roomId={roomId}
+        players={players}
+        currentPlayer={currentPlayer}
+        onLeave={onLeave}
+      />
+    );
+  }
+
+  // --- 3) LOBBY-LÄGE ---
+  const canStartGame = isCurrentPlayerHost && room.status === "lobby";
+
+  return (
+    <LobbyScreen
+      room={room}
+      players={players}
+      playersLoading={playersLoading}
+      playersError={playersError}
+      canStartGame={canStartGame}
+      onLeave={onLeave}
+      onStartGame={handleStartGame}
+    />
+  );
+};

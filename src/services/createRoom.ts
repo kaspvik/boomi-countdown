@@ -1,6 +1,6 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../../firebase";
-import type { Room } from "../../types/game";
+import { db } from "../firebase";
+import type { Room } from "../types/game";
 
 export async function createRoom(code: string): Promise<Room> {
   const roomsRef = collection(db, "rooms");

@@ -3,7 +3,6 @@ import styles from "./PixelButton.module.css";
 
 interface PixelButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  // om du vill ha future variants sen
   variant?: "primary" | "secondary";
 }
 
