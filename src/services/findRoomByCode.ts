@@ -1,6 +1,6 @@
 import { collection, getDocs, limit, query, where } from "firebase/firestore";
-import { db } from "../../firebase";
-import type { Room } from "../../types/game";
+import { db } from "../firebase";
+import type { Room } from "../types/game";
 
 export async function findRoomByCode(code: string): Promise<Room | null> {
   const roomsRef = collection(db, "rooms");
@@ -19,6 +19,8 @@ export async function findRoomByCode(code: string): Promise<Room | null> {
     id: docSnap.id,
     code: data.code,
     status: data.status,
+    round: data.round,
+    currentBombHolder: data.currentBombHolder,
     createdAt: data.createdAt ?? null,
   };
 }

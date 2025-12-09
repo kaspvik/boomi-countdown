@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
-import { killPlayer } from "../../services/rooms/killPlayer";
+import { PixelButton } from "../../layout/PixelButton/PixelButton";
+import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { killPlayer } from "../../services/killPlayer";
 import type { Player, Room } from "../../types/game";
-import styles from "../Game/GameScreen.module.css";
-import { PixelButton } from "../ui/PixelButton/PixelButton";
-import { PixelFrame } from "../ui/PixelFrame/PixelFrame";
+import styles from "../GamePage/GameScreen.module.css";
 import { GameTimer } from "./GameTimer";
 
 interface GameScreenProps {
