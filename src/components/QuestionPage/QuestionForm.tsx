@@ -59,7 +59,9 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <p className="text-title">{questionText}</p>
+      <div className={styles.questionBox}>
+        <p>{questionText}</p>
+      </div>
 
       <p className="text-subtitle">Tap the player you want to vote for:</p>
 
@@ -96,9 +98,11 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
       </div>
 
       {hasVoted && (
-        <p className="text-subtitle">
-          Your vote has been saved. Wait for the round to start.
-        </p>
+        <div className={styles.voteConfirmation}>
+          <p className="text-subtitle">
+            Your vote has been saved. <br /> Wait for the round to start.
+          </p>
+        </div>
       )}
     </div>
   );
