@@ -10,9 +10,14 @@ import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
 import { QuestionScreen } from "../components/QuestionPage/QuestionScreen";
 import { RoleScreen } from "../components/RolePage/RoleScreen";
+import { GameLogo } from "../layout/GameLogo/GameLogo";
+
 import { usePlayers } from "../firestore-hooks/usePlayers";
 import { useRoom } from "../firestore-hooks/useRoom";
-import { GameLogo } from "../layout/GameLogo/GameLogo";
+
+import { useRoundVotes } from "../firestore-hooks/useRoundVotes";
+
+import { QuestionResultsScreen } from "../components/QuestionResultPage/QuestionResultsScreen";
 
 interface RoomScreenContainerProps {
   roomId: string;
@@ -30,6 +35,8 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     error: playersError,
   } = usePlayers(roomId);
 
+  const { votes } = useRoundVotes(roomId, room?.round ?? null);
+
   const currentPlayerId = useGameStore((s) => s.currentPlayerId);
 
   const currentPlayer: Player | null = useMemo(
@@ -41,8 +48,13 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
   const gameStarted = room?.status === "in_progress";
 
   const alivePlayers = players.filter((p) => p.alive !== false);
+
   const allPlayersReady =
     alivePlayers.length > 0 && alivePlayers.every((p) => p.hasAcknowledgedRole);
+
+  const allAliveVoted =
+    alivePlayers.length > 0 &&
+    alivePlayers.every((p) => votes.some((v) => v.voterId === p.id));
 
   const handleStartGame = useCallback(async () => {
     if (!isCurrentPlayerHost || !currentPlayerId) return;
@@ -82,7 +94,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     }
   }, [roomId, isCurrentPlayerHost]);
 
-  // När alla har tryckt "Got it!" och hosten är inne:
   useEffect(() => {
     if (
       !room ||
@@ -106,6 +117,31 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       }
     })();
   }, [room, roomId, gameStarted, allPlayersReady, isCurrentPlayerHost]);
+
+  // 🆕 När alla levande har röstat i QUESTION-fasen -> gå till QUESTION_RESULTS
+  useEffect(() => {
+    if (
+      !room ||
+      room.phase !== "question" ||
+      !gameStarted ||
+      !isCurrentPlayerHost ||
+      !allAliveVoted
+    ) {
+      return;
+    }
+
+    const roomRef = doc(db, "rooms", roomId);
+
+    (async () => {
+      try {
+        await updateDoc(roomRef, {
+          phase: "question_results",
+        });
+      } catch (err) {
+        console.error("Failed to set phase=question_results", err);
+      }
+    })();
+  }, [room, roomId, gameStarted, isCurrentPlayerHost, allAliveVoted]);
 
   // --- Loading / error-state ---
 
@@ -166,6 +202,20 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         onLeave={onLeave}
         onHostStartRound={handleHostStartRound}
         isHost={isCurrentPlayerHost}
+      />
+    );
+  }
+
+  // 2.5) QUESTION RESULTS
+  if (gameStarted && room.phase === "question_results" && currentPlayer) {
+    return (
+      <QuestionResultsScreen
+        room={room}
+        roomId={roomId}
+        players={players}
+        isHost={isCurrentPlayerHost}
+        onLeave={onLeave}
+        onContinue={handleHostStartRound} //
       />
     );
   }
