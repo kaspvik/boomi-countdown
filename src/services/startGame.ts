@@ -67,15 +67,12 @@ export async function startGame(
     );
   }
 
-  const randomBombHolder =
-    players[Math.floor(Math.random() * players.length)].id;
-
   const roomRef = doc(db, "rooms", roomId);
   updates.push(
     updateDoc(roomRef, {
       status: "in_progress",
       round: 1,
-      currentBombHolder: randomBombHolder,
+      currentBombHolder: null,
       phase: "role_reveal",
     })
   );
