@@ -1,0 +1,48 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+  flex: 1;                    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.frameBody {
+  text-align: center;
+  background-color: white;
+  padding: 2rem;
+  border: 2px solid black;
+}
+
+.title {
+  margin: 0 0 0.25rem;
+}
+
+.playerName {
+  margin: 0 0 0.75rem;
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.extraMessage {
+  margin-top: 0.75rem;
+  font-size: var(--font-size-body);
+}
+
+.errorText {
+  margin-top: 0.75rem;
+  color: red;
+  font-size: var(--font-size-body);
+}
+

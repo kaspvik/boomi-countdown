@@ -14,6 +14,7 @@
 
   /* TYPO: storlekar (kan tweakas) */
   --font-size-display: 3rem;  /* t.ex. stora rubriken "Boomi Countdown" */
+  --font-size-game: 2rem; 
   --font-size-title: 1.5rem;    /* sektionstitlar */
   --font-size-subtitle: 1.25rem; /* mindre rubriker */
   --font-size-body: 1.2rem;     /* brödtext */
@@ -38,12 +39,18 @@
   font-weight: var(--font-weight-bold);
 }
 
+.text-game {
+  font-family: var(--font-main);
+  font-size: var(--font-size-game);
+  font-weight: var(--font-weight-medium);
+}
+
 /* Vanliga rubriker */
 .text-title {
   font-family: var(--font-main);
   font-size: var(--font-size-title);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  color: var(--color-bg);
 }
 
 /* Vanliga subrubriker */

@@ -1,18 +1,19 @@
 import { doc, updateDoc } from "firebase/firestore";
-import React, { useCallback, useEffect, useMemo } from "react";
-import { db } from "../firebase";
-import { startGame } from "../services/startGame";
-import { useGameStore } from "../store/gameStore";
-import type { Player } from "../types/game";
-
+import { useCallback, useMemo } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
 import { QuestionScreen } from "../components/QuestionPage/QuestionScreen";
 import { RoleScreen } from "../components/RolePage/RoleScreen";
+import { db } from "../firebase";
 import { usePlayers } from "../firestore-hooks/usePlayers";
 import { useRoom } from "../firestore-hooks/useRoom";
+import { useRoomPhaseTransitions } from "../firestore-hooks/useRoomPhaseTransitions";
 import { GameLogo } from "../layout/GameLogo/GameLogo";
+import { startGame } from "../services/startGame";
+import { useGameStore } from "../store/gameStore";
+import type { Player } from "../types/game";
+import { QuestionResultsContainer } from "./QuestionResultsContainer";
 
 interface RoomScreenContainerProps {
   roomId: string;
@@ -41,8 +42,18 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
   const gameStarted = room?.status === "in_progress";
 
   const alivePlayers = players.filter((p) => p.alive !== false);
+
   const allPlayersReady =
     alivePlayers.length > 0 && alivePlayers.every((p) => p.hasAcknowledgedRole);
+
+  useRoomPhaseTransitions(
+    room ?? null,
+    roomId,
+    gameStarted,
+    alivePlayers,
+    allPlayersReady,
+    isCurrentPlayerHost
+  );
 
   const handleStartGame = useCallback(async () => {
     if (!isCurrentPlayerHost || !currentPlayerId) return;
@@ -81,33 +92,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       console.error("Failed to set phase=round", err);
     }
   }, [roomId, isCurrentPlayerHost]);
-
-  // När alla har tryckt "Got it!" och hosten är inne:
-  useEffect(() => {
-    if (
-      !room ||
-      room.phase !== "role_reveal" ||
-      !gameStarted ||
-      !allPlayersReady ||
-      !isCurrentPlayerHost
-    ) {
-      return;
-    }
-
-    const roomRef = doc(db, "rooms", roomId);
-
-    (async () => {
-      try {
-        await updateDoc(roomRef, {
-          phase: "question",
-        });
-      } catch (err) {
-        console.error("Failed to set phase=question", err);
-      }
-    })();
-  }, [room, roomId, gameStarted, allPlayersReady, isCurrentPlayerHost]);
-
-  // --- Loading / error-state ---
 
   if (roomLoading || playersLoading) {
     return (
@@ -170,7 +154,22 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
-  // 3) MAIN ROUND / GAME
+  // 3) QUESTION RESULTS
+  if (gameStarted && room.phase === "question_results" && currentPlayer) {
+    return (
+      <QuestionResultsContainer
+        room={room}
+        roomId={roomId}
+        players={players}
+        currentPlayer={currentPlayer}
+        isHost={isCurrentPlayerHost}
+        onLeave={onLeave}
+        onContinue={handleHostStartRound}
+      />
+    );
+  }
+
+  // 4) MAIN ROUND / GAME
   if (gameStarted && room.phase === "round" && currentPlayer) {
     return (
       <GameScreen
@@ -183,7 +182,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
-  // 4) Annars: lobby
+  // 5) Annars: lobby
   return (
     <LobbyScreen
       room={room}
