@@ -43,12 +43,16 @@
   max-width: 380px;
   display: flex;
   justify-content: center;
+  text-align: center;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  background-color: white;
+  border: 3px solid black;
+  padding: 1rem;
 }
 
 .bottomBar {
