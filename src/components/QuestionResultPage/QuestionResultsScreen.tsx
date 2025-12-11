@@ -98,7 +98,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.timer}>
           <GameTimer
             key={timerKey}
-            durationSeconds={10000}
+            durationSeconds={10}
             onTimeout={handleTimerTimeout}
           />
         </div>
