@@ -1,53 +1,34 @@
 import React, { useCallback, useState } from "react";
-import { useRoundVotes } from "../../firestore-hooks/useRoundVotes";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
-import { getTopVotedPlayerForRole } from "../../services/voteHelpers";
 import type { Player, Room } from "../../types/game";
 import { GameTimer } from "../GamePage/GameTimer";
 import styles from "./QuestionResultsScreen.module.css";
 
 interface QuestionResultsScreenProps {
   room: Room;
-  roomId: string;
-  players: Player[];
-  isHost: boolean;
   onLeave: () => void;
   onContinue: () => void;
-  currentPlayer: Player;
+  hasAnyVotes: boolean;
+  error: string | null;
+  topCivilianTarget: Player | null;
+  topImposterTarget: Player | null;
+  isCurrentCivilianTop: boolean;
+  isCurrentImposterTop: boolean;
 }
 
 export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   room,
-  roomId,
-  players,
   onLeave,
   onContinue,
-  currentPlayer,
+  hasAnyVotes,
+  error,
+  topCivilianTarget,
+  topImposterTarget,
+  isCurrentCivilianTop,
+  isCurrentImposterTop,
 }) => {
-  const { votes, error } = useRoundVotes(roomId, room.round);
-
-  const { player: topCivilianTarget } = getTopVotedPlayerForRole(
-    votes,
-    players,
-    "civilian"
-  );
-
-  const { player: topImposterTarget } = getTopVotedPlayerForRole(
-    votes,
-    players,
-    "imposter"
-  );
-
   const [view, setView] = useState<"civilian" | "imposter">("civilian");
-
-  const hasAnyVotes = votes.length > 0;
-
-  const isCurrentCivilianTop =
-    !!topCivilianTarget && topCivilianTarget.id === currentPlayer.id;
-
-  const isCurrentImposterTop =
-    !!topImposterTarget && topImposterTarget.id === currentPlayer.id;
 
   let titleText = `Round ${room.round} – results`;
   let playerNameToShow: string | null = null;
@@ -102,6 +83,8 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
             onTimeout={handleTimerTimeout}
           />
         </div>
+
+        <div className={styles.emptyBlock} />
       </section>
 
       <section className={styles.content}>

@@ -17,7 +17,7 @@ import { useRoom } from "../firestore-hooks/useRoom";
 
 import { useRoundVotes } from "../firestore-hooks/useRoundVotes";
 
-import { QuestionResultsScreen } from "../components/QuestionResultPage/QuestionResultsScreen";
+import { QuestionResultsContainer } from "./QuestionResultsContainer";
 
 interface RoomScreenContainerProps {
   roomId: string;
@@ -206,17 +206,16 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
-  // 2.5) QUESTION RESULTS
   if (gameStarted && room.phase === "question_results" && currentPlayer) {
     return (
-      <QuestionResultsScreen
+      <QuestionResultsContainer
         room={room}
         roomId={roomId}
         players={players}
+        currentPlayer={currentPlayer}
         isHost={isCurrentPlayerHost}
         onLeave={onLeave}
         onContinue={handleHostStartRound}
-        currentPlayer={currentPlayer}
       />
     );
   }
