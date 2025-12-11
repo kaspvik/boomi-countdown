@@ -1,47 +1,49 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
-import { killPlayer } from "../../services/killPlayer";
-import type { Player, Room } from "../../types/game";
+import type { Player } from "../../types/game";
 import styles from "../GamePage/GameScreen.module.css";
 import { GameTimer } from "./GameTimer";
+import { GuessPanel } from "./GuessPanel";
 
 interface GameScreenProps {
-  room: Room;
-  players: Player[];
-  currentPlayer: Player | null;
-  roomId: string;
+  timerKey: string;
+  durationSeconds: number;
+  onTimeout: () => void;
+
   onLeave: () => void;
+
+  showInfoBox: boolean;
+  bombHolderName: string | null;
+
+  isCurrentHolder: boolean;
+  isAlive: boolean;
+  isGuessOpen: boolean;
+  guessTargets: Player[];
+  selectedGuessTargetId: string | null;
+  onSelectGuessTarget: (id: string) => void;
+  onOpenGuess: () => void;
+  onCancelGuess: () => void;
+  onConfirmGuess: () => void;
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({
-  room,
-  players,
-  currentPlayer,
-  roomId,
+  timerKey,
+  durationSeconds,
+  onTimeout,
   onLeave,
+  showInfoBox,
+  bombHolderName,
+  isCurrentHolder,
+  isAlive,
+  isGuessOpen,
+  guessTargets,
+  selectedGuessTargetId,
+  onSelectGuessTarget,
+  onOpenGuess,
+  onCancelGuess,
+  onConfirmGuess,
 }) => {
-  const bombHolder =
-    players.find((p) => p.id === room.currentBombHolder) || null;
-
-  const isCurrentHolder =
-    currentPlayer != null && currentPlayer.id === room.currentBombHolder;
-  const isAlive = currentPlayer?.alive ?? true;
-
-  const handleTimerTimeout = useCallback(() => {
-    if (!currentPlayer || !isCurrentHolder || !isAlive) return;
-
-    (async () => {
-      try {
-        await killPlayer(roomId, currentPlayer.id);
-      } catch (err) {
-        console.error("Failed to kill player on timeout", err);
-      }
-    })();
-  }, [currentPlayer, isCurrentHolder, isAlive, roomId]);
-
-  const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
-
   return (
     <main className={styles.main}>
       <section className={styles.topBar}>
@@ -54,8 +56,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         <div className={styles.timer}>
           <GameTimer
             key={timerKey}
-            durationSeconds={30}
-            onTimeout={handleTimerTimeout}
+            durationSeconds={durationSeconds}
+            onTimeout={onTimeout}
           />
         </div>
 
@@ -64,23 +66,53 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
       <section className={styles.content}>
         <div className={styles.contentInner}>
-          <PixelFrame>
-            <div className={styles.header}>
-              <p className="text-subtitle">Round {room.round}</p>
-              {bombHolder && (
+          {showInfoBox && bombHolderName && (
+            <PixelFrame>
+              <div className={styles.header}>
                 <p className="text-subtitle">
-                  Current bomb holder: <strong>{bombHolder.name}</strong>
+                  Current bomb holder: <strong>{bombHolderName}</strong>
                 </p>
-              )}
-            </div>
-          </PixelFrame>
+              </div>
+            </PixelFrame>
+          )}
+
+          {isCurrentHolder && isAlive && isGuessOpen && (
+            <PixelFrame>
+              <GuessPanel
+                targets={guessTargets}
+                selectedTargetId={selectedGuessTargetId}
+                onSelectTarget={onSelectGuessTarget}
+                onConfirm={onConfirmGuess}
+                onCancel={onCancelGuess}
+              />
+            </PixelFrame>
+          )}
         </div>
       </section>
 
       <section className={styles.bottomBar}>
-        <PixelButton></PixelButton>
-        <p>*BORDET*</p>
-        <PixelButton></PixelButton>
+        {isCurrentHolder && isAlive ? (
+          <>
+            <PixelButton
+              onClick={onOpenGuess}
+              className="text-button"
+              disabled={isGuessOpen}>
+              Guess
+            </PixelButton>
+
+            <p>*BORDET*</p>
+
+            <PixelButton className="text-button" disabled>
+              Pass Boomi
+            </PixelButton>
+          </>
+        ) : (
+          <>
+            <div />
+            <p>*BORDET*</p>
+            <div />
+          </>
+        )}
       </section>
     </main>
   );
