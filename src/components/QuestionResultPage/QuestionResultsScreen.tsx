@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useRoundVotes } from "../../firestore-hooks/useRoundVotes";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
@@ -14,6 +14,7 @@ interface QuestionResultsScreenProps {
   isHost: boolean;
   onLeave: () => void;
   onContinue: () => void;
+  currentPlayer: Player;
 }
 
 export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
@@ -22,18 +23,52 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   players,
   onLeave,
   onContinue,
+  currentPlayer,
 }) => {
   const { votes, error } = useRoundVotes(roomId, room.round);
 
-  const { player: topCivilianTarget, count: civilianCount } =
-    getTopVotedPlayerForRole(votes, players, "civilian");
+  const { player: topCivilianTarget } = getTopVotedPlayerForRole(
+    votes,
+    players,
+    "civilian"
+  );
 
-  const { player: topImposterTarget, count: imposterCount } =
-    getTopVotedPlayerForRole(votes, players, "imposter");
+  const { player: topImposterTarget } = getTopVotedPlayerForRole(
+    votes,
+    players,
+    "imposter"
+  );
 
   const [view, setView] = useState<"civilian" | "imposter">("civilian");
 
   const hasAnyVotes = votes.length > 0;
+
+  const isCurrentCivilianTop =
+    !!topCivilianTarget && topCivilianTarget.id === currentPlayer.id;
+
+  const isCurrentImposterTop =
+    !!topImposterTarget && topImposterTarget.id === currentPlayer.id;
+
+  let titleText = `Round ${room.round} – results`;
+  let playerNameToShow: string | null = null;
+
+  if (!error && hasAnyVotes) {
+    if (view === "civilian") {
+      if (isCurrentCivilianTop) {
+        titleText = "You got the most votes!";
+      } else if (topCivilianTarget) {
+        titleText = "The player with most votes:";
+        playerNameToShow = topCivilianTarget.name;
+      }
+    } else {
+      if (isCurrentImposterTop) {
+        titleText = "You got Boomi!";
+      } else if (topImposterTarget) {
+        titleText = "The player that got Boomi was:";
+        playerNameToShow = topImposterTarget.name;
+      }
+    }
+  }
 
   const [timerStep, setTimerStep] = useState(0);
 
@@ -63,67 +98,46 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.timer}>
           <GameTimer
             key={timerKey}
-            durationSeconds={10}
+            durationSeconds={10000}
             onTimeout={handleTimerTimeout}
           />
         </div>
-
-        <div className={styles.emptyBlock} />
       </section>
 
       <section className={styles.content}>
         <div className={styles.contentInner}>
           <PixelFrame>
-            <p className="text-title">
-              Round {room.round} –{" "}
-              {view === "civilian" ? "civilians voted" : "imposters chose"}
-            </p>
+            <div className={styles.frameBody}>
+              <p className={`text-title ${styles.title}`}>{titleText}</p>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+              {playerNameToShow && (
+                <p className={`text-game ${styles.playerName}`}>
+                  {playerNameToShow}
+                </p>
+              )}
 
-            {!error && !hasAnyVotes && (
-              <p className="text-subtitle">No votes this round.</p>
-            )}
+              {error && <p className={styles.errorText}>&quot;{error}&quot;</p>}
 
-            {!error && hasAnyVotes && (
-              <>
-                {view === "civilian" && (
-                  <div style={{ marginTop: "0.75rem" }}>
-                    <p className="text-subtitle">CIVILIANS voted:</p>
+              {!error && !hasAnyVotes && (
+                <p className={styles.extraMessage}>No votes this round.</p>
+              )}
 
-                    {topCivilianTarget ? (
-                      <p className="text-body">
-                        Most suspected:{" "}
-                        <strong>{topCivilianTarget.name}</strong> (
-                        {civilianCount} votes)
-                      </p>
-                    ) : (
-                      <p className="text-body">
-                        No civilian votes were cast this round.
-                      </p>
-                    )}
-                  </div>
-                )}
+              {!error && hasAnyVotes && (
+                <>
+                  {view === "civilian" && !topCivilianTarget && (
+                    <p className={styles.extraMessage}>
+                      No civilian votes were cast this round.
+                    </p>
+                  )}
 
-                {view === "imposter" && (
-                  <div style={{ marginTop: "0.75rem" }}>
-                    <p className="text-subtitle">IMPOSTERS chose:</p>
-
-                    {topImposterTarget ? (
-                      <p className="text-body">
-                        Target for Boomi:{" "}
-                        <strong>{topImposterTarget.name}</strong> (
-                        {imposterCount} votes)
-                      </p>
-                    ) : (
-                      <p className="text-body">
-                        No imposter votes were cast this round.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
+                  {view === "imposter" && !topImposterTarget && (
+                    <p className={styles.extraMessage}>
+                      No imposter votes were cast this round.
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
           </PixelFrame>
         </div>
       </section>

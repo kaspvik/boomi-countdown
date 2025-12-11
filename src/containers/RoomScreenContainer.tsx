@@ -215,7 +215,8 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         players={players}
         isHost={isCurrentPlayerHost}
         onLeave={onLeave}
-        onContinue={handleHostStartRound} //
+        onContinue={handleHostStartRound}
+        currentPlayer={currentPlayer}
       />
     );
   }
