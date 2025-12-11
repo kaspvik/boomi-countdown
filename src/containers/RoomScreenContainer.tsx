@@ -1,22 +1,18 @@
 import { doc, updateDoc } from "firebase/firestore";
-import React, { useCallback, useEffect, useMemo } from "react";
-import { db } from "../firebase";
-import { startGame } from "../services/startGame";
-import { useGameStore } from "../store/gameStore";
-import type { Player } from "../types/game";
-
+import { useCallback, useMemo } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
 import { QuestionScreen } from "../components/QuestionPage/QuestionScreen";
 import { RoleScreen } from "../components/RolePage/RoleScreen";
-import { GameLogo } from "../layout/GameLogo/GameLogo";
-
+import { db } from "../firebase";
 import { usePlayers } from "../firestore-hooks/usePlayers";
 import { useRoom } from "../firestore-hooks/useRoom";
-
-import { useRoundVotes } from "../firestore-hooks/useRoundVotes";
-
+import { useRoomPhaseTransitions } from "../firestore-hooks/useRoomPhaseTransitions";
+import { GameLogo } from "../layout/GameLogo/GameLogo";
+import { startGame } from "../services/startGame";
+import { useGameStore } from "../store/gameStore";
+import type { Player } from "../types/game";
 import { QuestionResultsContainer } from "./QuestionResultsContainer";
 
 interface RoomScreenContainerProps {
@@ -35,8 +31,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     error: playersError,
   } = usePlayers(roomId);
 
-  const { votes } = useRoundVotes(roomId, room?.round ?? null);
-
   const currentPlayerId = useGameStore((s) => s.currentPlayerId);
 
   const currentPlayer: Player | null = useMemo(
@@ -52,9 +46,14 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
   const allPlayersReady =
     alivePlayers.length > 0 && alivePlayers.every((p) => p.hasAcknowledgedRole);
 
-  const allAliveVoted =
-    alivePlayers.length > 0 &&
-    alivePlayers.every((p) => votes.some((v) => v.voterId === p.id));
+  useRoomPhaseTransitions(
+    room ?? null,
+    roomId,
+    gameStarted,
+    alivePlayers,
+    allPlayersReady,
+    isCurrentPlayerHost
+  );
 
   const handleStartGame = useCallback(async () => {
     if (!isCurrentPlayerHost || !currentPlayerId) return;
@@ -93,57 +92,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       console.error("Failed to set phase=round", err);
     }
   }, [roomId, isCurrentPlayerHost]);
-
-  useEffect(() => {
-    if (
-      !room ||
-      room.phase !== "role_reveal" ||
-      !gameStarted ||
-      !allPlayersReady ||
-      !isCurrentPlayerHost
-    ) {
-      return;
-    }
-
-    const roomRef = doc(db, "rooms", roomId);
-
-    (async () => {
-      try {
-        await updateDoc(roomRef, {
-          phase: "question",
-        });
-      } catch (err) {
-        console.error("Failed to set phase=question", err);
-      }
-    })();
-  }, [room, roomId, gameStarted, allPlayersReady, isCurrentPlayerHost]);
-
-  // 🆕 När alla levande har röstat i QUESTION-fasen -> gå till QUESTION_RESULTS
-  useEffect(() => {
-    if (
-      !room ||
-      room.phase !== "question" ||
-      !gameStarted ||
-      !isCurrentPlayerHost ||
-      !allAliveVoted
-    ) {
-      return;
-    }
-
-    const roomRef = doc(db, "rooms", roomId);
-
-    (async () => {
-      try {
-        await updateDoc(roomRef, {
-          phase: "question_results",
-        });
-      } catch (err) {
-        console.error("Failed to set phase=question_results", err);
-      }
-    })();
-  }, [room, roomId, gameStarted, isCurrentPlayerHost, allAliveVoted]);
-
-  // --- Loading / error-state ---
 
   if (roomLoading || playersLoading) {
     return (
@@ -206,6 +154,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
+  // 3) QUESTION RESULTS
   if (gameStarted && room.phase === "question_results" && currentPlayer) {
     return (
       <QuestionResultsContainer
@@ -220,7 +169,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
-  // 3) MAIN ROUND / GAME
+  // 4) MAIN ROUND / GAME
   if (gameStarted && room.phase === "round" && currentPlayer) {
     return (
       <GameScreen
@@ -233,7 +182,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
-  // 4) Annars: lobby
+  // 5) Annars: lobby
   return (
     <LobbyScreen
       room={room}
