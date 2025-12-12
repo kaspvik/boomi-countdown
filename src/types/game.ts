@@ -5,7 +5,8 @@ export type RoomPhase =
   | "role_reveal"
   | "question"
   | "question_results"
-  | "round";
+  | "round"
+  | "round_results";
 export type Role = "imposter" | "civilian";
 
 export interface Room {
@@ -17,6 +18,9 @@ export interface Room {
   currentBombHolder: string | null;
   createdAt?: Timestamp | null;
   phase?: RoomPhase;
+
+  lastKilledPlayerId?: string | null;
+  roundResultsStep?: "explosion" | "role" | null;
 }
 
 export interface Player {

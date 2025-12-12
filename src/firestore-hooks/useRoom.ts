@@ -41,6 +41,8 @@ export function useRoom(roomId: string | null): UseRoomResult {
           round: data.round,
           currentBombHolder: data.currentBombHolder ?? null,
           phase: data.phase ?? null,
+          lastKilledPlayerId: data.lastKilledPlayerId ?? null,
+          roundResultsStep: data.roundResultsStep ?? null,
         });
         setError(null);
         setLoading(false);

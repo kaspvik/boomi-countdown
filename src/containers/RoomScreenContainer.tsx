@@ -16,6 +16,7 @@ import { useGameStore } from "../store/gameStore";
 import type { Player } from "../types/game";
 import { GameScreenContainer } from "./GameScreenContainer";
 import { QuestionResultsContainer } from "./QuestionResultsContainer";
+import { RoundResultsContainer } from "./RoundResultsContainer";
 
 interface RoomScreenContainerProps {
   roomId: string;
@@ -103,6 +104,23 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       console.error("Failed to set phase=round + currentBombHolder", err);
     }
   }, [roomId, isCurrentPlayerHost, room, votes, players]);
+
+  const handleHostStartNextRound = useCallback(async () => {
+    if (!isCurrentPlayerHost || !room) return;
+
+    const roomRef = doc(db, "rooms", roomId);
+
+    try {
+      await updateDoc(roomRef, {
+        round: room.round + 1,
+        phase: "question",
+        lastKilledPlayerId: null,
+        roundResultsStep: null,
+      });
+    } catch (err) {
+      console.error("Failed to start next round", err);
+    }
+  }, [roomId, isCurrentPlayerHost, room]);
 
   if (roomLoading || playersLoading) {
     return (
@@ -193,7 +211,21 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
-  // 5) Annars: lobby
+  // 5) GAME RESULTS
+  if (gameStarted && room.phase === "round_results" && currentPlayer) {
+    return (
+      <RoundResultsContainer
+        room={room}
+        players={players}
+        currentPlayer={currentPlayer}
+        isHost={isCurrentPlayerHost}
+        onLeave={onLeave}
+        onNext={handleHostStartNextRound}
+      />
+    );
+  }
+
+  // 6) Annars: lobby
   return (
     <LobbyScreen
       room={room}
