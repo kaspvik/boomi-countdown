@@ -6,8 +6,15 @@ export async function killPlayer(
   playerId: string
 ): Promise<void> {
   const playerRef = doc(db, "rooms", roomId, "players", playerId);
+  const roomRef = doc(db, "rooms", roomId);
 
   await updateDoc(playerRef, {
     alive: false,
+  });
+
+  await updateDoc(roomRef, {
+    lastKilledPlayerId: playerId,
+    currentBombHolder: null,
+    phase: "round_results",
   });
 }
