@@ -115,6 +115,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         round: room.round + 1,
         phase: "question",
         lastKilledPlayerId: null,
+        roundResultsStep: null,
       });
     } catch (err) {
       console.error("Failed to start next round", err);
