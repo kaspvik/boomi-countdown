@@ -69,8 +69,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           {showInfoBox && bombHolderName && (
             <PixelFrame>
               <div className={styles.header}>
-                <p className="text-subtitle">
-                  Current bomb holder: <strong>{bombHolderName}</strong>
+                <p className="text-title">
+                  Current bomb holder: <br /> {bombHolderName}
                 </p>
               </div>
             </PixelFrame>
