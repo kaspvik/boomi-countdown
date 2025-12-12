@@ -1,6 +1,5 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { useCallback, useMemo } from "react";
-import { GameScreen } from "../components/GamePage/GameScreen";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
 import { QuestionScreen } from "../components/QuestionPage/QuestionScreen";
@@ -9,10 +8,13 @@ import { db } from "../firebase";
 import { usePlayers } from "../firestore-hooks/usePlayers";
 import { useRoom } from "../firestore-hooks/useRoom";
 import { useRoomPhaseTransitions } from "../firestore-hooks/useRoomPhaseTransitions";
+import { useRoundVotes } from "../firestore-hooks/useRoundVotes";
 import { GameLogo } from "../layout/GameLogo/GameLogo";
 import { startGame } from "../services/startGame";
+import { getTopVotedPlayerForRole } from "../services/voteHelpers";
 import { useGameStore } from "../store/gameStore";
 import type { Player } from "../types/game";
+import { GameScreenContainer } from "./GameScreenContainer";
 import { QuestionResultsContainer } from "./QuestionResultsContainer";
 
 interface RoomScreenContainerProps {
@@ -45,6 +47,8 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
 
   const allPlayersReady =
     alivePlayers.length > 0 && alivePlayers.every((p) => p.hasAcknowledgedRole);
+
+  const { votes } = useRoundVotes(roomId, room?.round ?? null);
 
   useRoomPhaseTransitions(
     room ?? null,
@@ -80,18 +84,25 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
   }, [roomId, currentPlayerId]);
 
   const handleHostStartRound = useCallback(async () => {
-    if (!isCurrentPlayerHost) return;
+    if (!isCurrentPlayerHost || !room) return;
 
     const roomRef = doc(db, "rooms", roomId);
+
+    const { player: topImposterTarget } = getTopVotedPlayerForRole(
+      votes,
+      players,
+      "imposter"
+    );
 
     try {
       await updateDoc(roomRef, {
         phase: "round",
+        currentBombHolder: topImposterTarget ? topImposterTarget.id : null,
       });
     } catch (err) {
-      console.error("Failed to set phase=round", err);
+      console.error("Failed to set phase=round + currentBombHolder", err);
     }
-  }, [roomId, isCurrentPlayerHost]);
+  }, [roomId, isCurrentPlayerHost, room, votes, players]);
 
   if (roomLoading || playersLoading) {
     return (
@@ -172,7 +183,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
   // 4) MAIN ROUND / GAME
   if (gameStarted && room.phase === "round" && currentPlayer) {
     return (
-      <GameScreen
+      <GameScreenContainer
         room={room}
         roomId={roomId}
         players={players}
