@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { killPlayer } from "../services/killPlayer";
+import { resolveGuess } from "../services/resolveGuess";
 import type { Player, Room } from "../types/game";
 
 interface GameScreenContainerProps {
@@ -63,8 +64,21 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     setSelectedGuessTargetId(null);
   };
 
-  const handleConfirmGuess = () => {
-    if (!isCurrentHolder || !isAlive || !selectedGuessTargetId) return;
+  const handleConfirmGuess = async () => {
+    if (
+      !currentPlayer ||
+      !isCurrentHolder ||
+      !isAlive ||
+      !selectedGuessTargetId
+    ) {
+      return;
+    }
+
+    try {
+      await resolveGuess(roomId, currentPlayer.id, selectedGuessTargetId);
+    } catch (err) {
+      console.error("Failed to resolve guess", err);
+    }
 
     setIsGuessOpen(false);
     setSelectedGuessTargetId(null);
