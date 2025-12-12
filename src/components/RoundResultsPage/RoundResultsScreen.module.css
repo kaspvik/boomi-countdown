@@ -1,0 +1,62 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topBar {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.75rem 1rem 0;
+}
+
+.leaveButton {
+  display: flex;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contentInner {
+  width: 100%;
+  max-width: 480px;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.frameBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+}
+
+.title {
+  margin: 0;
+}
+
+.message {
+  margin: 0;
+}
+
+.playerName {
+  margin: 0.5rem 0 0;
+}
+
+.buttonRow {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .contentInner {
+    max-width: 360px;
+  }
+}
