@@ -16,5 +16,6 @@ export async function killPlayer(
     lastKilledPlayerId: playerId,
     currentBombHolder: null,
     phase: "round_results",
+    roundResultsStep: "explosion",
   });
 }

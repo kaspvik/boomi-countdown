@@ -20,6 +20,7 @@ export interface Room {
   phase?: RoomPhase;
 
   lastKilledPlayerId?: string | null;
+  roundResultsStep?: "explosion" | "role" | null;
 }
 
 export interface Player {

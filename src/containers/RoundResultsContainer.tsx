@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import React from "react";
 import { RoundResultsScreen } from "../components/RoundResultsPage/RoundResultsScreen";
+import { db } from "../firebase";
 import type { Player, Room } from "../types/game";
 
 interface RoundResultsContainerProps {
@@ -8,7 +10,7 @@ interface RoundResultsContainerProps {
   currentPlayer: Player;
   isHost: boolean;
   onLeave: () => void;
-  onNext: () => void;
+  onNext: () => void; // host -> vidare till nästa fas/runda
 }
 
 export const RoundResultsContainer: React.FC<RoundResultsContainerProps> = ({
@@ -24,7 +26,7 @@ export const RoundResultsContainer: React.FC<RoundResultsContainerProps> = ({
 
   const isCurrentDead = !!deadPlayer && deadPlayer.id === currentPlayer.id;
 
-  const [step, setStep] = useState<0 | 1>(0);
+  const step: 0 | 1 = room.roundResultsStep === "role" ? 1 : 0;
 
   let titleText = "Round result";
   let messageText = "";
@@ -65,20 +67,26 @@ export const RoundResultsContainer: React.FC<RoundResultsContainerProps> = ({
     }
   }
 
-  const handlePrimaryClick = () => {
+  const handlePrimaryClick = async () => {
     if (!hasRoleReveal) {
       onNext();
       return;
     }
 
-    if (step === 0) {
-      setStep(1);
+    const roomRef = doc(db, "rooms", room.id);
+
+    if (room.roundResultsStep !== "role") {
+      try {
+        await updateDoc(roomRef, {
+          roundResultsStep: "role",
+        });
+      } catch (err) {
+        console.error("Failed to set roundResultsStep=role", err);
+      }
       return;
     }
 
-    if (step === 1) {
-      onNext();
-    }
+    onNext();
   };
 
   const primaryButtonLabel = !hasRoleReveal
