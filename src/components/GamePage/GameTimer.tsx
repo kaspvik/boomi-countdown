@@ -13,6 +13,10 @@ export const GameTimer: React.FC<GameTimerProps> = ({
   const [secondsLeft, setSecondsLeft] = useState<number>(durationSeconds);
 
   useEffect(() => {
+    setSecondsLeft(durationSeconds);
+  }, [durationSeconds]);
+
+  useEffect(() => {
     if (secondsLeft <= 0) return;
 
     const id = window.setInterval(() => {

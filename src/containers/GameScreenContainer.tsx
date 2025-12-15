@@ -51,16 +51,12 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
   // For now: same targets for pass-card
   const passTargets = guessTargets;
 
-  // Base round duration and dynamic penalty from Firestore
-  const baseDurationSeconds = 60; // din standardrundtid
+  // Base round duration in seconds
+  const baseDurationSeconds = 60;
+  const durationSeconds = baseDurationSeconds;
 
-  const timePenalty = room.roundTimePenaltySeconds ?? 0;
-  const durationSeconds = Math.max(5, baseDurationSeconds - timePenalty);
-
-  // Inkludera penalty i key så timern remountar när den ändras
-  const timerKey = `${room.round}-${
-    room.currentBombHolder ?? "none"
-  }-${timePenalty}`;
+  // Restart timer when round or bomb holder changes
+  const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
 
   const handleTimerTimeout = useCallback(() => {
     if (!currentPlayer || !isCurrentHolder || !isAlive) return;
