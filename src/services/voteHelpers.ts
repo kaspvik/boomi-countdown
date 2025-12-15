@@ -1,5 +1,4 @@
-import type { RoundVote } from "../firestore-hooks/useRoundVotes";
-import type { Player } from "../types/game";
+import type { Player, RoundVote } from "../types/game";
 
 export function getTopVotedPlayerForRole(
   votes: RoundVote[],

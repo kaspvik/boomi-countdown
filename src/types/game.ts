@@ -39,5 +39,6 @@ export interface RoundVote {
   id: string;
   voterId: string;
   targetPlayerId: string;
-  roleAtTime: "imposter" | "civilian";
+  roleAtTime: Role | null;
+  round: number;
 }
