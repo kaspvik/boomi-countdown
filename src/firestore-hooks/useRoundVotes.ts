@@ -1,13 +1,7 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-
-export interface RoundVote {
-  id: string;
-  voterId: string;
-  targetPlayerId: string;
-  roleAtTime: "imposter" | "civilian";
-}
+import type { RoundVote } from "../types/game";
 
 interface UseRoundVotesResult {
   votes: RoundVote[];
