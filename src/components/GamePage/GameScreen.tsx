@@ -3,6 +3,7 @@ import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import type { Player } from "../../types/game";
 import styles from "../GamePage/GameScreen.module.css";
+import { PassPanel } from "../PassPanel/PassPanel";
 import { GameTimer } from "./GameTimer";
 import { GuessPanel } from "./GuessPanel";
 
@@ -18,6 +19,7 @@ interface GameScreenProps {
 
   isCurrentHolder: boolean;
   isAlive: boolean;
+
   isGuessOpen: boolean;
   guessTargets: Player[];
   selectedGuessTargetId: string | null;
@@ -25,6 +27,15 @@ interface GameScreenProps {
   onOpenGuess: () => void;
   onCancelGuess: () => void;
   onConfirmGuess: () => void;
+
+  canUsePassCard: boolean;
+  isPassPanelOpen: boolean;
+  passTargets: Player[];
+  selectedPassTargetId: string | null;
+  onOpenPassPanel: () => void;
+  onCancelPassPanel: () => void;
+  onSelectPassTarget: (id: string) => void;
+  onConfirmPassTarget: () => void;
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({
@@ -43,6 +54,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onOpenGuess,
   onCancelGuess,
   onConfirmGuess,
+  canUsePassCard,
+  isPassPanelOpen,
+  passTargets,
+  selectedPassTargetId,
+  onOpenPassPanel,
+  onCancelPassPanel,
+  onSelectPassTarget,
+  onConfirmPassTarget,
 }) => {
   return (
     <main className={styles.main}>
@@ -87,6 +106,18 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               />
             </PixelFrame>
           )}
+
+          {isCurrentHolder && isAlive && !isGuessOpen && isPassPanelOpen && (
+            <PixelFrame>
+              <PassPanel
+                targets={passTargets}
+                selectedTargetId={selectedPassTargetId}
+                onSelectTarget={onSelectPassTarget}
+                onConfirm={onConfirmPassTarget}
+                onCancel={onCancelPassPanel}
+              />
+            </PixelFrame>
+          )}
         </div>
       </section>
 
@@ -96,14 +127,17 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             <PixelButton
               onClick={onOpenGuess}
               className="text-button"
-              disabled={isGuessOpen}>
+              disabled={isGuessOpen || isPassPanelOpen}>
               Guess
             </PixelButton>
 
             <p>*BORDET*</p>
 
-            <PixelButton className="text-button" disabled>
-              Pass Boomi
+            <PixelButton
+              onClick={onOpenPassPanel}
+              className="text-button"
+              disabled={!canUsePassCard || isGuessOpen || isPassPanelOpen}>
+              Cards
             </PixelButton>
           </>
         ) : (

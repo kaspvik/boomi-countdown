@@ -81,7 +81,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     room ?? null,
     roomId,
     gameStarted,
-    alivePlayers,
     allPlayersReady,
     isCurrentPlayerHost
   );
@@ -183,6 +182,8 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
           phase: "question",
           lastKilledPlayerId: null,
           roundResultsStep: null,
+          passCardUsedThisRound: false,
+          roundTimePenaltySeconds: 0,
         });
       }
     } catch (err) {

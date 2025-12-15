@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { killPlayer } from "../services/killPlayer";
+import { playPassBoomiCard } from "../services/playPassBoomiCard";
 import { resolveGuess } from "../services/resolveGuess";
 import type { Player, Room } from "../types/game";
 
@@ -26,11 +27,19 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     currentPlayer != null && currentPlayer.id === room.currentBombHolder;
   const isAlive = currentPlayer?.alive ?? true;
 
+  // Guess state
   const [isGuessOpen, setIsGuessOpen] = useState(false);
   const [selectedGuessTargetId, setSelectedGuessTargetId] = useState<
     string | null
   >(null);
 
+  // Pass card state
+  const [isPassPanelOpen, setIsPassPanelOpen] = useState(false);
+  const [selectedPassTargetId, setSelectedPassTargetId] = useState<
+    string | null
+  >(null);
+
+  // All valid targets (alive, not yourself)
   const guessTargets = useMemo(
     () =>
       players.filter(
@@ -38,6 +47,20 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       ),
     [players, currentPlayer]
   );
+
+  // For now: same targets for pass-card
+  const passTargets = guessTargets;
+
+  // Base round duration and dynamic penalty from Firestore
+  const baseDurationSeconds = 60; // din standardrundtid
+
+  const timePenalty = room.roundTimePenaltySeconds ?? 0;
+  const durationSeconds = Math.max(5, baseDurationSeconds - timePenalty);
+
+  // Inkludera penalty i key så timern remountar när den ändras
+  const timerKey = `${room.round}-${
+    room.currentBombHolder ?? "none"
+  }-${timePenalty}`;
 
   const handleTimerTimeout = useCallback(() => {
     if (!currentPlayer || !isCurrentHolder || !isAlive) return;
@@ -51,10 +74,17 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     })();
   }, [currentPlayer, isCurrentHolder, isAlive, roomId]);
 
-  const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
+  // Can the current player use the Pass Boomi card this round?
+  const canUsePassCard =
+    isCurrentHolder &&
+    isAlive &&
+    !room.passCardUsedThisRound &&
+    passTargets.length > 0;
+
+  // --- Guess handlers ---
 
   const handleOpenGuess = () => {
-    if (!isCurrentHolder || !isAlive) return;
+    if (!isCurrentHolder || !isAlive || isPassPanelOpen) return;
     setIsGuessOpen(true);
     setSelectedGuessTargetId(null);
   };
@@ -84,16 +114,50 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     setSelectedGuessTargetId(null);
   };
 
+  // --- Pass card handlers ---
+
+  const handleOpenPassPanel = () => {
+    if (!canUsePassCard || isGuessOpen) return;
+    setIsPassPanelOpen(true);
+    setSelectedPassTargetId(null);
+  };
+
+  const handleCancelPassPanel = () => {
+    setIsPassPanelOpen(false);
+    setSelectedPassTargetId(null);
+  };
+
+  const handleConfirmPassTarget = async () => {
+    if (
+      !currentPlayer ||
+      !isCurrentHolder ||
+      !isAlive ||
+      !selectedPassTargetId
+    ) {
+      return;
+    }
+
+    try {
+      await playPassBoomiCard(roomId, selectedPassTargetId);
+    } catch (err) {
+      console.error("Failed to play Pass Boomi card", err);
+    }
+
+    setIsPassPanelOpen(false);
+    setSelectedPassTargetId(null);
+  };
+
   return (
     <GameScreen
       timerKey={timerKey}
-      durationSeconds={10000}
+      durationSeconds={durationSeconds}
       onTimeout={handleTimerTimeout}
       onLeave={onLeave}
       showInfoBox={!isCurrentHolder && isAlive && !!bombHolder}
       bombHolderName={bombHolder?.name ?? null}
       isCurrentHolder={isCurrentHolder}
       isAlive={isAlive}
+      // Guess
       isGuessOpen={isGuessOpen}
       guessTargets={guessTargets}
       selectedGuessTargetId={selectedGuessTargetId}
@@ -101,6 +165,15 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       onOpenGuess={handleOpenGuess}
       onCancelGuess={handleCancelGuess}
       onConfirmGuess={handleConfirmGuess}
+      // Pass card
+      canUsePassCard={canUsePassCard}
+      isPassPanelOpen={isPassPanelOpen}
+      passTargets={passTargets}
+      selectedPassTargetId={selectedPassTargetId}
+      onOpenPassPanel={handleOpenPassPanel}
+      onCancelPassPanel={handleCancelPassPanel}
+      onSelectPassTarget={setSelectedPassTargetId}
+      onConfirmPassTarget={handleConfirmPassTarget}
     />
   );
 };
