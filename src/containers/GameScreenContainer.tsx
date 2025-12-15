@@ -52,7 +52,7 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
   const passTargets = guessTargets;
 
   // Base round duration in seconds
-  const baseDurationSeconds = 60;
+  const baseDurationSeconds = 10000;
   const durationSeconds = baseDurationSeconds;
 
   // Restart timer when round or bomb holder changes
