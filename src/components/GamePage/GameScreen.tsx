@@ -134,10 +134,12 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             <p>*BORDET*</p>
 
             <PixelButton
-              onClick={onOpenPassPanel}
               className="text-button"
-              disabled={!canUsePassCard || isGuessOpen || isPassPanelOpen}>
-              Cards
+              onClick={() =>
+                isPassPanelOpen ? onCancelPassPanel() : onOpenPassPanel()
+              }
+              disabled={!isPassPanelOpen && (!canUsePassCard || isGuessOpen)}>
+              {isPassPanelOpen ? "Go back" : "Cards"}
             </PixelButton>
           </>
         ) : (
