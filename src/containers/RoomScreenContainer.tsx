@@ -1,5 +1,6 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { useCallback, useMemo } from "react";
+import { GameOverScreen } from "../components/GameOverPage/GameOverScreen";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
 import { QuestionScreen } from "../components/QuestionPage/QuestionScreen";
@@ -12,6 +13,7 @@ import { useRoundVotes } from "../firestore-hooks/useRoundVotes";
 import { GameLogo } from "../layout/GameLogo/GameLogo";
 import { startGame } from "../services/startGame";
 import { getTopVotedPlayerForRole } from "../services/voteHelpers";
+import { getWinningTeam } from "../services/winConditions";
 import { useGameStore } from "../store/gameStore";
 import type { Player } from "../types/game";
 import { GameScreenContainer } from "./GameScreenContainer";
@@ -110,17 +112,29 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
 
     const roomRef = doc(db, "rooms", roomId);
 
+    const winner = getWinningTeam(players);
+
     try {
-      await updateDoc(roomRef, {
-        round: room.round + 1,
-        phase: "question",
-        lastKilledPlayerId: null,
-        roundResultsStep: null,
-      });
+      if (winner) {
+        await updateDoc(roomRef, {
+          status: "finished",
+          phase: "game_over",
+          winner,
+          lastKilledPlayerId: room.lastKilledPlayerId ?? null,
+          roundResultsStep: null,
+        });
+      } else {
+        await updateDoc(roomRef, {
+          round: room.round + 1,
+          phase: "question",
+          lastKilledPlayerId: null,
+          roundResultsStep: null,
+        });
+      }
     } catch (err) {
-      console.error("Failed to start next round", err);
+      console.error("Failed to start next round / finish game", err);
     }
-  }, [roomId, isCurrentPlayerHost, room]);
+  }, [roomId, isCurrentPlayerHost, room, players]);
 
   if (roomLoading || playersLoading) {
     return (
@@ -225,7 +239,23 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     );
   }
 
-  // 6) Annars: lobby
+  // 6) GAME OVER
+  if (
+    room.status === "finished" &&
+    room.phase === "game_over" &&
+    currentPlayer
+  ) {
+    return (
+      <GameOverScreen
+        room={room}
+        players={players}
+        currentPlayer={currentPlayer}
+        onLeave={onLeave}
+      />
+    );
+  }
+
+  // 7) Annars: lobby
   return (
     <LobbyScreen
       room={room}

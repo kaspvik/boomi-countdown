@@ -43,6 +43,7 @@ export function useRoom(roomId: string | null): UseRoomResult {
           phase: data.phase ?? null,
           lastKilledPlayerId: data.lastKilledPlayerId ?? null,
           roundResultsStep: data.roundResultsStep ?? null,
+          winner: data.winner ?? null,
         });
         setError(null);
         setLoading(false);
