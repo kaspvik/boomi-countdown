@@ -27,19 +27,24 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     currentPlayer != null && currentPlayer.id === room.currentBombHolder;
   const isAlive = currentPlayer?.alive ?? true;
 
-  // Guess state
   const [isGuessOpen, setIsGuessOpen] = useState(false);
   const [selectedGuessTargetId, setSelectedGuessTargetId] = useState<
     string | null
   >(null);
 
-  // Pass card state
   const [isPassPanelOpen, setIsPassPanelOpen] = useState(false);
   const [selectedPassTargetId, setSelectedPassTargetId] = useState<
     string | null
   >(null);
 
-  // All valid targets (alive, not yourself)
+  const [passCardUsage, setPassCardUsage] = useState<{
+    round: number | null;
+    used: boolean;
+  }>({ round: null, used: false });
+
+  const hasUsedPassCardThisRound =
+    passCardUsage.used && passCardUsage.round === room.round;
+
   const guessTargets = useMemo(
     () =>
       players.filter(
@@ -48,14 +53,11 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     [players, currentPlayer]
   );
 
-  // For now: same targets for pass-card
   const passTargets = guessTargets;
 
-  // Base round duration in seconds
   const baseDurationSeconds = 10000;
   const durationSeconds = baseDurationSeconds;
 
-  // Restart timer when round or bomb holder changes
   const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
 
   const handleTimerTimeout = useCallback(() => {
@@ -70,14 +72,12 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     })();
   }, [currentPlayer, isCurrentHolder, isAlive, roomId]);
 
-  // Can the current player use the Pass Boomi card this round?
   const canUsePassCard =
     isCurrentHolder &&
     isAlive &&
+    !hasUsedPassCardThisRound &&
     !room.passCardUsedThisRound &&
     passTargets.length > 0;
-
-  // --- Guess handlers ---
 
   const handleOpenGuess = () => {
     if (!isCurrentHolder || !isAlive || isPassPanelOpen) return;
@@ -110,8 +110,6 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     setSelectedGuessTargetId(null);
   };
 
-  // --- Pass card handlers ---
-
   const handleOpenPassPanel = () => {
     if (!canUsePassCard || isGuessOpen) return;
     setIsPassPanelOpen(true);
@@ -135,6 +133,11 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
 
     try {
       await playPassBoomiCard(roomId, selectedPassTargetId);
+
+      setPassCardUsage({
+        round: room.round,
+        used: true,
+      });
     } catch (err) {
       console.error("Failed to play Pass Boomi card", err);
     }
