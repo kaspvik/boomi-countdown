@@ -1,5 +1,5 @@
-import { doc, updateDoc } from "firebase/firestore";
-import { useCallback, useMemo } from "react";
+import { doc, increment, updateDoc } from "firebase/firestore";
+import { useCallback, useEffect, useMemo } from "react";
 import { GameOverScreen } from "../components/GameOverPage/GameOverScreen";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
@@ -53,6 +53,30 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
 
   const { votes } = useRoundVotes(roomId, room?.round ?? null);
 
+  useEffect(() => {
+    if (!room) return;
+    if (!gameStarted) return;
+    if (!isCurrentPlayerHost) return;
+
+    if (
+      room.phase === "question_results" &&
+      room.round > 1 &&
+      votes.length === 0
+    ) {
+      console.warn(
+        "[RoomScreenContainer] No votes for this round, but in question_results. Sending back to question."
+      );
+      const roomRef = doc(db, "rooms", roomId);
+      (async () => {
+        try {
+          await updateDoc(roomRef, { phase: "question" });
+        } catch (err) {
+          console.error("Failed to reset phase to question", err);
+        }
+      })();
+    }
+  }, [room, roomId, gameStarted, isCurrentPlayerHost, votes.length]);
+
   useRoomPhaseTransitions(
     room ?? null,
     roomId,
@@ -61,6 +85,37 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     allPlayersReady,
     isCurrentPlayerHost
   );
+
+  const allAliveVoted =
+    room?.phase === "question" &&
+    alivePlayers.length > 0 &&
+    votes.length > 0 &&
+    alivePlayers.every((p) => votes.some((v) => v.voterId === p.id));
+
+  useEffect(() => {
+    if (
+      !room ||
+      !gameStarted ||
+      !isCurrentPlayerHost ||
+      room.phase !== "question"
+    ) {
+      return;
+    }
+
+    if (!allAliveVoted) return;
+
+    const roomRef = doc(db, "rooms", roomId);
+
+    (async () => {
+      try {
+        await updateDoc(roomRef, {
+          phase: "question_results",
+        });
+      } catch (err) {
+        console.error("Failed to set phase=question_results", err);
+      }
+    })();
+  }, [room, roomId, gameStarted, isCurrentPlayerHost, allAliveVoted]);
 
   const handleStartGame = useCallback(async () => {
     if (!isCurrentPlayerHost || !currentPlayerId) return;
@@ -111,7 +166,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     if (!isCurrentPlayerHost || !room) return;
 
     const roomRef = doc(db, "rooms", roomId);
-
     const winner = getWinningTeam(players);
 
     try {
@@ -125,7 +179,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         });
       } else {
         await updateDoc(roomRef, {
-          round: room.round + 1,
+          round: increment(1), // 🔥 alltid +1 i databasen
           phase: "question",
           lastKilledPlayerId: null,
           roundResultsStep: null,
@@ -135,6 +189,8 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       console.error("Failed to start next round / finish game", err);
     }
   }, [roomId, isCurrentPlayerHost, room, players]);
+
+  // --- Loading / error ---
 
   if (roomLoading || playersLoading) {
     return (
