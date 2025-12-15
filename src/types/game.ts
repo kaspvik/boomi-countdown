@@ -23,6 +23,9 @@ export interface Room {
   lastKilledPlayerId?: string | null;
   roundResultsStep?: "explosion" | "role" | null;
   winner?: "civilians" | "imposters" | null;
+
+  passCardUsedThisRound?: boolean;
+  roundTimePenaltySeconds?: number;
 }
 
 export interface Player {
