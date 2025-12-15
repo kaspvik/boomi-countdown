@@ -1,18 +1,19 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-
-export interface RoundVote {
-  id: string;
-  voterId: string;
-  targetPlayerId: string;
-  roleAtTime: "imposter" | "civilian";
-}
+import type { RoundVote } from "../types/game";
 
 interface UseRoundVotesResult {
   votes: RoundVote[];
   error: string | null;
 }
+
+type FirestoreRoundVoteData = {
+  voterId: string;
+  targetPlayerId: string;
+  roleAtTime?: "imposter" | "civilian" | null;
+  round: number;
+};
 
 export function useRoundVotes(
   roomId: string | null,
@@ -24,21 +25,32 @@ export function useRoundVotes(
   useEffect(() => {
     if (!roomId || round == null) return;
 
-    const votesRef = collection(db, "rooms", roomId, "votes");
+    const votesRef = collection(db, "rooms", roomId, "roundVotes");
     const q = query(votesRef, where("round", "==", round));
 
     const unsub = onSnapshot(
       q,
       (snap) => {
         const next: RoundVote[] = snap.docs.map((docSnap) => {
-          const data = docSnap.data();
+          const data = docSnap.data() as FirestoreRoundVoteData;
+
           return {
             id: docSnap.id,
             voterId: data.voterId,
             targetPlayerId: data.targetPlayerId,
-            roleAtTime: data.roleAtTime,
+            roleAtTime: data.roleAtTime ?? null,
+            round: data.round,
           };
         });
+
+        console.log(
+          "[useRoundVotes] room:",
+          roomId,
+          "round filter:",
+          round,
+          "votes found:",
+          next
+        );
 
         setVotes(next);
         setError(null);

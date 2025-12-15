@@ -6,7 +6,8 @@ export type RoomPhase =
   | "question"
   | "question_results"
   | "round"
-  | "round_results";
+  | "round_results"
+  | "game_over";
 export type Role = "imposter" | "civilian";
 
 export interface Room {
@@ -21,6 +22,7 @@ export interface Room {
 
   lastKilledPlayerId?: string | null;
   roundResultsStep?: "explosion" | "role" | null;
+  winner?: "civilians" | "imposters" | null;
 }
 
 export interface Player {
@@ -31,4 +33,12 @@ export interface Player {
   alive: boolean;
   joinedAt?: Timestamp | null;
   hasAcknowledgedRole?: boolean;
+}
+
+export interface RoundVote {
+  id: string;
+  voterId: string;
+  targetPlayerId: string;
+  roleAtTime: Role | null;
+  round: number;
 }

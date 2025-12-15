@@ -6,14 +6,12 @@ import styles from "./QuestionForm.module.css";
 
 interface QuestionFormProps {
   roomId: string;
-  round: number;
   currentPlayer: Player;
   players: Player[];
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
   roomId,
-  round,
   currentPlayer,
   players,
 }) => {
@@ -34,12 +32,12 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   const handleSubmit = async () => {
     if (!selectedTargetId || isSubmitting || hasVoted) return;
+    console.log("[QuestionForm] submitting vote for target", selectedTargetId);
 
     setIsSubmitting(true);
     try {
       await submitVote(
         roomId,
-        round,
         currentPlayer.id,
         selectedTargetId,
         isImposter ? "imposter" : "civilian"

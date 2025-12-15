@@ -1,0 +1,45 @@
+/* GameOverScreen.module.css */
+
+.main {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.contentInner {
+  max-width: 480px;
+  width: 100%;
+}
+
+.frameBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+}
+
+.message {
+  margin: 0;
+}
+
+.extra {
+  margin: 0.5rem 0 0;
+}
+
+.buttonRow {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}

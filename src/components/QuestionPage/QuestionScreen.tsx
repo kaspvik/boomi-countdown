@@ -15,7 +15,6 @@ interface QuestionScreenProps {
 }
 
 export const QuestionScreen: React.FC<QuestionScreenProps> = ({
-  room,
   players,
   currentPlayer,
   roomId,
@@ -36,7 +35,6 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
           <PixelFrame>
             <QuestionForm
               roomId={roomId}
-              round={room.round}
               currentPlayer={currentPlayer}
               players={players}
             />
