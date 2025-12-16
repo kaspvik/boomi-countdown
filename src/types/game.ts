@@ -36,8 +36,10 @@ export interface Player {
   alive: boolean;
   joinedAt?: Timestamp | null;
   hasAcknowledgedRole?: boolean;
-}
 
+  blockCardUsed?: boolean;
+  blockActiveRound?: number | null;
+}
 export interface RoundVote {
   id: string;
   voterId: string;

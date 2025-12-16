@@ -27,6 +27,7 @@ export * from "./layout/PixelFrame/PixelFrame";
 export * from "./layout/PixelInputField/PixelInputField";
 
 export * from "./firestore-hooks/usePlayers";
+export * from "./services/activateBlockCard";
 export * from "./services/createRoom";
 export * from "./services/findRoomByCode";
 export * from "./services/generateRoomCode";
@@ -34,6 +35,7 @@ export * from "./services/joinRoom";
 export * from "./services/killPlayer";
 export * from "./services/passBomb";
 export * from "./services/playPassBoomiCard";
+export * from "./services/resolveGuess";
 export * from "./services/startGame";
 export * from "./services/voteHelpers";
 export * from "./services/winConditions";
