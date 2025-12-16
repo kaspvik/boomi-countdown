@@ -23,6 +23,9 @@ export interface Room {
   lastKilledPlayerId?: string | null;
   roundResultsStep?: "explosion" | "role" | null;
   winner?: "civilians" | "imposters" | null;
+
+  passCardUsedThisRound?: boolean;
+  roundTimePenaltySeconds?: number;
 }
 
 export interface Player {
@@ -33,8 +36,10 @@ export interface Player {
   alive: boolean;
   joinedAt?: Timestamp | null;
   hasAcknowledgedRole?: boolean;
-}
 
+  blockCardUsed?: boolean;
+  blockActiveRound?: number | null;
+}
 export interface RoundVote {
   id: string;
   voterId: string;

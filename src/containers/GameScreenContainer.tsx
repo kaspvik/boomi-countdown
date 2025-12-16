@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { killPlayer } from "../services/killPlayer";
 import { resolveGuess } from "../services/resolveGuess";
 import type { Player, Room } from "../types/game";
+import { CardPanelContainer } from "./CardPanelContainer";
 
 interface GameScreenContainerProps {
   room: Room;
@@ -31,6 +32,8 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     string | null
   >(null);
 
+  const [isPassPanelOpen, setIsPassPanelOpen] = useState(false);
+
   const guessTargets = useMemo(
     () =>
       players.filter(
@@ -38,6 +41,11 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       ),
     [players, currentPlayer]
   );
+
+  const baseDurationSeconds = 10000;
+  const durationSeconds = baseDurationSeconds;
+
+  const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
 
   const handleTimerTimeout = useCallback(() => {
     if (!currentPlayer || !isCurrentHolder || !isAlive) return;
@@ -51,10 +59,8 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     })();
   }, [currentPlayer, isCurrentHolder, isAlive, roomId]);
 
-  const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
-
   const handleOpenGuess = () => {
-    if (!isCurrentHolder || !isAlive) return;
+    if (!isCurrentHolder || !isAlive || isPassPanelOpen) return;
     setIsGuessOpen(true);
     setSelectedGuessTargetId(null);
   };
@@ -84,23 +90,57 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     setSelectedGuessTargetId(null);
   };
 
-  return (
-    <GameScreen
-      timerKey={timerKey}
-      durationSeconds={10000}
-      onTimeout={handleTimerTimeout}
-      onLeave={onLeave}
-      showInfoBox={!isCurrentHolder && isAlive && !!bombHolder}
-      bombHolderName={bombHolder?.name ?? null}
-      isCurrentHolder={isCurrentHolder}
-      isAlive={isAlive}
+  const handleOpenPassPanel = () => {
+    if (!isAlive) return;
+    if (isGuessOpen) return;
+    setIsPassPanelOpen(true);
+  };
+
+  const handleCancelPassPanel = () => {
+    setIsPassPanelOpen(false);
+  };
+
+  const cardPanelNode = (
+    <CardPanelContainer
+      room={room}
+      roomId={roomId}
+      players={players}
+      currentPlayer={currentPlayer}
+      isOpen={isPassPanelOpen}
       isGuessOpen={isGuessOpen}
-      guessTargets={guessTargets}
-      selectedGuessTargetId={selectedGuessTargetId}
-      onSelectGuessTarget={setSelectedGuessTargetId}
-      onOpenGuess={handleOpenGuess}
-      onCancelGuess={handleCancelGuess}
-      onConfirmGuess={handleConfirmGuess}
+      onClose={handleCancelPassPanel}
     />
+  );
+
+  const canOpenCardsButton = isAlive;
+
+  return (
+    <>
+      <GameScreen
+        timerKey={timerKey}
+        durationSeconds={durationSeconds}
+        onTimeout={handleTimerTimeout}
+        onLeave={onLeave}
+        showInfoBox={!isCurrentHolder && isAlive && !!bombHolder}
+        bombHolderName={bombHolder?.name ?? null}
+        isCurrentHolder={isCurrentHolder}
+        isAlive={isAlive}
+        // Guess
+        isGuessOpen={isGuessOpen}
+        guessTargets={guessTargets}
+        selectedGuessTargetId={selectedGuessTargetId}
+        onSelectGuessTarget={setSelectedGuessTargetId}
+        onOpenGuess={handleOpenGuess}
+        onCancelGuess={handleCancelGuess}
+        onConfirmGuess={handleConfirmGuess}
+        // Cards
+        isPassPanelOpen={isPassPanelOpen}
+        onOpenPassPanel={handleOpenPassPanel}
+        onCancelPassPanel={handleCancelPassPanel}
+        canOpenCardsButton={canOpenCardsButton}
+        // Panel content
+        cardPanel={cardPanelNode}
+      />
+    </>
   );
 };

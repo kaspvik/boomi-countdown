@@ -1,0 +1,43 @@
+.panelWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cardsRow {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+/* Header inside each card content */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Icon area in the middle of the card */
+.iconArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Placeholders for future images */
+.boomiPlaceholder,
+.blockPlaceholder {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Du kan behålla dina gamla:
+   .container, .playersList, .playerItem, .playerItemSelected,
+   .playerName, .actions, .cardHint, etc. */

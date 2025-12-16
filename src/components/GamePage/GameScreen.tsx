@@ -18,6 +18,7 @@ interface GameScreenProps {
 
   isCurrentHolder: boolean;
   isAlive: boolean;
+
   isGuessOpen: boolean;
   guessTargets: Player[];
   selectedGuessTargetId: string | null;
@@ -25,6 +26,13 @@ interface GameScreenProps {
   onOpenGuess: () => void;
   onCancelGuess: () => void;
   onConfirmGuess: () => void;
+
+  isPassPanelOpen: boolean;
+  onOpenPassPanel: () => void;
+  onCancelPassPanel: () => void;
+  canOpenCardsButton: boolean;
+
+  cardPanel: React.ReactNode;
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({
@@ -43,6 +51,11 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onOpenGuess,
   onCancelGuess,
   onConfirmGuess,
+  isPassPanelOpen,
+  onOpenPassPanel,
+  onCancelPassPanel,
+  canOpenCardsButton,
+  cardPanel,
 }) => {
   return (
     <main className={styles.main}>
@@ -66,15 +79,17 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
       <section className={styles.content}>
         <div className={styles.contentInner}>
-          {showInfoBox && bombHolderName && (
-            <PixelFrame>
-              <div className={styles.header}>
-                <p className="text-title">
-                  Current bomb holder: <br /> {bombHolderName}
-                </p>
-              </div>
-            </PixelFrame>
-          )}
+          {showInfoBox &&
+            bombHolderName &&
+            !(isPassPanelOpen && !isCurrentHolder) && (
+              <PixelFrame>
+                <div className={styles.header}>
+                  <p className="text-title">
+                    Current bomb holder: <br /> {bombHolderName}
+                  </p>
+                </div>
+              </PixelFrame>
+            )}
 
           {isCurrentHolder && isAlive && isGuessOpen && (
             <PixelFrame>
@@ -87,23 +102,34 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               />
             </PixelFrame>
           )}
+
+          {isAlive && !isGuessOpen && isPassPanelOpen && cardPanel}
         </div>
       </section>
 
       <section className={styles.bottomBar}>
-        {isCurrentHolder && isAlive ? (
+        {isAlive ? (
           <>
-            <PixelButton
-              onClick={onOpenGuess}
-              className="text-button"
-              disabled={isGuessOpen}>
-              Guess
-            </PixelButton>
+            {isCurrentHolder ? (
+              <PixelButton
+                onClick={onOpenGuess}
+                className="text-button"
+                disabled={isGuessOpen || isPassPanelOpen}>
+                Guess
+              </PixelButton>
+            ) : (
+              <div />
+            )}
 
             <p>*BORDET*</p>
 
-            <PixelButton className="text-button" disabled>
-              Pass Boomi
+            <PixelButton
+              className="text-button"
+              onClick={() =>
+                isPassPanelOpen ? onCancelPassPanel() : onOpenPassPanel()
+              }
+              disabled={!canOpenCardsButton || isGuessOpen}>
+              {isPassPanelOpen ? "Go back" : "Cards"}
             </PixelButton>
           </>
         ) : (
