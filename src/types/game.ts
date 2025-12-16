@@ -37,6 +37,8 @@ export interface Player {
   joinedAt?: Timestamp | null;
   hasAcknowledgedRole?: boolean;
 
+  authUid: string | null;
+
   blockCardUsed?: boolean;
   blockActiveRound?: number | null;
 }

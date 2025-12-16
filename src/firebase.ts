@@ -1,26 +1,18 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAJ15mXJlWQ5no_c52100Qf9SR2C7rTW7U",
-  authDomain: "boomi-countdown.firebaseapp.com",
-  projectId: "boomi-countdown",
-  storageBucket: "boomi-countdown.firebasestorage.app",
-  messagingSenderId: "521150273698",
-  appId: "1:521150273698:web:ec53637a0b06f680cd9ffb",
-  measurementId: "G-Y9VNB3GNRT",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Skapar en Firestore-instans kopplad till appen
 export const db = getFirestore(app);
-
-// (valfritt) exportera app om du behöver den senare
+export const auth = getAuth(app);
 export default app;
