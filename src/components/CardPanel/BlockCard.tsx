@@ -1,4 +1,5 @@
 import React from "react";
+import { GameCard } from "../../layout/GameCard/GameCard";
 import styles from "./CardPanel.module.css";
 
 interface BlockCardProps {
@@ -8,20 +9,20 @@ interface BlockCardProps {
 
 export const BlockCard: React.FC<BlockCardProps> = ({ disabled, onClick }) => {
   return (
-    <button
-      type="button"
-      className={styles.cardButton}
-      onClick={onClick}
-      disabled={disabled}>
-      <p className="text-title">Block</p>
+    <GameCard disabled={disabled} onClick={onClick}>
+      <div className={styles.cardHeader}>
+        <p className="text-title">Block</p>
+      </div>
 
-      <div className={styles.blockPlaceholder}>
-        <span className="text-body">Shield icon</span>
+      <div className={styles.iconArea}>
+        <div className={styles.blockPlaceholder}>
+          <span className="text-body">Shield icon</span>
+        </div>
       </div>
 
       <p className="text-body">
-        Other players can't pass Boomi to you this round.
+        Other players can’t pass Boomi to you this round.
       </p>
-    </button>
+    </GameCard>
   );
 };

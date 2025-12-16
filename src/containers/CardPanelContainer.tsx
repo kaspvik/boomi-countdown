@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { CardPanel } from "../components/CardPanel/CardPanel";
-import { PixelFrame } from "../layout/PixelFrame/PixelFrame";
 import { activateBlockCard } from "../services/activateBlockCard";
 import { playPassBoomiCard } from "../services/playPassBoomiCard";
 import type { Player, Room } from "../types/game";
@@ -29,7 +28,6 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
     currentPlayer != null && currentPlayer.id === room.currentBombHolder;
   const isAlive = currentPlayer?.alive ?? true;
 
-  // --- Local state for Pass on card usage in this round ---
   const [passCardUsage, setPassCardUsage] = useState<{
     round: number | null;
     used: boolean;
@@ -42,7 +40,6 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
   const hasUsedPassCardThisRound =
     passCardUsage.used && passCardUsage.round === room.round;
 
-  // --- Targets for Pass on (respects Block) ---
   const passTargets = useMemo(
     () =>
       players.filter((p) => {
@@ -50,7 +47,6 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
         if (p.alive === false) return false;
         if (p.id === currentPlayer.id) return false;
 
-        // Block: player has activated Block for this round
         if (p.blockActiveRound != null && p.blockActiveRound === room.round) {
           return false;
         }
@@ -59,8 +55,6 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
       }),
     [players, currentPlayer, room.round]
   );
-
-  // --- Permissions ---
 
   const canUsePassCard =
     isCurrentHolder &&
@@ -75,8 +69,6 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
     !isCurrentHolder &&
     !currentPlayer.blockCardUsed &&
     room.status === "in_progress";
-
-  // --- Handlers ---
 
   const handleConfirmPassTarget = async () => {
     if (
@@ -120,23 +112,20 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
     setSelectedPassTargetId(id);
   };
 
-  // --- Visibility rules ---
   if (!isOpen || isGuessOpen || !isAlive) {
     return null;
   }
 
   return (
-    <PixelFrame>
-      <CardPanel
-        targets={passTargets}
-        selectedTargetId={selectedPassTargetId}
-        onSelectTarget={handleSelectPassTarget}
-        onConfirm={handleConfirmPassTarget}
-        onCancel={onClose}
-        canUsePassCard={canUsePassCard}
-        canUseBlockCard={canUseBlockCard}
-        onUseBlockCard={handleUseBlockCard}
-      />
-    </PixelFrame>
+    <CardPanel
+      targets={passTargets}
+      selectedTargetId={selectedPassTargetId}
+      onSelectTarget={handleSelectPassTarget}
+      onConfirm={handleConfirmPassTarget}
+      onCancel={onClose}
+      canUsePassCard={canUsePassCard}
+      canUseBlockCard={canUseBlockCard}
+      onUseBlockCard={handleUseBlockCard}
+    />
   );
 };
