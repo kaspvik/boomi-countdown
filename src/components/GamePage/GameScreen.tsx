@@ -19,7 +19,6 @@ interface GameScreenProps {
   isCurrentHolder: boolean;
   isAlive: boolean;
 
-  // Guess
   isGuessOpen: boolean;
   guessTargets: Player[];
   selectedGuessTargetId: string | null;
@@ -28,13 +27,11 @@ interface GameScreenProps {
   onCancelGuess: () => void;
   onConfirmGuess: () => void;
 
-  // Cards (panel state)
   isPassPanelOpen: boolean;
   onOpenPassPanel: () => void;
   onCancelPassPanel: () => void;
   canOpenCardsButton: boolean;
 
-  // Card panel content
   cardPanel: React.ReactNode;
 }
 
@@ -47,7 +44,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   bombHolderName,
   isCurrentHolder,
   isAlive,
-  // Guess
   isGuessOpen,
   guessTargets,
   selectedGuessTargetId,
@@ -55,7 +51,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onOpenGuess,
   onCancelGuess,
   onConfirmGuess,
-  // Cards
   isPassPanelOpen,
   onOpenPassPanel,
   onCancelPassPanel,
@@ -84,17 +79,18 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
       <section className={styles.content}>
         <div className={styles.contentInner}>
-          {showInfoBox && bombHolderName && (
-            <PixelFrame>
-              <div className={styles.header}>
-                <p className="text-title">
-                  Current bomb holder: <br /> {bombHolderName}
-                </p>
-              </div>
-            </PixelFrame>
-          )}
+          {showInfoBox &&
+            bombHolderName &&
+            !(isPassPanelOpen && !isCurrentHolder) && (
+              <PixelFrame>
+                <div className={styles.header}>
+                  <p className="text-title">
+                    Current bomb holder: <br /> {bombHolderName}
+                  </p>
+                </div>
+              </PixelFrame>
+            )}
 
-          {/* Guess-panel: bara bomb-holder */}
           {isCurrentHolder && isAlive && isGuessOpen && (
             <PixelFrame>
               <GuessPanel
@@ -107,7 +103,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             </PixelFrame>
           )}
 
-          {/* Card panel content (Pass on + Block) */}
           {isAlive && !isGuessOpen && isPassPanelOpen && cardPanel}
         </div>
       </section>
@@ -115,7 +110,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       <section className={styles.bottomBar}>
         {isAlive ? (
           <>
-            {/* Left: Guess only for bomb-holder */}
             {isCurrentHolder ? (
               <PixelButton
                 onClick={onOpenGuess}
@@ -129,7 +123,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
             <p>*BORDET*</p>
 
-            {/* Right: Cards for all alive players */}
             <PixelButton
               className="text-button"
               onClick={() =>
