@@ -2,8 +2,8 @@ import React from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import type { Player } from "../../types/game";
+import { CardPanel } from "../CardPanel/CardPanel";
 import styles from "../GamePage/GameScreen.module.css";
-import { PassPanel } from "../PassPanel/PassPanel";
 import { GameTimer } from "./GameTimer";
 import { GuessPanel } from "./GuessPanel";
 
@@ -114,7 +114,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
           {isAlive && !isGuessOpen && isPassPanelOpen && (
             <PixelFrame>
-              <PassPanel
+              <CardPanel
                 targets={passTargets}
                 selectedTargetId={selectedPassTargetId}
                 onSelectTarget={onSelectPassTarget}
