@@ -18,7 +18,7 @@ export interface Room {
   round: number;
   currentBombHolder: string | null;
   createdAt?: Timestamp | null;
-  phase?: RoomPhase;
+  phase?: RoomPhase | null;
 
   lastKilledPlayerId?: string | null;
   roundResultsStep?: "explosion" | "role" | null;
@@ -26,6 +26,8 @@ export interface Room {
 
   passCardUsedThisRound?: boolean;
   roundTimePenaltySeconds?: number;
+
+  hostAuthUid?: string | null;
 }
 
 export interface Player {
@@ -36,6 +38,8 @@ export interface Player {
   alive: boolean;
   joinedAt?: Timestamp | null;
   hasAcknowledgedRole?: boolean;
+
+  authUid: string | null;
 
   blockCardUsed?: boolean;
   blockActiveRound?: number | null;

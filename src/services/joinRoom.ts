@@ -1,12 +1,14 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import type { Player } from "../types/game";
+import { ensureSignedIn } from "./authService";
 
 export async function joinRoom(
   roomId: string,
   name: string,
   isHost = false
 ): Promise<Player> {
+  const user = await ensureSignedIn();
   const playersCol = collection(db, "rooms", roomId, "players");
 
   const docRef = await addDoc(playersCol, {
@@ -15,6 +17,7 @@ export async function joinRoom(
     alive: true,
     role: null,
     joinedAt: serverTimestamp(),
+    authUid: user.uid,
   });
 
   return {
@@ -23,5 +26,6 @@ export async function joinRoom(
     isHost,
     alive: true,
     role: null,
+    authUid: user.uid,
   };
 }
