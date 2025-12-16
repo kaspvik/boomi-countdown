@@ -36,6 +36,11 @@ export function usePlayers(roomId: string | null): UsePlayersResult {
             alive: data.alive ?? true,
             joinedAt: data.joinedAt ?? null,
             hasAcknowledgedRole: data.hasAcknowledgedRole ?? false,
+            blockCardUsed: data.blockCardUsed ?? false,
+            blockActiveRound:
+              typeof data.blockActiveRound === "number"
+                ? data.blockActiveRound
+                : null,
           };
         });
 

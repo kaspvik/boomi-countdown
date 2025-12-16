@@ -9,6 +9,10 @@ interface PassPanelProps {
   onSelectTarget: (id: string) => void;
   onConfirm: () => void;
   onCancel: () => void;
+
+  canUsePassCard: boolean;
+  canUseBlockCard: boolean;
+  onUseBlockCard: () => void;
 }
 
 export const PassPanel: React.FC<PassPanelProps> = ({
@@ -16,10 +20,14 @@ export const PassPanel: React.FC<PassPanelProps> = ({
   selectedTargetId,
   onSelectTarget,
   onConfirm,
+  canUsePassCard,
+  canUseBlockCard,
+  onUseBlockCard,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
 
-  const handleCardClick = () => {
+  const handlePassOnCardClick = () => {
+    if (!canUsePassCard) return;
     if (!targets.length) return;
     setIsSelecting(true);
   };
@@ -30,12 +38,12 @@ export const PassPanel: React.FC<PassPanelProps> = ({
 
   if (!isSelecting) {
     return (
-      <div className={styles.cardWrapper}>
+      <div className={styles.cardsRow}>
         <button
           type="button"
           className={styles.cardButton}
-          onClick={handleCardClick}
-          disabled={!targets.length}>
+          onClick={handlePassOnCardClick}
+          disabled={!targets.length || !canUsePassCard}>
           <p className="text-title">Pass on</p>
 
           <div className={styles.boomiPlaceholder}>
@@ -44,6 +52,22 @@ export const PassPanel: React.FC<PassPanelProps> = ({
 
           <p className={`text-body ${styles.cardHint}`}>
             Tap to choose who to pass Boomi to.
+          </p>
+        </button>
+
+        <button
+          type="button"
+          className={styles.cardButton}
+          onClick={onUseBlockCard}
+          disabled={!canUseBlockCard}>
+          <p className="text-title">Block</p>
+
+          <div className={styles.blockPlaceholder}>
+            <span className="text-body">Shield icon</span>
+          </div>
+
+          <p className="text-body">
+            Other players can't pass Boomi to you this round.
           </p>
         </button>
       </div>
@@ -81,7 +105,7 @@ export const PassPanel: React.FC<PassPanelProps> = ({
         <PixelButton
           onClick={onConfirm}
           className="text-button"
-          disabled={!selectedTargetId}>
+          disabled={!selectedTargetId || !canUsePassCard}>
           Use card
         </PixelButton>
       </div>

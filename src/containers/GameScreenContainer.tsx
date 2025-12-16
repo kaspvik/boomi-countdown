@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
+import { activateBlockCard } from "../services/activateBlockCard";
 import { killPlayer } from "../services/killPlayer";
 import { playPassBoomiCard } from "../services/playPassBoomiCard";
 import { resolveGuess } from "../services/resolveGuess";
@@ -53,7 +54,21 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     [players, currentPlayer]
   );
 
-  const passTargets = guessTargets;
+  const passTargets = useMemo(
+    () =>
+      players.filter((p) => {
+        if (!currentPlayer) return false;
+        if (p.alive === false) return false;
+        if (p.id === currentPlayer.id) return false;
+
+        if (p.blockActiveRound != null && p.blockActiveRound === room.round) {
+          return false;
+        }
+
+        return true;
+      }),
+    [players, currentPlayer, room.round]
+  );
 
   const baseDurationSeconds = 10000;
   const durationSeconds = baseDurationSeconds;
@@ -78,6 +93,13 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     !hasUsedPassCardThisRound &&
     !room.passCardUsedThisRound &&
     passTargets.length > 0;
+
+  const canUseBlockCard =
+    !!currentPlayer &&
+    isAlive &&
+    !isCurrentHolder &&
+    !currentPlayer.blockCardUsed &&
+    room.status === "in_progress";
 
   const handleOpenGuess = () => {
     if (!isCurrentHolder || !isAlive || isPassPanelOpen) return;
@@ -111,7 +133,9 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
   };
 
   const handleOpenPassPanel = () => {
-    if (!canUsePassCard || isGuessOpen) return;
+    if (isGuessOpen) return;
+    if (!canUsePassCard && !canUseBlockCard) return;
+
     setIsPassPanelOpen(true);
     setSelectedPassTargetId(null);
   };
@@ -146,6 +170,19 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     setSelectedPassTargetId(null);
   };
 
+  const handleUseBlockCard = async () => {
+    if (!currentPlayer) return;
+    if (!canUseBlockCard) return;
+
+    try {
+      await activateBlockCard(roomId, currentPlayer.id, room.round);
+    } catch (err) {
+      console.error("Failed to activate Block card", err);
+    }
+
+    setIsPassPanelOpen(false);
+  };
+
   return (
     <GameScreen
       timerKey={timerKey}
@@ -173,6 +210,9 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       onCancelPassPanel={handleCancelPassPanel}
       onSelectPassTarget={setSelectedPassTargetId}
       onConfirmPassTarget={handleConfirmPassTarget}
+      // Block card
+      canUseBlockCard={canUseBlockCard}
+      onUseBlockCard={handleUseBlockCard}
     />
   );
 };
