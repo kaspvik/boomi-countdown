@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import type { Player } from "../../types/game";
 import { BlockCard } from "./BlockCard";
@@ -12,7 +12,6 @@ interface CardPanelProps {
   onConfirm: () => void;
   onCancel: () => void;
 
-  // Permissions
   canUsePassCard: boolean;
   canUseBlockCard: boolean;
   onUseBlockCard: () => void;
@@ -39,55 +38,59 @@ export const CardPanel: React.FC<CardPanelProps> = ({
     onSelectTarget(playerId);
   };
 
-  // --- View 1: Kort-rad (Pass on + Block) ---
   if (!isSelecting) {
     return (
-      <div className={styles.cardsRow}>
-        <PassOnCard
-          disabled={!targets.length || !canUsePassCard}
-          onClick={handlePassOnCardClick}
-        />
+      <div className={styles.panelWrapper}>
+        <div className={styles.cardsRow}>
+          <PassOnCard
+            disabled={!targets.length || !canUsePassCard}
+            onClick={handlePassOnCardClick}
+          />
 
-        <BlockCard disabled={!canUseBlockCard} onClick={onUseBlockCard} />
+          <BlockCard disabled={!canUseBlockCard} onClick={onUseBlockCard} />
+        </div>
       </div>
     );
   }
 
-  // --- View 2: Target-lista för Pass on ---
   return (
-    <div className={styles.container}>
-      <p className="text-title">Pass on</p>
-      <p className="text-subtitle">Tap the player you want to pass Boomi to:</p>
+    <div className={styles.panelWrapper}>
+      <div className={styles.container}>
+        <p className="text-title">Pass on</p>
+        <p className="text-subtitle">
+          Tap the player you want to pass Boomi to:
+        </p>
 
-      <ul className={styles.playersList}>
-        {targets.map((p) => {
-          const isSelected = p.id === selectedTargetId;
+        <ul className={styles.playersList}>
+          {targets.map((p) => {
+            const isSelected = p.id === selectedTargetId;
 
-          return (
-            <li key={p.id}>
-              <button
-                type="button"
-                className={`${styles.playerItem} ${
-                  isSelected ? styles.playerItemSelected : ""
-                }`}
-                onClick={() => handleSelectPlayer(p.id)}>
-                <span className={styles.playerName}>
-                  {p.name}
-                  {p.isHost ? " (host)" : ""}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+            return (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  className={`${styles.playerItem} ${
+                    isSelected ? styles.playerItemSelected : ""
+                  }`}
+                  onClick={() => handleSelectPlayer(p.id)}>
+                  <span className={styles.playerName}>
+                    {p.name}
+                    {p.isHost ? " (host)" : ""}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
 
-      <div className={styles.actions}>
-        <PixelButton
-          onClick={onConfirm}
-          className="text-button"
-          disabled={!selectedTargetId || !canUsePassCard}>
-          Use card
-        </PixelButton>
+        <div className={styles.actions}>
+          <PixelButton
+            onClick={onConfirm}
+            className="text-button"
+            disabled={!selectedTargetId || !canUsePassCard}>
+            Use card
+          </PixelButton>
+        </div>
       </div>
     </div>
   );
