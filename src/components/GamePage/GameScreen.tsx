@@ -36,6 +36,9 @@ interface GameScreenProps {
   onCancelPassPanel: () => void;
   onSelectPassTarget: (id: string) => void;
   onConfirmPassTarget: () => void;
+
+  canUseBlockCard: boolean;
+  onUseBlockCard: () => void;
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({
@@ -62,6 +65,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onCancelPassPanel,
   onSelectPassTarget,
   onConfirmPassTarget,
+  canUseBlockCard,
+  onUseBlockCard,
 }) => {
   return (
     <main className={styles.main}>
@@ -107,7 +112,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             </PixelFrame>
           )}
 
-          {isCurrentHolder && isAlive && !isGuessOpen && isPassPanelOpen && (
+          {isAlive && !isGuessOpen && isPassPanelOpen && (
             <PixelFrame>
               <PassPanel
                 targets={passTargets}
@@ -115,6 +120,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
                 onSelectTarget={onSelectPassTarget}
                 onConfirm={onConfirmPassTarget}
                 onCancel={onCancelPassPanel}
+                canUsePassCard={canUsePassCard}
+                canUseBlockCard={canUseBlockCard}
+                onUseBlockCard={onUseBlockCard}
               />
             </PixelFrame>
           )}
@@ -122,14 +130,18 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       </section>
 
       <section className={styles.bottomBar}>
-        {isCurrentHolder && isAlive ? (
+        {isAlive ? (
           <>
-            <PixelButton
-              onClick={onOpenGuess}
-              className="text-button"
-              disabled={isGuessOpen || isPassPanelOpen}>
-              Guess
-            </PixelButton>
+            {isCurrentHolder ? (
+              <PixelButton
+                onClick={onOpenGuess}
+                className="text-button"
+                disabled={isGuessOpen || isPassPanelOpen}>
+                Guess
+              </PixelButton>
+            ) : (
+              <div />
+            )}
 
             <p>*BORDET*</p>
 
@@ -138,7 +150,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               onClick={() =>
                 isPassPanelOpen ? onCancelPassPanel() : onOpenPassPanel()
               }
-              disabled={!isPassPanelOpen && (!canUsePassCard || isGuessOpen)}>
+              disabled={
+                !isPassPanelOpen &&
+                (isGuessOpen || (!canUsePassCard && !canUseBlockCard))
+              }>
               {isPassPanelOpen ? "Go back" : "Cards"}
             </PixelButton>
           </>
