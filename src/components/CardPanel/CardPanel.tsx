@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import type { Player } from "../../types/game";
-import styles from "./PassPanel.module.css";
+import { BlockCard } from "./BlockCard";
+import styles from "./CardPanel.module.css";
+import { PassOnCard } from "./PassOnCard";
 
-interface PassPanelProps {
+interface CardPanelProps {
   targets: Player[];
   selectedTargetId: string | null;
   onSelectTarget: (id: string) => void;
   onConfirm: () => void;
   onCancel: () => void;
 
+  // Permissions
   canUsePassCard: boolean;
   canUseBlockCard: boolean;
   onUseBlockCard: () => void;
 }
 
-export const PassPanel: React.FC<PassPanelProps> = ({
+export const CardPanel: React.FC<CardPanelProps> = ({
   targets,
   selectedTargetId,
   onSelectTarget,
@@ -36,44 +39,21 @@ export const PassPanel: React.FC<PassPanelProps> = ({
     onSelectTarget(playerId);
   };
 
+  // --- View 1: Kort-rad (Pass on + Block) ---
   if (!isSelecting) {
     return (
       <div className={styles.cardsRow}>
-        <button
-          type="button"
-          className={styles.cardButton}
+        <PassOnCard
+          disabled={!targets.length || !canUsePassCard}
           onClick={handlePassOnCardClick}
-          disabled={!targets.length || !canUsePassCard}>
-          <p className="text-title">Pass on</p>
+        />
 
-          <div className={styles.boomiPlaceholder}>
-            <span className="text-body">Boomi goes here</span>
-          </div>
-
-          <p className={`text-body ${styles.cardHint}`}>
-            Tap to choose who to pass Boomi to.
-          </p>
-        </button>
-
-        <button
-          type="button"
-          className={styles.cardButton}
-          onClick={onUseBlockCard}
-          disabled={!canUseBlockCard}>
-          <p className="text-title">Block</p>
-
-          <div className={styles.blockPlaceholder}>
-            <span className="text-body">Shield icon</span>
-          </div>
-
-          <p className="text-body">
-            Other players can't pass Boomi to you this round.
-          </p>
-        </button>
+        <BlockCard disabled={!canUseBlockCard} onClick={onUseBlockCard} />
       </div>
     );
   }
 
+  // --- View 2: Target-lista för Pass on ---
   return (
     <div className={styles.container}>
       <p className="text-title">Pass on</p>

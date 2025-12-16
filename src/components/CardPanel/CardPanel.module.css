@@ -70,3 +70,39 @@
   justify-content: flex-end;
   margin-top: 0.75rem;
 }
+
+.cardsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.cardButton {
+  width: 100%;
+  padding: 1.2rem 1rem;
+  border: none;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cardButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.boomiPlaceholder,
+.blockPlaceholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 2px dashed #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* plus dina befintliga:
+   .container, .playersList, .playerItem, .playerItemSelected,
+   .playerName, .actions, .cardHint osv. */
