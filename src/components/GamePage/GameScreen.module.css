@@ -3,10 +3,13 @@
   flex-direction: column;
   min-height: 100vh;
 
-
-  width: 100vh;  max-width: 600px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;       /* ✅ detta centrerar */
   padding: 0 2rem;
+  box-sizing: border-box;
 }
+
 
 .topBar {
   display: flex;
@@ -28,13 +31,13 @@
 
 .emptyBlock {
   flex: 1;
-  width: 9.5rem;;
+  width: 9.5rem;
 }
 
 .content {
   flex: 1;
   display: flex;
-  justify-content: center;  
+  justify-content: center;
   align-items: center;
 }
 
@@ -56,23 +59,46 @@
 }
 
 .bottomBar {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: clamp(8px, 3vw, 20px);
+
+  padding: 12px;
+  min-height: 140px;
+}
+
+.tableBg {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  z-index: 0;
+
   display: flex;
+  justify-content: center;
+  width: 100%;
+
+  pointer-events: none;
+}
+
+.left,
+.center,
+.right {
+  position: relative;
+  z-index: 1; 
+}
+
+.left {
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: space-between;
 }
 
-.bottomBar p {
-  margin: 0;
-  text-align: center;
-}
-
-@media (max-width: 600px) {
-
-  .contentInner {
-    max-width: 260px;
-  }
-
-  .bottomBar {
-    gap: 1rem;
-  }
+.right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }

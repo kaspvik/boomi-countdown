@@ -1,6 +1,7 @@
 import React from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { Table } from "../../layout/Table/Table";
 import type { Player } from "../../types/game";
 import styles from "../GamePage/GameScreen.module.css";
 import { GameTimer } from "./GameTimer";
@@ -107,21 +108,25 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       </section>
 
       <section className={styles.bottomBar}>
-        {isAlive ? (
-          <>
-            {isCurrentHolder ? (
-              <PixelButton
-                onClick={onOpenGuess}
-                className="text-button"
-                disabled={isGuessOpen || isPassPanelOpen}>
-                Guess
-              </PixelButton>
-            ) : (
-              <div />
-            )}
+        <div className={styles.tableBg} aria-hidden="true">
+          <Table />
+        </div>
 
-            <p>*BORDET*</p>
+        <div className={styles.left}>
+          {isAlive && isCurrentHolder ? (
+            <PixelButton
+              onClick={onOpenGuess}
+              className="text-button"
+              disabled={isGuessOpen || isPassPanelOpen}>
+              Guess
+            </PixelButton>
+          ) : null}
+        </div>
 
+        <div className={styles.center} />
+
+        <div className={styles.right}>
+          {isAlive ? (
             <PixelButton
               className="text-button"
               onClick={() =>
@@ -130,14 +135,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               disabled={!canOpenCardsButton || isGuessOpen}>
               {isPassPanelOpen ? "Go back" : "Cards"}
             </PixelButton>
-          </>
-        ) : (
-          <>
-            <div />
-            <p>*BORDET*</p>
-            <div />
-          </>
-        )}
+          ) : null}
+        </div>
       </section>
     </main>
   );
