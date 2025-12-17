@@ -63,8 +63,7 @@ export const CardPanel: React.FC<CardPanelProps> = ({
   return (
     <div className={styles.panelWrapper}>
       <PlayerSelectPanel
-        title="Pass on"
-        subtitle="Tap the player you want to pass Boomi to:"
+        headerLabel="Tap the player you want to pass Boomi to:"
         targets={targets}
         selectedTargetId={selectedTargetId}
         onSelectTarget={onSelectTarget}
