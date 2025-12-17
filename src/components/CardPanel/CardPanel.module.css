@@ -1,15 +1,11 @@
-.panelWrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
+
 
 .cardsRow {
   display: flex;
+  flex-direction: row;
   gap: 1.5rem;
   justify-content: center;
   align-items: stretch;
-  flex-wrap: wrap;
 }
 
 /* Header inside each card content */

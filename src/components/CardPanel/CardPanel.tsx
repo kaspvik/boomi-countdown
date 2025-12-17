@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PixelButton } from "../../layout/PixelButton/PixelButton";
+import { PlayerSelectPanel } from "../../layout/PlayerSelectPanel/PlayerSelectPanel";
 import type { Player } from "../../types/game";
 import { BlockCard } from "./BlockCard";
 import styles from "./CardPanel.module.css";
@@ -22,6 +22,7 @@ export const CardPanel: React.FC<CardPanelProps> = ({
   selectedTargetId,
   onSelectTarget,
   onConfirm,
+  onCancel,
   canUsePassCard,
   canUseBlockCard,
   onUseBlockCard,
@@ -34,8 +35,14 @@ export const CardPanel: React.FC<CardPanelProps> = ({
     setIsSelecting(true);
   };
 
-  const handleSelectPlayer = (playerId: string) => {
-    onSelectTarget(playerId);
+  const handleConfirmPass = () => {
+    onConfirm();
+    setIsSelecting(false);
+  };
+
+  const handleBack = () => {
+    setIsSelecting(false);
+    onCancel();
   };
 
   if (!isSelecting) {
@@ -55,43 +62,20 @@ export const CardPanel: React.FC<CardPanelProps> = ({
 
   return (
     <div className={styles.panelWrapper}>
-      <div className={styles.container}>
-        <p className="text-title">Pass on</p>
-        <p className="text-subtitle">
-          Tap the player you want to pass Boomi to:
-        </p>
-
-        <ul className={styles.playersList}>
-          {targets.map((p) => {
-            const isSelected = p.id === selectedTargetId;
-
-            return (
-              <li key={p.id}>
-                <button
-                  type="button"
-                  className={`${styles.playerItem} ${
-                    isSelected ? styles.playerItemSelected : ""
-                  }`}
-                  onClick={() => handleSelectPlayer(p.id)}>
-                  <span className={styles.playerName}>
-                    {p.name}
-                    {p.isHost ? " (host)" : ""}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-
-        <div className={styles.actions}>
-          <PixelButton
-            onClick={onConfirm}
-            className="text-button"
-            disabled={!selectedTargetId || !canUsePassCard}>
-            Use card
-          </PixelButton>
-        </div>
-      </div>
+      <PlayerSelectPanel
+        title="Pass on"
+        subtitle="Tap the player you want to pass Boomi to:"
+        targets={targets}
+        selectedTargetId={selectedTargetId}
+        onSelectTarget={onSelectTarget}
+        confirmLabel="Use card"
+        onConfirm={handleConfirmPass}
+        confirmDisabled={!selectedTargetId || !canUsePassCard}
+        secondaryLabel="Back"
+        onSecondary={handleBack}
+        secondaryDisabled={false}
+        disabled={!canUsePassCard}
+      />
     </div>
   );
 };
