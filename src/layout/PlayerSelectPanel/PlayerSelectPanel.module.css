@@ -24,12 +24,6 @@
   box-shadow: 0 0 0 3px #000000, 0 2px 0 #c4c4c4;
 }
 
-@media (max-width: 600px) {
-  .selected {
-    box-shadow: 0 0 0 3px #000000, 0 1px 0 #c4c4c4;
-  }
-}
-
 .footer {
   margin-top: 0.75rem;
   text-align: center;
@@ -45,5 +39,9 @@
   .panel {
     max-width: 100%;
     padding: 0 1rem; 
+  }
+
+  .selected {
+    box-shadow: 0 0 0 3px #000000, 0 1px 0 #c4c4c4;
   }
 }

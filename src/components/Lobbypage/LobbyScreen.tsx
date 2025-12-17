@@ -31,21 +31,22 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         <GameLogo />
 
         <PixelFrame>
+          <p className="text-title">GAME PIN:</p>
+
           <div className={panelStyles.headerBox}>
             <p className={panelStyles.headerText}>
-              <span className={panelStyles.headerLabel}>Game Pin:</span>
               <span className={panelStyles.headerValue}>{room.code}</span>
             </p>
           </div>
 
-          <h2 className="text-title">Players:</h2>
+          <h2 className="text-title">PLAYERS:</h2>
 
           {playersLoading && (
-            <p className="text-subtitle">Loading players...</p>
+            <p className="text-subtitle">LOADING PLAYERS...</p>
           )}
           {playersError && <p style={{ color: "red" }}>{playersError}</p>}
           {!playersLoading && players.length === 0 && !playersError && (
-            <p className="text-subtitle">No players in this room yet.</p>
+            <p className="text-subtitle">NO PLAYERS IN THIS ROOM YET.</p>
           )}
 
           {players.length > 0 && (

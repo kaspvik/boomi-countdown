@@ -2,8 +2,7 @@
   /* Bas-typografi */
   font-family: "Handjet", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  line-height: 1.5;
-  font-weight: 700;
+  font-weight: 400;
 
   /* Färger / tokens */
   --color-text: #ffffff;
@@ -15,6 +14,7 @@
   /* TYPO: storlekar (kan tweakas) */
   --font-size-display: 3rem;  /* t.ex. stora rubriken "Boomi Countdown" */
   --font-size-game: 2rem; 
+  --font-size-button: 2rem; 
   --font-size-title: 1.5rem;    /* sektionstitlar */
   --font-size-subtitle: 1.25rem; /* mindre rubriker */
   --font-size-body: 1.2rem;     /* brödtext */
@@ -31,6 +31,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;}
 
 /* Stora spelets titel */
 .text-display {
@@ -49,8 +52,8 @@
 .text-title {
   font-family: var(--font-main);
   font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-bg);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text);
 }
 
 /* Vanliga subrubriker */
@@ -96,4 +99,5 @@ body {
   overflow: hidden;
   background-color: var(--color-bg);
   color: var(--color-text);
+  text-transform: uppercase;
 }
