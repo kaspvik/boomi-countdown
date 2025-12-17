@@ -23,7 +23,7 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
       <div className={styles.container}>
         <div className={styles.textBlock}>
           <h2 className={styles.titel}>
-            {isCivilian ? "You are a CIVILIAN!" : "You are an IMPOSTER!"}
+            {isCivilian ? "You are a CIVILIAN" : "You are an IMPOSTER"}
           </h2>
 
           {isCivilian && (
