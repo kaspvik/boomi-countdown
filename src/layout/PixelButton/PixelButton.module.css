@@ -4,6 +4,9 @@
   align-items: center;
   justify-content: center;
 
+  flex: 0 0 auto;
+  min-width: 150px;
+  min-height: 60px;
   width: 150px;
   height: 60px;
 
@@ -18,6 +21,7 @@
   outline: none;
 
   background-image: url("/pixel-button.png");
+  background-repeat: no-repeat;
 
   background-position: center;
   background-size: contain;
@@ -45,4 +49,3 @@
   filter: none;
   transform: none;
 }
-
