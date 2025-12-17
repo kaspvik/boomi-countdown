@@ -16,7 +16,7 @@
   --font-size-game: 2rem; 
   --font-size-button: 2rem; 
   --font-size-title: 1.5rem;    /* sektionstitlar */
-  --font-size-subtitle: 1.25rem; /* mindre rubriker */
+  --font-size-subtitle: 1.5rem;
   --font-size-body: 1.2rem;     /* brödtext */
   --font-size-caption: 0.85rem;
 
@@ -56,12 +56,10 @@ h1, h2, h3, h4, h5, h6, p {
   color: var(--color-text);
 }
 
-/* Vanliga subrubriker */
 .text-subtitle {
   font-family: var(--font-main);
-  font-size: var(--font-size-subtitle);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  font-size: var( --font-size-subtitle);
+  font-weight: var(--font-weight-medium);
 }
 
 /* Brödtext */
@@ -69,6 +67,7 @@ h1, h2, h3, h4, h5, h6, p {
   font-family: var(--font-main);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-regular);
+  color: var(--color-text);
 }
 
 /* Knapptexter */
