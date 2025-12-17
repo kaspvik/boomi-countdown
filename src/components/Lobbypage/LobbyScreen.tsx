@@ -2,6 +2,7 @@ import React from "react";
 import { GameLogo } from "../../layout/GameLogo/GameLogo";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import panelStyles from "../../layout/PlayerPanel/PlayerPanel.module.css";
 import type { Player, Room } from "../../types/game";
 import styles from "./LobbyScreen.module.css";
 
@@ -30,27 +31,28 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         <GameLogo />
 
         <PixelFrame>
-          <div className={styles.roomHeader}>
-            <p className={styles.roomCodeText}>
-              <span className={styles.roomCodeLabel}>Game Pin:</span>
-              <span className={styles.roomCodeValue}>{room.code}</span>
+          <p className="text-title">GAME PIN:</p>
+
+          <div className={panelStyles.headerBox}>
+            <p className={panelStyles.headerText}>
+              <span className={panelStyles.headerValue}>{room.code}</span>
             </p>
           </div>
 
-          <h2 className="text-title">Players:</h2>
+          <h2 className="text-title">PLAYERS:</h2>
 
           {playersLoading && (
-            <p className="text-subtitle">Loading players...</p>
+            <p className="text-subtitle">LOADING PLAYERS...</p>
           )}
           {playersError && <p style={{ color: "red" }}>{playersError}</p>}
           {!playersLoading && players.length === 0 && !playersError && (
-            <p className="text-subtitle">No players in this room yet.</p>
+            <p className="text-subtitle">NO PLAYERS IN THIS ROOM YET.</p>
           )}
 
           {players.length > 0 && (
-            <ul className={styles.playersGrid}>
+            <ul className={panelStyles.playersGrid}>
               {players.map((player) => (
-                <li key={player.id} className={styles.playerItem}>
+                <li key={player.id} className={panelStyles.playerItem}>
                   {player.name}
                   {player.isHost && " (host)"}
                 </li>
@@ -60,7 +62,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         </PixelFrame>
       </section>
 
-      <div className={styles.buttonRow}>
+      <div className={panelStyles.buttonRow}>
         <PixelButton onClick={onLeave} className="text-button">
           Back to start
         </PixelButton>

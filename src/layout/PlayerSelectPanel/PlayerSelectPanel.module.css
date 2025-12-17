@@ -1,0 +1,47 @@
+.playerButton {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  display: block;
+
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+}
+
+.playerButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.playerButton:focus-visible {
+  outline: 3px solid #000000;
+  outline-offset: 2px;
+}
+
+.selected {
+  box-shadow: 0 0 0 3px #000000, 0 2px 0 #c4c4c4;
+}
+
+.footer {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.panel {
+  width: 100%;
+  max-width: 780px; 
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .panel {
+    max-width: 100%;
+    padding: 0 1rem; 
+  }
+
+  .selected {
+    box-shadow: 0 0 0 3px #000000, 0 1px 0 #c4c4c4;
+  }
+}
