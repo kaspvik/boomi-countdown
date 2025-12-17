@@ -6,15 +6,19 @@
 
 .frameSection {
   width: 100%;
-  max-width: 780px;
+  max-width: 480px;
   margin-bottom: 1rem;
   margin-top: 8rem;
+}
+
+.headerLabel {
+  text-align: center;
 }
 
 @media (max-width: 600px) {
   .frameSection {
     max-width: 100%;
-    padding: 0 1rem;
+    padding: 0 3rem;
     margin-top: 10rem;
   }
 }

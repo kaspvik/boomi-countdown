@@ -3,8 +3,8 @@
   color: #000000;
   box-sizing: border-box;
   padding: 0.5rem 0.75rem;
-  margin-bottom: 1rem;
 
+  margin-bottom: 0.8rem;
   display: flex;
   justify-content: center;
 }
@@ -22,7 +22,7 @@
 }
 
 .headerValue {
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-display);
   font-weight: var(--font-weight-bold);
 }
 
@@ -73,9 +73,9 @@
     font-size: var(--font-size-body);
   }
 
-  .headerValue {
-    font-size: 1.4rem;
-  }
+.headerValue {
+  font-size: var(--font-size-title);
+}
 
   .playersGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -96,7 +96,7 @@
 
   .buttonRow > * {
     width: 100%;
-    max-width: 260px;
+    max-width: 160px;
     margin: 0 auto;
   }
 }
