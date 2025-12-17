@@ -11,16 +11,16 @@ export const BlockCard: React.FC<BlockCardProps> = ({ disabled, onClick }) => {
   return (
     <GameCard disabled={disabled} onClick={onClick}>
       <div className={styles.cardHeader}>
-        <p className="text-title">Block</p>
+        <p className="text-subtitle">Block</p>
       </div>
 
       <div className={styles.iconArea}>
         <div className={styles.blockPlaceholder}>
-          <span className="text-body">Shield icon</span>
+          <span className="text-subtitle">Shield icon</span>
         </div>
       </div>
 
-      <p className="text-body">
+      <p className="text-subtitle">
         Other players can’t pass Boomi to you this round.
       </p>
     </GameCard>

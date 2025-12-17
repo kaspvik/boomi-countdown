@@ -14,16 +14,16 @@ export const PassOnCard: React.FC<PassOnCardProps> = ({
   return (
     <GameCard disabled={disabled} onClick={onClick}>
       <div className={styles.cardHeader}>
-        <p className="text-title">Pass on</p>
+        <p className="text-subtitle">Pass on</p>
       </div>
 
       <div className={styles.iconArea}>
         <div className={styles.boomiPlaceholder}>
-          <span className="text-body">Boomi goes here</span>
+          <span className="text-subtitle">Boomi goes here</span>
         </div>
       </div>
 
-      <p className={`text-body ${styles.cardHint}`}>
+      <p className={`text-subtitle ${styles.cardHint}`}>
         Tap to choose who to pass Boomi to.
       </p>
     </GameCard>

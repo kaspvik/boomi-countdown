@@ -84,8 +84,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             !(isPassPanelOpen && !isCurrentHolder) && (
               <PixelFrame>
                 <div className={styles.header}>
-                  <p className="text-title">
-                    Current bomb holder: <br /> {bombHolderName}
+                  <p className="text-subtitle">
+                    Current bomb holder: <br />
+                    {bombHolderName}
                   </p>
                 </div>
               </PixelFrame>
