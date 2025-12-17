@@ -1,0 +1,13 @@
+.wrap {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100%;
+overflow: hidden;
+}
+
+.image {
+  width: min(420px, 55vw);
+  height: auto;
+  min-width: 300px;
+}
