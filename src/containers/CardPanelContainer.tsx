@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { CardPanel } from "../components/CardPanel/CardPanel";
 import { activateBlockCard } from "../services/activateBlockCard";
-import { playPassBoomiCard } from "../services/playPassBoomiCard";
+import { passBomb } from "../services/passBomb";
 import type { Player, Room } from "../types/game";
 
 interface CardPanelContainerProps {
@@ -26,19 +26,16 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
 }) => {
   const isCurrentHolder =
     currentPlayer != null && currentPlayer.id === room.currentBombHolder;
-  const isAlive = currentPlayer?.alive ?? true;
 
-  const [passCardUsage, setPassCardUsage] = useState<{
-    round: number | null;
-    used: boolean;
-  }>({ round: null, used: false });
+  const isAlive = currentPlayer?.alive ?? true;
 
   const [selectedPassTargetId, setSelectedPassTargetId] = useState<
     string | null
   >(null);
 
-  const hasUsedPassCardThisRound =
-    passCardUsage.used && passCardUsage.round === room.round;
+  const hasUsedPassThisRound =
+    currentPlayer?.passUsedRound != null &&
+    currentPlayer.passUsedRound === room.round;
 
   const passTargets = useMemo(
     () =>
@@ -59,9 +56,10 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
   const canUsePassCard =
     isCurrentHolder &&
     isAlive &&
-    !hasUsedPassCardThisRound &&
+    !hasUsedPassThisRound &&
     !room.passCardUsedThisRound &&
-    passTargets.length > 0;
+    passTargets.length > 0 &&
+    room.status === "in_progress";
 
   const canUseBlockCard =
     !!currentPlayer &&
@@ -71,28 +69,20 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
     room.status === "in_progress";
 
   const handleConfirmPassTarget = async () => {
-    if (
-      !currentPlayer ||
-      !isCurrentHolder ||
-      !isAlive ||
-      !selectedPassTargetId
-    ) {
-      return;
-    }
+    if (!currentPlayer) return;
+    if (!isCurrentHolder) return;
+    if (!isAlive) return;
+    if (!selectedPassTargetId) return;
+    if (!canUsePassCard) return;
 
     try {
-      await playPassBoomiCard(roomId, selectedPassTargetId);
-
-      setPassCardUsage({
-        round: room.round,
-        used: true,
-      });
+      await passBomb(roomId, currentPlayer.id, selectedPassTargetId, "card");
     } catch (err) {
-      console.error("Failed to play Pass Boomi card", err);
+      console.error("Failed to pass bomb", err);
+    } finally {
+      setSelectedPassTargetId(null);
+      onClose();
     }
-
-    setSelectedPassTargetId(null);
-    onClose();
   };
 
   const handleUseBlockCard = async () => {
@@ -103,9 +93,9 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
       await activateBlockCard(roomId, currentPlayer.id, room.round);
     } catch (err) {
       console.error("Failed to activate Block card", err);
+    } finally {
+      onClose();
     }
-
-    onClose();
   };
 
   const handleSelectPassTarget = (id: string) => {

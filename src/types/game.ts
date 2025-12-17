@@ -43,6 +43,8 @@ export interface Player {
 
   blockCardUsed?: boolean;
   blockActiveRound?: number | null;
+
+  passUsedRound?: number | null;
 }
 export interface RoundVote {
   id: string;
