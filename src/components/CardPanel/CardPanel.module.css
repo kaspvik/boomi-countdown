@@ -1,5 +1,3 @@
-
-
 .cardsRow {
   display: flex;
   flex-direction: row;
@@ -8,14 +6,12 @@
   align-items: stretch;
 }
 
-/* Header inside each card content */
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Icon area in the middle of the card */
 .iconArea {
   flex: 1;
   display: flex;
@@ -23,7 +19,6 @@
   justify-content: center;
 }
 
-/* Placeholders for future images */
 .boomiPlaceholder,
 .blockPlaceholder {
   width: 100%;
@@ -33,7 +28,3 @@
   align-items: center;
   justify-content: center;
 }
-
-/* Du kan behålla dina gamla:
-   .container, .playersList, .playerItem, .playerItemSelected,
-   .playerName, .actions, .cardHint, etc. */
