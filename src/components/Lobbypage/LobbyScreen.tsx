@@ -2,6 +2,7 @@ import React from "react";
 import { GameLogo } from "../../layout/GameLogo/GameLogo";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import panelStyles from "../../layout/PlayerPanel/PlayerPanel.module.css";
 import type { Player, Room } from "../../types/game";
 import styles from "./LobbyScreen.module.css";
 
@@ -30,10 +31,10 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         <GameLogo />
 
         <PixelFrame>
-          <div className={styles.roomHeader}>
-            <p className={styles.roomCodeText}>
-              <span className={styles.roomCodeLabel}>Game Pin:</span>
-              <span className={styles.roomCodeValue}>{room.code}</span>
+          <div className={panelStyles.headerBox}>
+            <p className={panelStyles.headerText}>
+              <span className={panelStyles.headerLabel}>Game Pin:</span>
+              <span className={panelStyles.headerValue}>{room.code}</span>
             </p>
           </div>
 
@@ -48,9 +49,9 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
           )}
 
           {players.length > 0 && (
-            <ul className={styles.playersGrid}>
+            <ul className={panelStyles.playersGrid}>
               {players.map((player) => (
-                <li key={player.id} className={styles.playerItem}>
+                <li key={player.id} className={panelStyles.playerItem}>
                   {player.name}
                   {player.isHost && " (host)"}
                 </li>
@@ -60,7 +61,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         </PixelFrame>
       </section>
 
-      <div className={styles.buttonRow}>
+      <div className={panelStyles.buttonRow}>
         <PixelButton onClick={onLeave} className="text-button">
           Back to start
         </PixelButton>

@@ -92,15 +92,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             )}
 
           {isCurrentHolder && isAlive && isGuessOpen && (
-            <PixelFrame>
-              <GuessPanel
-                targets={guessTargets}
-                selectedTargetId={selectedGuessTargetId}
-                onSelectTarget={onSelectGuessTarget}
-                onConfirm={onConfirmGuess}
-                onCancel={onCancelGuess}
-              />
-            </PixelFrame>
+            <GuessPanel
+              targets={guessTargets}
+              selectedTargetId={selectedGuessTargetId}
+              onSelectTarget={onSelectGuessTarget}
+              onConfirm={onConfirmGuess}
+              onCancel={onCancelGuess}
+            />
           )}
 
           {isAlive && !isGuessOpen && isPassPanelOpen && cardPanel}
