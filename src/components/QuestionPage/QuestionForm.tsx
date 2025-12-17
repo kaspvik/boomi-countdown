@@ -97,7 +97,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
       {hasVoted && (
         <div className={styles.voteConfirmation}>
-          <p className="text-subtitle">
+          <p className="text-body">
             Your vote has been saved. <br /> Wait for the round to start.
           </p>
         </div>
