@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { submitVote } from "../../services/voting/submitVote";
 import type { Player } from "../../types/game";
@@ -6,18 +6,26 @@ import styles from "./QuestionForm.module.css";
 
 interface QuestionFormProps {
   roomId: string;
-  currentPlayer: Player;
+  round: number;
   players: Player[];
+  currentPlayer: Player;
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
   roomId,
+  round,
   currentPlayer,
   players,
 }) => {
   const [selectedTargetId, setSelectedTargetId] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
+
+  useEffect(() => {
+    setSelectedTargetId("");
+    setHasVoted(false);
+    setIsSubmitting(false);
+  }, [roomId, round, currentPlayer.id]);
 
   const isImposter = currentPlayer.role === "imposter";
 
@@ -30,29 +38,29 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     [players, currentPlayer.id]
   );
 
+  const handleSelectPlayer = (playerId: string) => {
+    if (hasVoted || isSubmitting) return;
+    setSelectedTargetId(playerId);
+  };
+
   const handleSubmit = async () => {
     if (!selectedTargetId || isSubmitting || hasVoted) return;
-    console.log("[QuestionForm] submitting vote for target", selectedTargetId);
 
     setIsSubmitting(true);
     try {
-      await submitVote(
+      await submitVote({
         roomId,
-        currentPlayer.id,
-        selectedTargetId,
-        isImposter ? "imposter" : "civilian"
-      );
+        round,
+        voterId: currentPlayer.id,
+        targetPlayerId: selectedTargetId,
+        roleAtTime: isImposter ? "imposter" : "civilian",
+      });
       setHasVoted(true);
     } catch (err) {
       console.error("Failed to submit vote", err);
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleSelectPlayer = (playerId: string) => {
-    if (hasVoted || isSubmitting) return;
-    setSelectedTargetId(playerId);
   };
 
   return (
