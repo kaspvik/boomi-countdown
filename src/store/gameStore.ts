@@ -1,31 +1,16 @@
 import { create } from "zustand";
 
-type Screen = "start" | "lobby";
-
-interface GameState {
-  screen: Screen;
+interface GameSessionState {
   activeRoomId: string | null;
   currentPlayerId: string | null;
   enterLobby: (roomId: string, playerId: string) => void;
   leaveLobby: () => void;
 }
 
-export const useGameStore = create<GameState>((set) => ({
-  screen: "start",
+export const useGameStore = create<GameSessionState>((set) => ({
   activeRoomId: null,
   currentPlayerId: null,
-
   enterLobby: (roomId, playerId) =>
-    set(() => ({
-      screen: "lobby",
-      activeRoomId: roomId,
-      currentPlayerId: playerId,
-    })),
-
-  leaveLobby: () =>
-    set(() => ({
-      screen: "start",
-      activeRoomId: null,
-      currentPlayerId: null,
-    })),
+    set({ activeRoomId: roomId, currentPlayerId: playerId }),
+  leaveLobby: () => set({ activeRoomId: null, currentPlayerId: null }),
 }));
