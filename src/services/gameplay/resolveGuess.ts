@@ -1,6 +1,6 @@
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import type { Player } from "../types/game";
+import { db } from "../../firebase";
+import type { Player } from "../../types/game";
 import { killPlayer } from "./killPlayer";
 
 export async function resolveGuess(

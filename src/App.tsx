@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { RoomScreenContainer } from "./containers/RoomScreenContainer";
 import { StartScreenContainer } from "./containers/StartScreenContainer";
 import { GameLayout } from "./layout/GameLayout/GameLayout";
-import { ensureSignedIn } from "./services/authService";
+import { ensureSignedIn } from "./services/auth/authService";
 import { useGameStore } from "./store/gameStore";
 
 function App() {

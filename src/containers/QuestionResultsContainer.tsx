@@ -1,7 +1,7 @@
 import React from "react";
 import { QuestionResultsScreen } from "../components/QuestionResultPage/QuestionResultsScreen";
-import { useRoundVotes } from "../firestore-hooks/useRoundVotes";
-import { getTopVotedPlayerForRole } from "../services/voteHelpers";
+import { useRoundVotes } from "../hooks/useRoundVotes";
+import { getTopVotedPlayerForRole } from "../services/voting/voteHelpers";
 import type { Player, Room } from "../types/game";
 
 interface QuestionResultsContainerProps {
