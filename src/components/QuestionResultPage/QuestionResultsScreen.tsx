@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { PixelButton } from "../../layout/PixelButton/PixelButton";
+import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import type { Player, Room } from "../../types/game";
 import { GameTimer } from "../GamePage/GameTimer";
@@ -69,23 +69,16 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   return (
     <main className={styles.main}>
-      <section className={styles.topBar}>
-        <div className={styles.leaveButton}>
-          <PixelButton onClick={onLeave} className="text-button">
-            Leave game
-          </PixelButton>
-        </div>
-
-        <div className={styles.timer}>
+      <GameHeader
+        onLeave={onLeave}
+        center={
           <GameTimer
             key={timerKey}
-            durationSeconds={10}
+            durationSeconds={10000}
             onTimeout={handleTimerTimeout}
           />
-        </div>
-
-        <div className={styles.emptyBlock} />
-      </section>
+        }
+      />
 
       <section className={styles.content}>
         <div className={styles.contentInner}>

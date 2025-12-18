@@ -4,10 +4,12 @@ import styles from "./PixelButton.module.css";
 interface PixelButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
+  size?: "md" | "sm";
 }
 
 export const PixelButton: React.FC<PixelButtonProps> = ({
   variant = "primary",
+  size = "md",
   className = "",
   children,
   ...rest
@@ -19,9 +21,9 @@ export const PixelButton: React.FC<PixelButtonProps> = ({
       className={[
         styles.pixelButton,
         styles[variant],
+        styles[size],
         isDisabled ? styles.disabled : "",
         className,
-        onclick,
       ]
         .filter(Boolean)
         .join(" ")}
