@@ -74,7 +74,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         center={
           <GameTimer
             key={timerKey}
-            durationSeconds={10000}
+            durationSeconds={10}
             onTimeout={handleTimerTimeout}
           />
         }
