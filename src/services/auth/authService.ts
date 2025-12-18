@@ -1,6 +1,6 @@
 import type { User } from "firebase/auth";
 import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 
 let currentUserPromise: Promise<User> | null = null;
 

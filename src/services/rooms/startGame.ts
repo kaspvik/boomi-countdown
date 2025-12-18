@@ -5,8 +5,9 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../firebase";
-import type { Role } from "../types/game";
+import { db } from "../../firebase";
+
+type Role = "imposter" | "civilian";
 
 function getImposterCount(playerCount: number): number {
   if (playerCount <= 6) return 1;

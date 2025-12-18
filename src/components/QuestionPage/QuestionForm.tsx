@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
-import { submitVote } from "../../services/submitVote";
+import { submitVote } from "../../services/voting/submitVote";
 import type { Player } from "../../types/game";
 import styles from "./QuestionForm.module.css";
 

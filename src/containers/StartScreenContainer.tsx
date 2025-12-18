@@ -3,10 +3,10 @@ import {
   StartScreen,
   type PendingAction,
 } from "../components/Startpage/StartScreen";
-import { createRoom } from "../services/createRoom";
-import { findRoomByCode } from "../services/findRoomByCode";
-import { generateRoomCode } from "../services/generateRoomCode";
-import { joinRoom } from "../services/joinRoom";
+import { createRoom } from "../services/rooms/createRoom";
+import { findRoomByCode } from "../services/rooms/findRoomByCode";
+import { generateRoomCode } from "../services/rooms/generateRoomCode";
+import { joinRoom } from "../services/rooms/joinRoom";
 import { useGameStore } from "../store/gameStore";
 
 export const StartScreenContainer: React.FC = () => {

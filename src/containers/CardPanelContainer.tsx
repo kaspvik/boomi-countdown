@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { CardPanel } from "../components/CardPanel/CardPanel";
-import { activateBlockCard } from "../services/activateBlockCard";
-import { passBomb } from "../services/passBomb";
+import { activateBlockCard } from "../services/cards/activateBlockCard";
+import { passBomb } from "../services/gameplay/passBomb";
 import type { Player, Room } from "../types/game";
 
 interface CardPanelContainerProps {
