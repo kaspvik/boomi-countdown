@@ -6,22 +6,27 @@ import { ensureSignedIn } from "./services/authService";
 import { useGameStore } from "./store/gameStore";
 
 function App() {
-  const screen = useGameStore((s) => s.screen);
   const activeRoomId = useGameStore((s) => s.activeRoomId);
   const leaveLobby = useGameStore((s) => s.leaveLobby);
+
   const [authReady, setAuthReady] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
       try {
         await ensureSignedIn();
+        setAuthReady(true);
       } catch (err) {
         console.error("Failed to sign in anonymously", err);
-      } finally {
-        setAuthReady(true);
+        setAuthError("Could not connect. Please refresh and try again.");
       }
     })();
   }, []);
+
+  if (authError) {
+    return <p className="text-subtitle">{authError}</p>;
+  }
 
   if (!authReady) {
     return <p className="text-subtitle">Connecting to game server...</p>;
@@ -29,7 +34,7 @@ function App() {
 
   return (
     <GameLayout>
-      {screen === "lobby" && activeRoomId ? (
+      {activeRoomId ? (
         <RoomScreenContainer roomId={activeRoomId} onLeave={leaveLobby} />
       ) : (
         <StartScreenContainer />
