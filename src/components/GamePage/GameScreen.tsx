@@ -1,4 +1,5 @@
 import React from "react";
+import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
@@ -60,23 +61,16 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 }) => {
   return (
     <main className={styles.main}>
-      <section className={styles.topBar}>
-        <div className={styles.leaveButton}>
-          <PixelButton onClick={onLeave} className="text-button">
-            Leave game
-          </PixelButton>
-        </div>
-
-        <div className={styles.timer}>
+      <GameHeader
+        onLeave={onLeave}
+        center={
           <GameTimer
             key={timerKey}
             durationSeconds={durationSeconds}
             onTimeout={onTimeout}
           />
-        </div>
-
-        <div className={styles.emptyBlock} />
-      </section>
+        }
+      />
 
       <section className={styles.content}>
         <div className={styles.contentInner}>
