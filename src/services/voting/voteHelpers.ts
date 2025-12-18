@@ -1,4 +1,4 @@
-import type { Player, RoundVote } from "../types/game";
+import type { Player, RoundVote } from "../../types/game";
 
 export function getTopVotedPlayerForRole(
   votes: RoundVote[],

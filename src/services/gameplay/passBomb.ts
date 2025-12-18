@@ -1,6 +1,6 @@
 import { doc, runTransaction } from "firebase/firestore";
-import { db } from "../firebase";
-import type { Player, Room } from "../types/game";
+import { db } from "../../firebase";
+import type { Player, Room } from "../../types/game";
 
 type PassKind = "normal" | "card";
 

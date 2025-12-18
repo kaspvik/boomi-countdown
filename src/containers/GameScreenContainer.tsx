@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
-import { killPlayer } from "../services/killPlayer";
-import { resolveGuess } from "../services/resolveGuess";
+import { killPlayer } from "../services/gameplay/killPlayer";
+import { resolveGuess } from "../services/gameplay/resolveGuess";
 import type { Player, Room } from "../types/game";
 import { CardPanelContainer } from "./CardPanelContainer";
 
