@@ -8,6 +8,7 @@ interface QuestionScreenProps {
   room: Room;
   players: Player[];
   currentPlayer: Player;
+  round: number;
   roomId: string;
   onLeave: () => void;
   onHostStartRound: () => void;
@@ -18,6 +19,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
   players,
   currentPlayer,
   roomId,
+  room,
   onLeave,
 }) => {
   return (
@@ -35,6 +37,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
           <PixelFrame>
             <QuestionForm
               roomId={roomId}
+              round={room.round}
               currentPlayer={currentPlayer}
               players={players}
             />

@@ -10,15 +10,24 @@ export function useHostPhaseController(params: {
   isHost: boolean;
   allAliveVoted: boolean;
   votesCount: number;
+  votesLoaded: boolean;
 }) {
-  const { room, roomId, gameStarted, isHost, allAliveVoted, votesCount } =
-    params;
+  const {
+    room,
+    roomId,
+    gameStarted,
+    isHost,
+    allAliveVoted,
+    votesCount,
+    votesLoaded,
+  } = params;
 
   const sentQuestionResultsRef = useRef<string | null>(null);
   const resetNoVotesRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!room || !gameStarted || !isHost) return;
+    if (!votesLoaded) return;
     if (room.phase !== "question_results") return;
     if (room.round <= 1) return;
     if (votesCount !== 0) return;
@@ -28,6 +37,7 @@ export function useHostPhaseController(params: {
     resetNoVotesRef.current = key;
 
     const roomRef = doc(db, "rooms", roomId);
+
     (async () => {
       try {
         await updateDoc(roomRef, { phase: "question" });
@@ -35,10 +45,11 @@ export function useHostPhaseController(params: {
         console.error("Failed to reset phase to question", err);
       }
     })();
-  }, [roomId, room, gameStarted, isHost, votesCount]);
+  }, [roomId, room, gameStarted, isHost, votesCount, votesLoaded]);
 
   useEffect(() => {
     if (!room || !gameStarted || !isHost) return;
+    if (!votesLoaded) return;
     if (room.phase !== "question") return;
     if (!allAliveVoted) return;
 
@@ -47,6 +58,7 @@ export function useHostPhaseController(params: {
     sentQuestionResultsRef.current = key;
 
     const roomRef = doc(db, "rooms", roomId);
+
     (async () => {
       try {
         await updateDoc(roomRef, { phase: "question_results" });
@@ -54,5 +66,5 @@ export function useHostPhaseController(params: {
         console.error("Failed to set phase=question_results", err);
       }
     })();
-  }, [roomId, room, gameStarted, isHost, allAliveVoted]);
+  }, [roomId, room, gameStarted, isHost, allAliveVoted, votesLoaded]);
 }

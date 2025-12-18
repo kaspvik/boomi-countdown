@@ -1,11 +1,12 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { db } from "../firebase";
 import type { RoundVote } from "../types/game";
 
 interface UseRoundVotesResult {
   votes: RoundVote[];
   error: string | null;
+  loaded: boolean;
 }
 
 type FirestoreRoundVoteData = {
@@ -21,11 +22,19 @@ export function useRoundVotes(
 ): UseRoundVotesResult {
   const [votes, setVotes] = useState<RoundVote[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [lastSnapKey, setLastSnapKey] = useState<string | null>(null);
+
+  const isActive = !!roomId && round != null;
+
+  const currentKey = useMemo(() => {
+    if (!isActive) return null;
+    return `${roomId}:${round}`;
+  }, [isActive, roomId, round]);
 
   useEffect(() => {
-    if (!roomId || round == null) return;
+    if (!isActive) return;
 
-    const votesRef = collection(db, "rooms", roomId, "roundVotes");
+    const votesRef = collection(db, "rooms", roomId!, "roundVotes");
     const q = query(votesRef, where("round", "==", round));
 
     const unsub = onSnapshot(
@@ -43,30 +52,27 @@ export function useRoundVotes(
           };
         });
 
-        console.log(
-          "[useRoundVotes] room:",
-          roomId,
-          "round filter:",
-          round,
-          "votes found:",
-          next
-        );
-
         setVotes(next);
         setError(null);
+
+        setLastSnapKey(`${roomId}:${round}`);
       },
       (err) => {
         console.error("useRoundVotes error:", err);
         setError(err.message);
+
+        setLastSnapKey(`${roomId}:${round}`);
       }
     );
 
     return () => unsub();
-  }, [roomId, round]);
+  }, [isActive, roomId, round]);
 
-  if (!roomId || round == null) {
-    return { votes: [], error: null };
+  const loaded = isActive && currentKey != null && lastSnapKey === currentKey;
+
+  if (!isActive) {
+    return { votes: [], error: null, loaded: false };
   }
 
-  return { votes, error };
+  return { votes, error, loaded };
 }

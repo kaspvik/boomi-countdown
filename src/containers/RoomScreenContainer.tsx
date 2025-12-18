@@ -33,7 +33,10 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
   } = usePlayers(roomId);
 
   const currentPlayerId = useGameStore((s) => s.currentPlayerId);
-  const { votes } = useRoundVotes(roomId, room?.round ?? null);
+  const { votes, loaded: votesLoaded } = useRoundVotes(
+    roomId,
+    room?.round ?? null
+  );
 
   const derived = useRoomDerivedState({
     room,
@@ -57,6 +60,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     isHost: derived.isCurrentPlayerHost,
     allAliveVoted: derived.allAliveVoted,
     votesCount: votes.length,
+    votesLoaded,
   });
 
   const actions = useRoomActions({
@@ -123,6 +127,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       <QuestionScreen
         room={room}
         roomId={roomId}
+        round={room.round}
         players={players}
         currentPlayer={currentPlayer}
         onLeave={onLeave}
