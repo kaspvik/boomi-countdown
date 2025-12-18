@@ -5,10 +5,6 @@
   justify-content: center;
 
   flex: 0 0 auto;
-  min-width: 150px;
-  min-height: 60px;
-  width: 150px;
-  height: 60px;
 
   padding: 0;
   border: none;
@@ -48,4 +44,27 @@
   opacity: 0.5;
   filter: none;
   transform: none;
+}
+
+.md {
+  min-width: 150px;
+  min-height: 60px;
+  width: 150px;
+  height: 60px;
+}
+
+.sm {
+  min-width: 110px;
+  min-height: 44px;
+  width: 110px;
+  height: 44px;
+}
+
+.label {
+  /* om du vill: skala texten lite på small */
+}
+
+.sm .label {
+  font-size: 0.8rem;
+  line-height: 1;
 }

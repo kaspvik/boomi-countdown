@@ -10,30 +10,6 @@
   box-sizing: border-box;
 }
 
-
-.topBar {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.leaveButton {
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.timer {
-  flex: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.emptyBlock {
-  flex: 1;
-  width: 9.5rem;
-}
-
 .content {
   flex: 1;
   display: flex;
