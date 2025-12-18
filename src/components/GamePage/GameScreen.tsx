@@ -4,6 +4,7 @@ import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
 import type { Player } from "../../types/game";
+import { BoomiCanvas } from "../Boomi/BoomiCanvas";
 import styles from "../GamePage/GameScreen.module.css";
 import { GameTimer } from "./GameTimer";
 import { GuessPanel } from "./GuessPanel";
@@ -105,6 +106,12 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         <div className={styles.tableBg} aria-hidden="true">
           <Table />
         </div>
+
+        {isAlive && isCurrentHolder ? (
+          <div className={styles.boomiLayer} aria-hidden="true">
+            <BoomiCanvas visibleKey={timerKey} />
+          </div>
+        ) : null}
 
         <div className={styles.left}>
           {isAlive && isCurrentHolder ? (
