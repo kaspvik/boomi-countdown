@@ -24,7 +24,7 @@ interface GameScreenProps {
   isCurrentHolder: boolean;
   isAlive: boolean;
 
-  boomiAnim: "idle" | "tick" | "explode";
+  boomiAnim: "idle" | "tick" | "pass" | "explode";
   boomiAnimKey: string;
   onBoomiExplodeComplete?: () => void;
 

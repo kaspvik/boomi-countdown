@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { useRoundUiState } from "../hooks";
 import { useTimeoutKillPlayer } from "../hooks/useTimeoutKillPlayer";
-import { killPlayer } from "../services/gameplay/killPlayer"; // ✅ ändra sökväg om behövs
+import { killPlayer } from "../services/gameplay/killPlayer";
 import type { Player, Room } from "../types/game";
 import { CardPanelContainer } from "./CardPanelContainer";
 
@@ -34,6 +34,14 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
   const durationSeconds = 60;
 
   const [secondsLeft, setSecondsLeft] = useState<number>(durationSeconds);
+
+  const passHere =
+    !!currentPlayer &&
+    currentPlayer.alive !== false &&
+    isCurrentHolder &&
+    room.phase === "round" &&
+    room.roundResultsStep === null &&
+    room.lastKilledPlayerId === currentPlayer.id;
 
   const ticking =
     isAlive && isCurrentHolder && secondsLeft <= 10 && secondsLeft > 0;
@@ -114,10 +122,20 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       ? `room-explode-${room.round}-${room.lastKilledPlayerId ?? "none"}`
       : null);
 
-  const boomiAnim = effectiveExplodeKey ? "explode" : ticking ? "tick" : "idle";
+  // ✅ ANIM: explode > pass > tick > idle
+  const boomiAnim = effectiveExplodeKey
+    ? "explode"
+    : passHere
+    ? "pass"
+    : ticking
+    ? "tick"
+    : "idle";
 
+  // ✅ KEY: se till att pass/tick/idle startar om när läget ändras
   const boomiAnimKey = effectiveExplodeKey
     ? effectiveExplodeKey
+    : passHere
+    ? `pass-${timerKey}-${room.lastKilledPlayerId ?? "none"}`
     : ticking
     ? `tick-${timerKey}`
     : `idle-${timerKey}`;

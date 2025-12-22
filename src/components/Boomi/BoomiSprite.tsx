@@ -15,6 +15,7 @@ type Props = {
 
   fpsIdle?: number;
   fpsTick?: number;
+  fpsPass?: number;
   fpsExplode?: number;
 };
 
@@ -27,6 +28,7 @@ export function BoomiSprite({
   onExplodeComplete,
   fpsIdle = 8,
   fpsTick = 10,
+  fpsPass = 18,
   fpsExplode = 14,
 }: Props) {
   const spriteRef = useRef<PixiSprite | null>(null);
@@ -78,7 +80,14 @@ export function BoomiSprite({
     s.scale.set(scale);
 
     const fps =
-      anim === "explode" ? fpsExplode : anim === "tick" ? fpsTick : fpsIdle;
+      anim === "explode"
+        ? fpsExplode
+        : anim === "pass"
+        ? fpsPass
+        : anim === "tick"
+        ? fpsTick
+        : fpsIdle;
+
     const frameTime = 1 / fps;
 
     tRef.current += ticker.deltaTime / 60;
@@ -89,8 +98,7 @@ export function BoomiSprite({
       if (idxRef.current < frames.length - 1) {
         idxRef.current += 1;
         s.texture = frames[idxRef.current];
-      } else if (!didCompleteExplodeRef.current) {
-        didCompleteExplodeRef.current = true;
+      } else {
         onExplodeComplete?.();
       }
       return;
