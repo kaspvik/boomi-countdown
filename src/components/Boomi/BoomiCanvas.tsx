@@ -10,7 +10,7 @@ export function BoomiCanvas() {
       backgroundAlpha={0}
       antialias={false}
       autoStart>
-      <BoomiSprite x={200} y={260} scale={6} />
+      <BoomiSprite x={200} y={230} scale={7} />
     </Application>
   );
 }
