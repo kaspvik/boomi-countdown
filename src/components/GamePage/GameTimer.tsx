@@ -4,17 +4,23 @@ import styles from "./GameTimer.module.css";
 interface GameTimerProps {
   durationSeconds: number;
   onTimeout?: () => void;
+  onTick?: (secondsLeft: number) => void;
 }
 
 export const GameTimer: React.FC<GameTimerProps> = ({
   durationSeconds,
   onTimeout,
+  onTick,
 }) => {
   const [secondsLeft, setSecondsLeft] = useState<number>(durationSeconds);
 
   useEffect(() => {
     setSecondsLeft(durationSeconds);
   }, [durationSeconds]);
+
+  useEffect(() => {
+    onTick?.(secondsLeft);
+  }, [secondsLeft, onTick]);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;

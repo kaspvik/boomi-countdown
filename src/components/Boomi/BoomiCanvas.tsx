@@ -1,8 +1,16 @@
 import { Application } from "@pixi/react";
 import { BoomiSprite } from "./BoomiSprite";
+import type { BoomiAnim } from "./boomiFrames";
 import "./functions/pixiSetup";
 
-export function BoomiCanvas({ visibleKey }: { visibleKey: string }) {
+export function BoomiCanvas(props: {
+  visibleKey: string;
+  anim: BoomiAnim;
+  animKey: string;
+  onExplodeComplete?: () => void;
+}) {
+  const { visibleKey, anim, animKey, onExplodeComplete } = props;
+
   return (
     <Application
       key={visibleKey}
@@ -11,7 +19,14 @@ export function BoomiCanvas({ visibleKey }: { visibleKey: string }) {
       backgroundAlpha={0}
       antialias={false}
       autoStart>
-      <BoomiSprite x={200} y={230} scale={7} />
+      <BoomiSprite
+        x={200}
+        y={230}
+        scale={7}
+        anim={anim}
+        animKey={animKey}
+        onExplodeComplete={onExplodeComplete}
+      />
     </Application>
   );
 }

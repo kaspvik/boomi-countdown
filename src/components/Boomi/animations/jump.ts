@@ -1,10 +1,8 @@
-// src/game/animations/jump.ts
-
 export type JumpConfig = {
-  duration?: number; // sekunder
-  startOffset?: number; // px under bordet
-  bounce?: number; // px extra bounce
-  squash?: number; // 0..1 (0.15 = ganska lagom)
+  duration?: number;
+  startOffset?: number;
+  bounce?: number;
+  squash?: number;
 };
 
 export type JumpRuntime = {
@@ -34,10 +32,6 @@ export function createJumpRuntime(): JumpRuntime {
   };
 }
 
-/**
- * Startar en hopp-animation som landar på endY.
- * Returnerar startY (bra om du vill sätta sprite.y direkt).
- */
 export function startJump(
   r: JumpRuntime,
   endY: number,
@@ -56,10 +50,6 @@ export function startJump(
   return r.startY;
 }
 
-/**
- * Stegar hoppet med dt (sekunder).
- * Returnerar nya y + skala för squash/stretch.
- */
 export function stepJump(
   r: JumpRuntime,
   dt: number
@@ -77,14 +67,11 @@ export function stepJump(
   const t = clamp01(r.t);
   const e = easeOutCubic(t);
 
-  // interpolera från under bordet -> landa
   let y = r.startY + (r.endY - r.startY) * e;
 
-  // liten bounce (uppåt = minus y)
   const bounce = Math.sin(t * Math.PI) * -r.bounce;
   y += bounce;
 
-  // squash/stretch (lite stretch i luften)
   const stretch = 1 + (1 - e) * r.squash;
   const scaleX = 1 / stretch;
   const scaleY = stretch;
