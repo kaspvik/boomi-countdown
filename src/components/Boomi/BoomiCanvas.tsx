@@ -25,6 +25,7 @@ export function BoomiCanvas(props: {
         scale={7}
         anim={anim}
         animKey={animKey}
+        jumpKey={visibleKey}
         onExplodeComplete={onExplodeComplete}
       />
     </Application>

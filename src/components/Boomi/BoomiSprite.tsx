@@ -1,18 +1,17 @@
 import { useTick } from "@pixi/react";
 import { Assets, Sprite as PixiSprite, Texture } from "pixi.js";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createJumpRuntime, startJump, stepJump } from "./animations/jump";
 import { getBoomiFrames, type BoomiAnim } from "./boomiFrames";
 
 type Props = {
   x: number;
   y: number;
   scale?: number;
-
   anim: BoomiAnim;
   animKey: string;
-
+  jumpKey?: string;
   onExplodeComplete?: () => void;
-
   fpsIdle?: number;
   fpsTick?: number;
   fpsPass?: number;
@@ -25,6 +24,7 @@ export function BoomiSprite({
   scale = 4,
   anim,
   animKey,
+  jumpKey,
   onExplodeComplete,
   fpsIdle = 8,
   fpsTick = 10,
@@ -36,7 +36,10 @@ export function BoomiSprite({
 
   const idxRef = useRef(0);
   const tRef = useRef(0);
-  const didCompleteExplodeRef = useRef(false);
+
+  const jumpRef = useRef(createJumpRuntime());
+  const pendingJumpRef = useRef(false);
+  const lastJumpKeyRef = useRef<string | undefined>(undefined);
 
   const loadedOnce = useRef(false);
 
@@ -67,17 +70,46 @@ export function BoomiSprite({
 
     idxRef.current = 0;
     tRef.current = 0;
-    didCompleteExplodeRef.current = false;
     s.texture = frames[0];
   }, [frames, animKey]);
+
+  useEffect(() => {
+    if (!jumpKey) return;
+    if (lastJumpKeyRef.current === jumpKey) return;
+
+    lastJumpKeyRef.current = jumpKey;
+    pendingJumpRef.current = true;
+  }, [jumpKey]);
 
   useTick((ticker) => {
     const s = spriteRef.current;
     if (!s || frames.length === 0) return;
 
+    const dt = ticker.deltaTime / 60;
+
     s.x = x;
-    s.y = y;
-    s.scale.set(scale);
+
+    if (pendingJumpRef.current) {
+      pendingJumpRef.current = false;
+
+      const startY = startJump(jumpRef.current, y, {
+        duration: 0.45,
+        startOffset: 120,
+        bounce: 12,
+        squash: 0.18,
+      });
+
+      s.y = startY;
+    }
+
+    const j = stepJump(jumpRef.current, dt);
+    if (!j.done) {
+      s.y = j.y;
+      s.scale.set(scale * j.scaleX, scale * j.scaleY);
+    } else {
+      s.y = y;
+      s.scale.set(scale);
+    }
 
     const fps =
       anim === "explode"
@@ -90,7 +122,7 @@ export function BoomiSprite({
 
     const frameTime = 1 / fps;
 
-    tRef.current += ticker.deltaTime / 60;
+    tRef.current += dt;
     if (tRef.current < frameTime) return;
     tRef.current = 0;
 
