@@ -1,7 +1,6 @@
 import { Application } from "@pixi/react";
 import { BoomiSprite } from "./BoomiSprite";
 import type { BoomiAnim } from "./boomiFrames";
-import "./functions/pixiSetup";
 
 export function BoomiCanvas(props: {
   visibleKey: string;
