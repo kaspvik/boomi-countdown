@@ -8,13 +8,8 @@ export function getWinningTeam(players: Player[]): WinningTeam {
   const aliveImposters = alive.filter((p) => p.role === "imposter").length;
   const aliveCivilians = alive.filter((p) => p.role === "civilian").length;
 
-  if (aliveImposters === 0) {
-    return "civilians";
-  }
-
-  if (aliveImposters >= aliveCivilians && aliveCivilians > 0) {
-    return "imposters";
-  }
+  if (aliveImposters === 0) return "civilians";
+  if (aliveImposters >= aliveCivilians) return "imposters";
 
   return null;
 }
