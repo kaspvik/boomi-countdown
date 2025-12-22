@@ -1,6 +1,6 @@
 import { extend, useTick } from "@pixi/react";
-import { Assets, Sprite as PixiSprite, Texture } from "pixi.js";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Sprite as PixiSprite } from "pixi.js";
+import { useEffect, useRef } from "react";
 import {
   createFrameAnimRuntime,
   resetFrameAnim,
@@ -12,12 +12,10 @@ import {
   startBoomiJump,
   stepJump,
 } from "./animations/jump";
-import {
-  getBoomiFps,
-  getBoomiFrames,
-  isLoopAnim,
-  type BoomiAnim,
-} from "./boomiFrames";
+import { getBoomiFps, isLoopAnim, type BoomiAnim } from "./boomiFrames";
+import { useBoomiFrames } from "./hooks/useBoomiFrames";
+import { useBoomiSheet } from "./hooks/useBoomiSheet";
+import { useKeyTrigger } from "./hooks/useKeyTrigger";
 
 extend({ Sprite: PixiSprite });
 
@@ -30,7 +28,6 @@ type Props = {
 
   jumpKey?: string;
 
-  // NEW
   exitKey?: string;
   onExitComplete?: () => void;
 
@@ -58,43 +55,22 @@ export function BoomiSprite({
   fpsExplode = 14,
 }: Props) {
   const spriteRef = useRef<PixiSprite | null>(null);
-  const [sheet, setSheet] = useState<Texture | null>(null);
+
+  const sheet = useBoomiSheet("/Chomb3.png");
+  const frames = useBoomiFrames(sheet, anim);
+
+  const frameAnim = useRef(createFrameAnimRuntime());
 
   const jumpIn = useRef(createJumpRuntime());
   const dropOut = useRef(createJumpRuntime());
-  const frameAnim = useRef(createFrameAnimRuntime());
 
-  const pendingJump = useRef(false);
-  const lastJumpKey = useRef<string | undefined>(undefined);
+  const { consume: consumeJump } = useKeyTrigger(jumpKey);
+  const { consume: consumeExit } = useKeyTrigger(exitKey);
 
-  const pendingExit = useRef(false);
-  const lastExitKey = useRef<string | undefined>(undefined);
   const exiting = useRef(false);
   const exitDoneCalled = useRef(false);
 
   const explodeDoneCalled = useRef(false);
-  const loadedOnce = useRef(false);
-
-  useEffect(() => {
-    if (loadedOnce.current) return;
-    loadedOnce.current = true;
-
-    let alive = true;
-    (async () => {
-      const tex = (await Assets.load("/Chomb3.png")) as Texture;
-      tex.source.scaleMode = "nearest";
-      if (alive) setSheet(tex);
-    })();
-
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  const frames = useMemo(
-    () => (sheet ? getBoomiFrames(sheet, anim) : []),
-    [sheet, anim]
-  );
 
   useEffect(() => {
     const s = spriteRef.current;
@@ -103,23 +79,12 @@ export function BoomiSprite({
     resetFrameAnim(frameAnim.current);
     explodeDoneCalled.current = false;
 
-    // Viktigt: gör synlig igen när anim byts
     s.visible = true;
     s.texture = frames[0];
   }, [frames, animKey]);
 
   useEffect(() => {
-    if (!jumpKey) return;
-    if (lastJumpKey.current === jumpKey) return;
-    lastJumpKey.current = jumpKey;
-    pendingJump.current = true;
-  }, [jumpKey]);
-
-  useEffect(() => {
     if (!exitKey) return;
-    if (lastExitKey.current === exitKey) return;
-    lastExitKey.current = exitKey;
-    pendingExit.current = true;
     exitDoneCalled.current = false;
   }, [exitKey]);
 
@@ -131,17 +96,16 @@ export function BoomiSprite({
 
     s.x = x;
 
-    // Start drop-out
-    if (pendingExit.current) {
-      pendingExit.current = false;
+    if (consumeExit()) {
       exiting.current = true;
+
       s.visible = true;
       s.y = y;
       s.scale.set(scale);
+
       startBoomiDrop(dropOut.current, y);
     }
 
-    // While exiting: animate drop, then hide and callback
     if (exiting.current) {
       const d = stepJump(dropOut.current, dt);
       if (!d.done) {
@@ -163,14 +127,11 @@ export function BoomiSprite({
       return;
     }
 
-    // Start jump-in
-    if (pendingJump.current) {
-      pendingJump.current = false;
+    if (consumeJump()) {
       s.visible = true;
       s.y = startBoomiJump(jumpIn.current, y);
     }
 
-    // Animate jump-in
     const j = stepJump(jumpIn.current, dt);
     if (!j.done) {
       s.y = j.y;
@@ -180,7 +141,6 @@ export function BoomiSprite({
       s.scale.set(scale);
     }
 
-    // Frame animation
     const fps = getBoomiFps(anim, {
       idle: fpsIdle,
       tick: fpsTick,
