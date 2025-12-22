@@ -14,6 +14,8 @@ interface GameScreenProps {
   durationSeconds: number;
   onTimeout: () => void;
 
+  onTimerTick: (secondsLeft: number) => void;
+
   onLeave: () => void;
 
   showInfoBox: boolean;
@@ -21,6 +23,10 @@ interface GameScreenProps {
 
   isCurrentHolder: boolean;
   isAlive: boolean;
+
+  boomiAnim: "idle" | "tick" | "explode";
+  boomiAnimKey: string;
+  onBoomiExplodeComplete?: () => void;
 
   isGuessOpen: boolean;
   guessTargets: Player[];
@@ -42,11 +48,15 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   timerKey,
   durationSeconds,
   onTimeout,
+  onTimerTick,
   onLeave,
   showInfoBox,
   bombHolderName,
   isCurrentHolder,
   isAlive,
+  boomiAnim,
+  boomiAnimKey,
+  onBoomiExplodeComplete,
   isGuessOpen,
   guessTargets,
   selectedGuessTargetId,
@@ -69,6 +79,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             key={timerKey}
             durationSeconds={durationSeconds}
             onTimeout={onTimeout}
+            onTick={onTimerTick}
           />
         }
       />
@@ -109,7 +120,12 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
         {isAlive && isCurrentHolder ? (
           <div className={styles.boomiLayer} aria-hidden="true">
-            <BoomiCanvas visibleKey={bombHolderName ?? "none"} />
+            <BoomiCanvas
+              visibleKey={bombHolderName ?? "none"}
+              anim={boomiAnim}
+              animKey={boomiAnimKey}
+              onExplodeComplete={onBoomiExplodeComplete}
+            />
           </div>
         ) : null}
 

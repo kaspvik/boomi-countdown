@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { useRoundUiState } from "../hooks";
 import { useTimeoutKillPlayer } from "../hooks/useTimeoutKillPlayer";
@@ -30,7 +30,14 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
   );
 
   const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
-  const durationSeconds = 10000;
+  const durationSeconds = 60;
+
+  const [secondsLeft, setSecondsLeft] = useState<number>(durationSeconds);
+
+  const ticking =
+    isAlive && isCurrentHolder && secondsLeft <= 10 && secondsLeft > 0;
+
+  const [explodeKey, setExplodeKey] = useState<string | null>(null);
 
   const ui = useRoundUiState({
     roomId,
@@ -40,11 +47,21 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     isCurrentHolder,
   });
 
-  const onTimeout = useTimeoutKillPlayer({
+  const killOnTimeout = useTimeoutKillPlayer({
     roomId,
     currentPlayerId: currentPlayer?.id ?? null,
     canDieOnTimeout: isAlive && isCurrentHolder,
   });
+
+  const onTimeout = useCallback(() => {
+    if (!(isAlive && isCurrentHolder)) return;
+    setExplodeKey(`timeout-${room.round}-${room.currentBombHolder ?? "none"}`);
+  }, [isAlive, isCurrentHolder, room.round, room.currentBombHolder]);
+
+  const onExplodeComplete = useCallback(async () => {
+    await killOnTimeout();
+    setExplodeKey(null);
+  }, [killOnTimeout]);
 
   const showInfoBox = !isCurrentHolder && isAlive && !!bombHolder;
 
@@ -60,6 +77,14 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     />
   );
 
+  const boomiAnim = explodeKey ? "explode" : ticking ? "tick" : "idle";
+
+  const boomiAnimKey = explodeKey
+    ? explodeKey
+    : ticking
+    ? `tick-${timerKey}`
+    : `idle-${timerKey}`;
+
   return (
     <GameScreen
       timerKey={timerKey}
@@ -70,6 +95,10 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       bombHolderName={bombHolder?.name ?? null}
       isCurrentHolder={isCurrentHolder}
       isAlive={isAlive}
+      onTimerTick={setSecondsLeft}
+      boomiAnim={boomiAnim}
+      boomiAnimKey={boomiAnimKey}
+      onBoomiExplodeComplete={explodeKey ? onExplodeComplete : undefined}
       // Guess
       isGuessOpen={ui.isGuessOpen}
       guessTargets={ui.guessTargets}
