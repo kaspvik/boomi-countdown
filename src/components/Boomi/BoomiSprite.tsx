@@ -1,8 +1,18 @@
 import { useTick } from "@pixi/react";
 import { Assets, Sprite as PixiSprite, Texture } from "pixi.js";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createJumpRuntime, startJump, stepJump } from "./animations/jump";
-import { getBoomiFrames, type BoomiAnim } from "./boomiFrames";
+import {
+  createFrameAnimRuntime,
+  resetFrameAnim,
+  stepFrameAnim,
+} from "./animations/frameAnim";
+import { createJumpRuntime, startBoomiJump, stepJump } from "./animations/jump";
+import {
+  getBoomiFps,
+  getBoomiFrames,
+  isLoopAnim,
+  type BoomiAnim,
+} from "./boomiFrames";
 
 type Props = {
   x: number;
@@ -34,17 +44,17 @@ export function BoomiSprite({
   const spriteRef = useRef<PixiSprite | null>(null);
   const [sheet, setSheet] = useState<Texture | null>(null);
 
-  const idxRef = useRef(0);
-  const tRef = useRef(0);
+  const jump = useRef(createJumpRuntime());
+  const frameAnim = useRef(createFrameAnimRuntime());
 
-  const jumpRef = useRef(createJumpRuntime());
-  const pendingJumpRef = useRef(false);
-  const lastJumpKeyRef = useRef<string | undefined>(undefined);
+  const pendingJump = useRef(false);
+  const lastJumpKey = useRef<string | undefined>(undefined);
 
+  const explodeDoneCalled = useRef(false);
   const loadedOnce = useRef(false);
 
   useEffect(() => {
-    if (loadedOnce.current) return;
+    if (loadedOnce.current) return; // StrictMode dev-guard
     loadedOnce.current = true;
 
     let alive = true;
@@ -59,26 +69,26 @@ export function BoomiSprite({
     };
   }, []);
 
-  const frames = useMemo(() => {
-    if (!sheet) return [];
-    return getBoomiFrames(sheet, anim);
-  }, [sheet, anim]);
+  const frames = useMemo(
+    () => (sheet ? getBoomiFrames(sheet, anim) : []),
+    [sheet, anim]
+  );
 
   useEffect(() => {
     const s = spriteRef.current;
     if (!s || frames.length === 0) return;
 
-    idxRef.current = 0;
-    tRef.current = 0;
+    resetFrameAnim(frameAnim.current);
+    explodeDoneCalled.current = false;
     s.texture = frames[0];
   }, [frames, animKey]);
 
   useEffect(() => {
     if (!jumpKey) return;
-    if (lastJumpKeyRef.current === jumpKey) return;
+    if (lastJumpKey.current === jumpKey) return;
 
-    lastJumpKeyRef.current = jumpKey;
-    pendingJumpRef.current = true;
+    lastJumpKey.current = jumpKey;
+    pendingJump.current = true;
   }, [jumpKey]);
 
   useTick((ticker) => {
@@ -89,20 +99,12 @@ export function BoomiSprite({
 
     s.x = x;
 
-    if (pendingJumpRef.current) {
-      pendingJumpRef.current = false;
-
-      const startY = startJump(jumpRef.current, y, {
-        duration: 0.45,
-        startOffset: 120,
-        bounce: 12,
-        squash: 0.18,
-      });
-
-      s.y = startY;
+    if (pendingJump.current) {
+      pendingJump.current = false;
+      s.y = startBoomiJump(jump.current, y);
     }
 
-    const j = stepJump(jumpRef.current, dt);
+    const j = stepJump(jump.current, dt);
     if (!j.done) {
       s.y = j.y;
       s.scale.set(scale * j.scaleX, scale * j.scaleY);
@@ -111,33 +113,30 @@ export function BoomiSprite({
       s.scale.set(scale);
     }
 
-    const fps =
-      anim === "explode"
-        ? fpsExplode
-        : anim === "pass"
-        ? fpsPass
-        : anim === "tick"
-        ? fpsTick
-        : fpsIdle;
+    const fps = getBoomiFps(anim, {
+      idle: fpsIdle,
+      tick: fpsTick,
+      pass: fpsPass,
+      explode: fpsExplode,
+    });
 
-    const frameTime = 1 / fps;
+    const loop = isLoopAnim(anim);
+    const step = stepFrameAnim({
+      r: frameAnim.current,
+      dt,
+      fps,
+      frameCount: frames.length,
+      loop,
+    });
 
-    tRef.current += dt;
-    if (tRef.current < frameTime) return;
-    tRef.current = 0;
-
-    if (anim === "explode") {
-      if (idxRef.current < frames.length - 1) {
-        idxRef.current += 1;
-        s.texture = frames[idxRef.current];
-      } else {
-        onExplodeComplete?.();
-      }
-      return;
+    if (step.advanced) {
+      s.texture = frames[step.idx];
     }
 
-    idxRef.current = (idxRef.current + 1) % frames.length;
-    s.texture = frames[idxRef.current];
+    if (!loop && step.done && !explodeDoneCalled.current) {
+      explodeDoneCalled.current = true;
+      onExplodeComplete?.();
+    }
   });
 
   if (frames.length === 0) return null;

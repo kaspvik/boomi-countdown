@@ -86,3 +86,14 @@ export function stepJump(
     done,
   };
 }
+
+export const BOOMI_JUMP_PRESET: JumpConfig = {
+  duration: 0.45,
+  startOffset: 120,
+  bounce: 12,
+  squash: 0.18,
+};
+
+export function startBoomiJump(r: JumpRuntime, endY: number): number {
+  return startJump(r, endY, BOOMI_JUMP_PRESET);
+}
