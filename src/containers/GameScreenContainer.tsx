@@ -104,25 +104,12 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
 
   const showInfoBox = !isCurrentHolder && isAlive && !!bombHolder;
 
-  const cardPanelNode = (
-    <CardPanelContainer
-      room={room}
-      roomId={roomId}
-      players={players}
-      currentPlayer={currentPlayer}
-      isOpen={ui.isPassPanelOpen}
-      isGuessOpen={ui.isGuessOpen}
-      onClose={ui.closePassPanel}
-    />
-  );
-
   const effectiveExplodeKey =
     explodeKey ??
     (explodeFromRoomHere
       ? `room-explode-${room.round}-${room.lastKilledPlayerId ?? "none"}`
       : null);
 
-  // ✅ ANIM: explode > pass > tick > idle
   const boomiAnim = effectiveExplodeKey
     ? "explode"
     : passHere
@@ -131,7 +118,6 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     ? "tick"
     : "idle";
 
-  // ✅ KEY: se till att pass/tick/idle startar om när läget ändras
   const boomiAnimKey = effectiveExplodeKey
     ? effectiveExplodeKey
     : passHere
@@ -169,8 +155,18 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       onOpenPassPanel={ui.openPassPanel}
       onCancelPassPanel={ui.closePassPanel}
       canOpenCardsButton={isAlive}
-      // Panel content
-      cardPanel={cardPanelNode}
+      cardPanel={({ requestBoomiExit }) => (
+        <CardPanelContainer
+          room={room}
+          roomId={roomId}
+          players={players}
+          currentPlayer={currentPlayer}
+          isOpen={ui.isPassPanelOpen}
+          isGuessOpen={ui.isGuessOpen}
+          onClose={ui.closePassPanel}
+          requestBoomiExit={requestBoomiExit}
+        />
+      )}
     />
   );
 };

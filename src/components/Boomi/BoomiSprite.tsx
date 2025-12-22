@@ -6,7 +6,12 @@ import {
   resetFrameAnim,
   stepFrameAnim,
 } from "./animations/frameAnim";
-import { createJumpRuntime, startBoomiJump, stepJump } from "./animations/jump";
+import {
+  createJumpRuntime,
+  startBoomiDrop,
+  startBoomiJump,
+  stepJump,
+} from "./animations/jump";
 import {
   getBoomiFps,
   getBoomiFrames,
@@ -14,7 +19,6 @@ import {
   type BoomiAnim,
 } from "./boomiFrames";
 
-// Register Pixi components for @pixi/react v8 intrinsic elements (<pixiSprite /> etc)
 extend({ Sprite: PixiSprite });
 
 type Props = {
@@ -23,8 +27,15 @@ type Props = {
   scale?: number;
   anim: BoomiAnim;
   animKey: string;
+
   jumpKey?: string;
+
+  // NEW
+  exitKey?: string;
+  onExitComplete?: () => void;
+
   onExplodeComplete?: () => void;
+
   fpsIdle?: number;
   fpsTick?: number;
   fpsPass?: number;
@@ -38,6 +49,8 @@ export function BoomiSprite({
   anim,
   animKey,
   jumpKey,
+  exitKey,
+  onExitComplete,
   onExplodeComplete,
   fpsIdle = 8,
   fpsTick = 10,
@@ -47,17 +60,23 @@ export function BoomiSprite({
   const spriteRef = useRef<PixiSprite | null>(null);
   const [sheet, setSheet] = useState<Texture | null>(null);
 
-  const jump = useRef(createJumpRuntime());
+  const jumpIn = useRef(createJumpRuntime());
+  const dropOut = useRef(createJumpRuntime());
   const frameAnim = useRef(createFrameAnimRuntime());
 
   const pendingJump = useRef(false);
   const lastJumpKey = useRef<string | undefined>(undefined);
 
+  const pendingExit = useRef(false);
+  const lastExitKey = useRef<string | undefined>(undefined);
+  const exiting = useRef(false);
+  const exitDoneCalled = useRef(false);
+
   const explodeDoneCalled = useRef(false);
   const loadedOnce = useRef(false);
 
   useEffect(() => {
-    if (loadedOnce.current) return; // StrictMode dev-guard
+    if (loadedOnce.current) return;
     loadedOnce.current = true;
 
     let alive = true;
@@ -83,16 +102,26 @@ export function BoomiSprite({
 
     resetFrameAnim(frameAnim.current);
     explodeDoneCalled.current = false;
+
+    // Viktigt: gör synlig igen när anim byts
+    s.visible = true;
     s.texture = frames[0];
   }, [frames, animKey]);
 
   useEffect(() => {
     if (!jumpKey) return;
     if (lastJumpKey.current === jumpKey) return;
-
     lastJumpKey.current = jumpKey;
     pendingJump.current = true;
   }, [jumpKey]);
+
+  useEffect(() => {
+    if (!exitKey) return;
+    if (lastExitKey.current === exitKey) return;
+    lastExitKey.current = exitKey;
+    pendingExit.current = true;
+    exitDoneCalled.current = false;
+  }, [exitKey]);
 
   useTick((ticker) => {
     const s = spriteRef.current;
@@ -102,12 +131,47 @@ export function BoomiSprite({
 
     s.x = x;
 
-    if (pendingJump.current) {
-      pendingJump.current = false;
-      s.y = startBoomiJump(jump.current, y);
+    // Start drop-out
+    if (pendingExit.current) {
+      pendingExit.current = false;
+      exiting.current = true;
+      s.visible = true;
+      s.y = y;
+      s.scale.set(scale);
+      startBoomiDrop(dropOut.current, y);
     }
 
-    const j = stepJump(jump.current, dt);
+    // While exiting: animate drop, then hide and callback
+    if (exiting.current) {
+      const d = stepJump(dropOut.current, dt);
+      if (!d.done) {
+        s.y = d.y;
+        s.scale.set(scale * d.scaleX, scale * d.scaleY);
+        return;
+      }
+
+      s.visible = false;
+      s.y = y;
+      s.scale.set(scale);
+
+      exiting.current = false;
+
+      if (!exitDoneCalled.current) {
+        exitDoneCalled.current = true;
+        onExitComplete?.();
+      }
+      return;
+    }
+
+    // Start jump-in
+    if (pendingJump.current) {
+      pendingJump.current = false;
+      s.visible = true;
+      s.y = startBoomiJump(jumpIn.current, y);
+    }
+
+    // Animate jump-in
+    const j = stepJump(jumpIn.current, dt);
     if (!j.done) {
       s.y = j.y;
       s.scale.set(scale * j.scaleX, scale * j.scaleY);
@@ -116,6 +180,7 @@ export function BoomiSprite({
       s.scale.set(scale);
     }
 
+    // Frame animation
     const fps = getBoomiFps(anim, {
       idle: fpsIdle,
       tick: fpsTick,
@@ -132,9 +197,7 @@ export function BoomiSprite({
       loop,
     });
 
-    if (step.advanced) {
-      s.texture = frames[step.idx];
-    }
+    if (step.advanced) s.texture = frames[step.idx];
 
     if (!loop && step.done && !explodeDoneCalled.current) {
       explodeDoneCalled.current = true;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
@@ -41,7 +41,9 @@ interface GameScreenProps {
   onCancelPassPanel: () => void;
   canOpenCardsButton: boolean;
 
-  cardPanel: React.ReactNode;
+  cardPanel: (helpers: {
+    requestBoomiExit: (afterExit: () => void) => void;
+  }) => React.ReactNode;
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({
@@ -70,6 +72,37 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   canOpenCardsButton,
   cardPanel,
 }) => {
+  const [boomiExitKey, setBoomiExitKey] = useState<string | undefined>(
+    undefined
+  );
+
+  const [, setAfterExitAction] = useState<null | (() => void)>(null);
+
+  const requestBoomiExit = useCallback(
+    (afterExit: () => void) => {
+      if (!isAlive || !isCurrentHolder) {
+        afterExit();
+        return;
+      }
+
+      if (boomiExitKey) return;
+
+      setAfterExitAction(() => afterExit);
+
+      setBoomiExitKey(`${Date.now()}-${Math.random()}`);
+    },
+    [isAlive, isCurrentHolder, boomiExitKey]
+  );
+
+  const handleBoomiExitComplete = useCallback(() => {
+    setAfterExitAction((fn) => {
+      fn?.();
+      return null;
+    });
+
+    setBoomiExitKey(undefined);
+  }, []);
+
   return (
     <main className={styles.main}>
       <GameHeader
@@ -104,12 +137,15 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               targets={guessTargets}
               selectedTargetId={selectedGuessTargetId}
               onSelectTarget={onSelectGuessTarget}
-              onConfirm={onConfirmGuess}
+              onConfirm={() => requestBoomiExit(onConfirmGuess)}
               onCancel={onCancelGuess}
             />
           )}
 
-          {isAlive && !isGuessOpen && isPassPanelOpen && cardPanel}
+          {isAlive &&
+            !isGuessOpen &&
+            isPassPanelOpen &&
+            cardPanel({ requestBoomiExit })}
         </div>
       </section>
 
@@ -124,6 +160,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               visibleKey={bombHolderName ?? "none"}
               anim={boomiAnim}
               animKey={boomiAnimKey}
+              exitKey={boomiExitKey}
+              onExitComplete={handleBoomiExitComplete}
               onExplodeComplete={onBoomiExplodeComplete}
             />
           </div>

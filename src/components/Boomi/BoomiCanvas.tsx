@@ -6,9 +6,21 @@ export function BoomiCanvas(props: {
   visibleKey: string;
   anim: BoomiAnim;
   animKey: string;
+
+  // NEW: trigger drop-out
+  exitKey?: string;
+  onExitComplete?: () => void;
+
   onExplodeComplete?: () => void;
 }) {
-  const { visibleKey, anim, animKey, onExplodeComplete } = props;
+  const {
+    visibleKey,
+    anim,
+    animKey,
+    exitKey,
+    onExitComplete,
+    onExplodeComplete,
+  } = props;
 
   return (
     <Application
@@ -25,6 +37,8 @@ export function BoomiCanvas(props: {
         anim={anim}
         animKey={animKey}
         jumpKey={visibleKey}
+        exitKey={exitKey}
+        onExitComplete={onExitComplete}
         onExplodeComplete={onExplodeComplete}
       />
     </Application>

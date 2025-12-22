@@ -12,6 +12,8 @@ interface CardPanelContainerProps {
   isOpen: boolean;
   isGuessOpen: boolean;
   onClose: () => void;
+
+  requestBoomiExit: (afterExit: () => void) => void;
 }
 
 export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
@@ -22,6 +24,7 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
   isOpen,
   isGuessOpen,
   onClose,
+  requestBoomiExit,
 }) => {
   const ui = useCardPanelState({
     room,
@@ -45,6 +48,7 @@ export const CardPanelContainer: React.FC<CardPanelContainerProps> = ({
       canUsePassCard={ui.canUsePassCard}
       canUseBlockCard={ui.canUseBlockCard}
       onUseBlockCard={ui.useBlockCard}
+      requestBoomiExit={requestBoomiExit}
     />
   );
 };

@@ -9,12 +9,16 @@ interface CardPanelProps {
   targets: Player[];
   selectedTargetId: string | null;
   onSelectTarget: (id: string) => void;
+
   onConfirm: () => void;
+
   onCancel: () => void;
 
   canUsePassCard: boolean;
   canUseBlockCard: boolean;
   onUseBlockCard: () => void;
+
+  requestBoomiExit: (afterExit: () => void) => void;
 }
 
 export const CardPanel: React.FC<CardPanelProps> = ({
@@ -26,6 +30,7 @@ export const CardPanel: React.FC<CardPanelProps> = ({
   canUsePassCard,
   canUseBlockCard,
   onUseBlockCard,
+  requestBoomiExit,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
 
@@ -36,8 +41,12 @@ export const CardPanel: React.FC<CardPanelProps> = ({
   };
 
   const handleConfirmPass = () => {
-    onConfirm();
-    setIsSelecting(false);
+    if (!canUsePassCard || !selectedTargetId) return;
+
+    requestBoomiExit(() => {
+      onConfirm();
+      setIsSelecting(false);
+    });
   };
 
   const handleBack = () => {
