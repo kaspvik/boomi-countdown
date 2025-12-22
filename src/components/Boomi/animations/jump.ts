@@ -40,6 +40,7 @@ export function createJumpRuntime(): JumpRuntime {
   };
 }
 
+/** Jump "in": starts below and lands on endY */
 export function startJump(
   r: JumpRuntime,
   endY: number,
@@ -61,6 +62,7 @@ export function startJump(
   return r.startY;
 }
 
+/** Drop "out": starts on startY and falls down */
 export function startDrop(
   r: JumpRuntime,
   startY: number,
@@ -85,12 +87,7 @@ export function startDrop(
 export function stepJump(
   r: JumpRuntime,
   dt: number
-): {
-  y: number;
-  scaleX: number;
-  scaleY: number;
-  done: boolean;
-} {
+): { y: number; scaleX: number; scaleY: number; done: boolean } {
   if (!r.active) {
     return { y: r.endY, scaleX: 1, scaleY: 1, done: true };
   }
