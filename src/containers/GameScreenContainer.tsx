@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { useRoundUiState } from "../hooks";
 import { useTimeoutKillPlayer } from "../hooks/useTimeoutKillPlayer";
+import { killPlayer } from "../services/gameplay/killPlayer"; // ✅ ändra sökväg om behövs
 import type { Player, Room } from "../types/game";
 import { CardPanelContainer } from "./CardPanelContainer";
 
@@ -53,15 +54,45 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     canDieOnTimeout: isAlive && isCurrentHolder,
   });
 
+  const explodeFromRoomHere =
+    !!currentPlayer &&
+    currentPlayer.alive !== false &&
+    isCurrentHolder &&
+    room.roundResultsStep === "explosion" &&
+    room.lastKilledPlayerId === currentPlayer.id;
+
+  const handledRoomExplodeRef = useRef<string | null>(null);
+
   const onTimeout = useCallback(() => {
     if (!(isAlive && isCurrentHolder)) return;
     setExplodeKey(`timeout-${room.round}-${room.currentBombHolder ?? "none"}`);
   }, [isAlive, isCurrentHolder, room.round, room.currentBombHolder]);
 
   const onExplodeComplete = useCallback(async () => {
-    await killOnTimeout();
-    setExplodeKey(null);
-  }, [killOnTimeout]);
+    if (explodeFromRoomHere && currentPlayer) {
+      const key = `${room.round}-${currentPlayer.id}-${
+        room.lastKilledPlayerId ?? "none"
+      }`;
+      if (handledRoomExplodeRef.current === key) return;
+      handledRoomExplodeRef.current = key;
+
+      await killPlayer(roomId, currentPlayer.id);
+      return;
+    }
+
+    if (explodeKey) {
+      await killOnTimeout();
+      setExplodeKey(null);
+    }
+  }, [
+    explodeFromRoomHere,
+    currentPlayer,
+    room.round,
+    room.lastKilledPlayerId,
+    roomId,
+    explodeKey,
+    killOnTimeout,
+  ]);
 
   const showInfoBox = !isCurrentHolder && isAlive && !!bombHolder;
 
@@ -77,10 +108,16 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     />
   );
 
-  const boomiAnim = explodeKey ? "explode" : ticking ? "tick" : "idle";
+  const effectiveExplodeKey =
+    explodeKey ??
+    (explodeFromRoomHere
+      ? `room-explode-${room.round}-${room.lastKilledPlayerId ?? "none"}`
+      : null);
 
-  const boomiAnimKey = explodeKey
-    ? explodeKey
+  const boomiAnim = effectiveExplodeKey ? "explode" : ticking ? "tick" : "idle";
+
+  const boomiAnimKey = effectiveExplodeKey
+    ? effectiveExplodeKey
     : ticking
     ? `tick-${timerKey}`
     : `idle-${timerKey}`;
@@ -98,7 +135,9 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
       onTimerTick={setSecondsLeft}
       boomiAnim={boomiAnim}
       boomiAnimKey={boomiAnimKey}
-      onBoomiExplodeComplete={explodeKey ? onExplodeComplete : undefined}
+      onBoomiExplodeComplete={
+        effectiveExplodeKey ? onExplodeComplete : undefined
+      }
       // Guess
       isGuessOpen={ui.isGuessOpen}
       guessTargets={ui.guessTargets}
