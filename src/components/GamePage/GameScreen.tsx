@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
 import type { Player } from "../../types/game";
+import { BoomiCanvas } from "../Boomi/BoomiCanvas";
 import styles from "../GamePage/GameScreen.module.css";
 import { GameTimer } from "./GameTimer";
 import { GuessPanel } from "./GuessPanel";
@@ -13,6 +14,8 @@ interface GameScreenProps {
   durationSeconds: number;
   onTimeout: () => void;
 
+  onTimerTick: (secondsLeft: number) => void;
+
   onLeave: () => void;
 
   showInfoBox: boolean;
@@ -20,6 +23,10 @@ interface GameScreenProps {
 
   isCurrentHolder: boolean;
   isAlive: boolean;
+
+  boomiAnim: "idle" | "tick" | "pass" | "explode";
+  boomiAnimKey: string;
+  onBoomiExplodeComplete?: () => void;
 
   isGuessOpen: boolean;
   guessTargets: Player[];
@@ -34,18 +41,24 @@ interface GameScreenProps {
   onCancelPassPanel: () => void;
   canOpenCardsButton: boolean;
 
-  cardPanel: React.ReactNode;
+  cardPanel: (helpers: {
+    requestBoomiExit: (afterExit: () => void) => void;
+  }) => React.ReactNode;
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({
   timerKey,
   durationSeconds,
   onTimeout,
+  onTimerTick,
   onLeave,
   showInfoBox,
   bombHolderName,
   isCurrentHolder,
   isAlive,
+  boomiAnim,
+  boomiAnimKey,
+  onBoomiExplodeComplete,
   isGuessOpen,
   guessTargets,
   selectedGuessTargetId,
@@ -59,6 +72,37 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   canOpenCardsButton,
   cardPanel,
 }) => {
+  const [boomiExitKey, setBoomiExitKey] = useState<string | undefined>(
+    undefined
+  );
+
+  const [, setAfterExitAction] = useState<null | (() => void)>(null);
+
+  const requestBoomiExit = useCallback(
+    (afterExit: () => void) => {
+      if (!isAlive || !isCurrentHolder) {
+        afterExit();
+        return;
+      }
+
+      if (boomiExitKey) return;
+
+      setAfterExitAction(() => afterExit);
+
+      setBoomiExitKey(`${Date.now()}-${Math.random()}`);
+    },
+    [isAlive, isCurrentHolder, boomiExitKey]
+  );
+
+  const handleBoomiExitComplete = useCallback(() => {
+    setAfterExitAction((fn) => {
+      fn?.();
+      return null;
+    });
+
+    setBoomiExitKey(undefined);
+  }, []);
+
   return (
     <main className={styles.main}>
       <GameHeader
@@ -68,6 +112,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             key={timerKey}
             durationSeconds={durationSeconds}
             onTimeout={onTimeout}
+            onTick={onTimerTick}
           />
         }
       />
@@ -92,12 +137,15 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               targets={guessTargets}
               selectedTargetId={selectedGuessTargetId}
               onSelectTarget={onSelectGuessTarget}
-              onConfirm={onConfirmGuess}
+              onConfirm={() => requestBoomiExit(onConfirmGuess)}
               onCancel={onCancelGuess}
             />
           )}
 
-          {isAlive && !isGuessOpen && isPassPanelOpen && cardPanel}
+          {isAlive &&
+            !isGuessOpen &&
+            isPassPanelOpen &&
+            cardPanel({ requestBoomiExit })}
         </div>
       </section>
 
@@ -105,6 +153,19 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         <div className={styles.tableBg} aria-hidden="true">
           <Table />
         </div>
+
+        {isAlive && isCurrentHolder ? (
+          <div className={styles.boomiLayer} aria-hidden="true">
+            <BoomiCanvas
+              visibleKey={bombHolderName ?? "none"}
+              anim={boomiAnim}
+              animKey={boomiAnimKey}
+              exitKey={boomiExitKey}
+              onExitComplete={handleBoomiExitComplete}
+              onExplodeComplete={onBoomiExplodeComplete}
+            />
+          </div>
+        ) : null}
 
         <div className={styles.left}>
           {isAlive && isCurrentHolder ? (
