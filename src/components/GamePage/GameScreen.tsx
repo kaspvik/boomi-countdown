@@ -109,7 +109,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
         {isAlive && isCurrentHolder ? (
           <div className={styles.boomiLayer} aria-hidden="true">
-            <BoomiCanvas visibleKey={timerKey} />
+            <BoomiCanvas visibleKey={bombHolderName ?? "none"} />
           </div>
         ) : null}
 

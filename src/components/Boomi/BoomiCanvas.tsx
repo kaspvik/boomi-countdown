@@ -1,21 +1,16 @@
-// src/game/BoomiCanvas.tsx
 import { Application } from "@pixi/react";
-import { useRef } from "react";
 import { BoomiSprite } from "./BoomiSprite";
 import "./pixiSetup";
 
-export function BoomiCanvas({ visibleKey }: { visibleKey: string }) {
-  const wrapRef = useRef<HTMLDivElement>(null);
-
+export function BoomiCanvas() {
   return (
-    <div ref={wrapRef} style={{ width: "100%", height: "100%" }}>
-      <Application
-        resizeTo={wrapRef}
-        backgroundAlpha={0}
-        antialias={false}
-        autoStart>
-        <BoomiSprite jumpKey={visibleKey} dockBottom scale={5} />
-      </Application>
-    </div>
+    <Application
+      width={400}
+      height={300}
+      backgroundAlpha={0}
+      antialias={false}
+      autoStart>
+      <BoomiSprite x={200} y={260} scale={6} />
+    </Application>
   );
 }
