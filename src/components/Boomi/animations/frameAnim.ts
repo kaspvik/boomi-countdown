@@ -23,24 +23,31 @@ export function stepFrameAnim(params: {
 
   if (frameCount <= 0) return { idx: 0, advanced: false, done: true };
 
-  const frameTime = 1 / Math.max(1, fps);
+  const safeFps = Math.max(1, fps);
+  const frameTime = 1 / safeFps;
+
   r.t += dt;
 
-  if (r.t < frameTime) {
-    return { idx: r.idx, advanced: false, done: false };
+  let advanced = false;
+
+  while (r.t >= frameTime) {
+    r.t -= frameTime;
+
+    if (loop) {
+      r.idx = (r.idx + 1) % frameCount;
+      advanced = true;
+      continue;
+    }
+
+    if (r.idx < frameCount - 1) {
+      r.idx += 1;
+      advanced = true;
+      continue;
+    }
+
+    return { idx: r.idx, advanced, done: true };
   }
 
-  r.t = 0;
-
-  if (loop) {
-    r.idx = (r.idx + 1) % frameCount;
-    return { idx: r.idx, advanced: true, done: false };
-  }
-
-  if (r.idx < frameCount - 1) {
-    r.idx += 1;
-    return { idx: r.idx, advanced: true, done: false };
-  }
-
-  return { idx: r.idx, advanced: false, done: true };
+  const done = !loop && r.idx === frameCount - 1;
+  return { idx: r.idx, advanced, done };
 }

@@ -1,4 +1,4 @@
-import { useTick } from "@pixi/react";
+import { extend, useTick } from "@pixi/react";
 import { Assets, Sprite as PixiSprite, Texture } from "pixi.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -13,6 +13,9 @@ import {
   isLoopAnim,
   type BoomiAnim,
 } from "./boomiFrames";
+
+// Register Pixi components for @pixi/react v8 intrinsic elements (<pixiSprite /> etc)
+extend({ Sprite: PixiSprite });
 
 type Props = {
   x: number;
