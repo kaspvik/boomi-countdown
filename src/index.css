@@ -70,6 +70,14 @@ h1, h2, h3, h4, h5, h6, p {
   color: var(--color-text);
 }
 
+/* Brödtext */
+.text-body-black {
+  font-family: var(--font-main);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-bg);
+}
+
 /* Knapptexter */
 .text-button {
   font-family: var(--font-main);
