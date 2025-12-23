@@ -66,10 +66,10 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   return (
     <div className={styles.wrapper}>
       <div className={styles.questionBox}>
-        <p className="text-subtitle">{questionText}</p>
+        <h1 className="text-subtitle">{questionText}</h1>
       </div>
 
-      <p className="text-body">Tap the player you want to vote for:</p>
+      <h2 className="text-body">Tap the player you want to vote for:</h2>
 
       <ul className={styles.playersList}>
         {possibleTargets.map((p) => {
