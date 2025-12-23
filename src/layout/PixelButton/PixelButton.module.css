@@ -26,7 +26,8 @@
 }
 
 .pixelButton:hover:not(.disabled):not(:disabled) {
-  filter: brightness(1.05);
+  filter: drop-shadow(2px 3px 0 #000);
+  transform: translateY(-1px);
 }
 
 .pixelButton:active:not(.disabled):not(:disabled) {
@@ -61,7 +62,13 @@
 }
 
 .label {
-  /* om du vill: skala texten lite på small */
+  position: relative;
+  z-index: 1;
+
+  background: #B7CCCD;
+  color: #000;
+
+  background-clip: padding-box;
 }
 
 .sm .label {
