@@ -48,27 +48,39 @@ export const PlayerSelectPanel: React.FC<PlayerSelectPanelProps> = ({
   footerText,
   emptyText = "No players available.",
 }) => {
+  const safeHeaderLabel = headerLabel?.trim();
+  const safeHeaderValue = headerValue?.trim();
+  const safeTitle = title?.trim();
+  const safeSubtitle = subtitle?.trim();
+
+  const safeEmptyText =
+    (emptyText ?? "No players available.").trim() || "No players available.";
+
   return (
     <div className={styles.panel}>
       <PixelFrame>
-        {(headerLabel || headerValue) && (
+        {(safeHeaderLabel || safeHeaderValue) && (
           <div className={panelStyles.headerBox}>
-            <p className={panelStyles.headerText}>
-              {headerLabel && (
-                <span className={panelStyles.headerLabel}>{headerLabel}</span>
+            <h1 className={panelStyles.headerText}>
+              {safeHeaderLabel && (
+                <span className={panelStyles.headerLabel}>
+                  {safeHeaderLabel}
+                </span>
               )}
-              {headerValue && (
-                <span className={panelStyles.headerValue}>{headerValue}</span>
+              {safeHeaderValue && (
+                <span className={panelStyles.headerValue}>
+                  {safeHeaderValue}
+                </span>
               )}
-            </p>
+            </h1>
           </div>
         )}
 
-        <h2 className="text-title">{title}</h2>
-        {subtitle && <p className="text-subtitle">{subtitle}</p>}
+        {safeTitle && <h2 className="text-title">{safeTitle}</h2>}
+        {safeSubtitle && <p className="text-subtitle">{safeSubtitle}</p>}
 
         {targets.length === 0 ? (
-          <p className="text-subtitle">{emptyText}</p>
+          <p className="text-subtitle">{safeEmptyText}</p>
         ) : (
           <ul className={panelStyles.playersGrid}>
             {targets.map((p) => {
@@ -82,7 +94,9 @@ export const PlayerSelectPanel: React.FC<PlayerSelectPanelProps> = ({
                       styles.playerButton,
                       panelStyles.playerItem,
                       isSelected ? styles.selected : "",
-                    ].join(" ")}
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                     onClick={() => onSelectTarget(p.id)}
                     disabled={disabled}
                     aria-pressed={isSelected}>
@@ -114,8 +128,8 @@ export const PlayerSelectPanel: React.FC<PlayerSelectPanelProps> = ({
         )}
       </div>
 
-      {footerText && (
-        <p className={`text-subtitle ${styles.footer}`}>{footerText}</p>
+      {footerText?.trim() && (
+        <p className={`text-subtitle ${styles.footer}`}>{footerText.trim()}</p>
       )}
     </div>
   );
