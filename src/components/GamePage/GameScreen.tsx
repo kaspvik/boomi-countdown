@@ -124,10 +124,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             !(isPassPanelOpen && !isCurrentHolder) && (
               <PixelFrame>
                 <div className={styles.header}>
-                  <p className="text-subtitle">
+                  <h1 className="text-subtitle">
                     Current Boomi holder: <br />
                     <span className="text-game">{bombHolderName}</span>
-                  </p>
+                  </h1>
                 </div>
               </PixelFrame>
             )}
