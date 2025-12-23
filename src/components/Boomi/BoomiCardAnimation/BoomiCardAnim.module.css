@@ -1,0 +1,24 @@
+.wrap {
+  display: grid;
+  place-items: center;
+  width: 140px;
+  height: 140px;
+}
+
+.sprite {
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  transform-origin: center;
+  pointer-events: none;
+}
+
+@keyframes boomiFrames {
+  from {
+    background-position: var(--fromX) var(--y);
+  }
+  to {
+    background-position: var(--toX) var(--y);
+  }
+}
