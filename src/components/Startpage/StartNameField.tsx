@@ -27,22 +27,23 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
 
   return (
     <PixelFrame>
-      <p className={`${styles.title} text-title`}>
-        {isJoin
-          ? "Enter your name to join the room!"
-          : "Choose a name before creating the room!"}
-      </p>
       {isJoin && roomCode && (
-        <p className={`text-subtitle ${styles.roomInfo}`}>
+        <p className={`text-title ${styles.roomInfo}`}>
           Joining room with code: {roomCode}
         </p>
       )}
+
       <PixelInputField
-        label="Your name:"
+        label={
+          isJoin
+            ? "Enter your name to join the room!"
+            : "Choose a name before creating the room!"
+        }
         value={playerName}
         onChange={(e) => onPlayerNameChange(e.target.value)}
-        placeholder="e.g. Kasper"
+        placeholder="Name"
       />
+
       <div className={styles.buttonsRow}>
         <PixelButton onClick={onConfirmName} className="text-button">
           Continue
