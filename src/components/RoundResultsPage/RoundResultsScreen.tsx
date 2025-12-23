@@ -48,20 +48,22 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
             <div className={styles.frameBody}>
               {step === 0 && (
                 <>
-                  <p className={`text-title ${styles.title}`}>{titleText}</p>
-                  <p className={`text-body ${styles.message}`}>{messageText}</p>
+                  <h1 className={`text-title ${styles.title}`}>{titleText}</h1>
+                  <h2 className={`text-body ${styles.message}`}>
+                    {messageText}
+                  </h2>
                 </>
               )}
 
               {step === 1 && hasRoleReveal && roleTitleText && (
                 <>
-                  <p className={`text-title ${styles.title}`}>
+                  <h1 className={`text-title ${styles.title}`}>
                     {roleTitleText}
-                  </p>
+                  </h1>
                   {roleMessageText && (
-                    <p className={`text-body ${styles.message}`}>
+                    <h2 className={`text-body ${styles.message}`}>
                       {roleMessageText}
-                    </p>
+                    </h2>
                   )}
                 </>
               )}
