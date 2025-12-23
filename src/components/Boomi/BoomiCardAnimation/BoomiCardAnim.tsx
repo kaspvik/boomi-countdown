@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import styles from "../BoomiCardAnimation/BoomiCardAnim.module.css";
 
-export type BoomiAnim = "idle" | "tick" | "pass" | "explode";
+export type BoomiAnim = "idle" | "tick" | "pass" | "block" | "explode";
 
 type Props = {
   anim: BoomiAnim;
@@ -36,6 +36,15 @@ function animMeta(anim: BoomiAnim) {
         row: 4,
         fromCol: 0,
         toCol: 5,
+        defaultFps: 6,
+        defaultLoop: true,
+      };
+
+    case "block":
+      return {
+        row: 7,
+        fromCol: 0,
+        toCol: 3,
         defaultFps: 6,
         defaultLoop: true,
       };
