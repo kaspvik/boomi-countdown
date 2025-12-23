@@ -31,12 +31,12 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
         <GameLogo />
 
         <PixelFrame>
-          <p className="text-title">GAME PIN:</p>
+          <h2 className="text-title">GAME PIN:</h2>
 
           <div className={panelStyles.headerBox}>
-            <p className={panelStyles.headerText}>
+            <h3 className={panelStyles.headerText}>
               <span className={panelStyles.headerValue}>{room.code}</span>
-            </p>
+            </h3>
           </div>
 
           <h2 className="text-title">PLAYERS:</h2>
