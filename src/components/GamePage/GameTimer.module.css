@@ -23,7 +23,10 @@
 
 .value {
   font-size: 3rem;
-  margin-top: 4rem;
-  color: black;
+  margin-top: 4.1rem;
+  color: #000;
   font-weight: var(--font-weight-bold);
+
+  background: #fff;
+  background-clip: padding-box;
 }
