@@ -125,8 +125,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               <PixelFrame>
                 <div className={styles.header}>
                   <p className="text-subtitle">
-                    Current bomb holder: <br />
-                    {bombHolderName}
+                    Current Boomi holder: <br />
+                    <span className="text-game">{bombHolderName}</span>
                   </p>
                 </div>
               </PixelFrame>
