@@ -26,8 +26,9 @@
 
 .waitingText {
   text-align: center;
-  font-size: 1rem;
-  margin: 1rem
+  font-size: 1.2rem;
+  margin: 1rem;
+  font-weight: bold;
 }
 
 .allReadyText {

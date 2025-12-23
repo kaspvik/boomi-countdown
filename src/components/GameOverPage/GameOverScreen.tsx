@@ -40,9 +40,9 @@ export const GameOverScreen: React.FC<GameOverScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <p className={`text-title ${styles.title}`}>{title}</p>
+              <h1 className={`text-title ${styles.title}`}>{title}</h1>
 
-              <p className={`text-body ${styles.message}`}>{message}</p>
+              <h2 className={`text-body ${styles.message}`}>{message}</h2>
 
               {winner && (
                 <p className={`text-body ${styles.extra}`}>

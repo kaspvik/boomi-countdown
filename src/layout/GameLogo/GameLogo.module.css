@@ -8,13 +8,15 @@
 .frame {
   display: inline-block;
   box-sizing: border-box;
-
   padding: 0 2rem;
 
   border-width: 18px;
   border-style: solid;
   border-image-source: url("/pixel-frame.png");
   border-image-slice: 36 fill;
+
+  background: #fff;
+  background-clip: padding-box;
 }
 
 .title {
@@ -37,7 +39,6 @@
 
 @media (max-width: 600px) {
   .wrapper {
-    margin-top: 1;
     margin-bottom: 0.5rem;
   }
 

@@ -84,32 +84,32 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <p className={`text-subtitle ${styles.title}`}>{titleText}</p>
+              <h1 className={`text-subtitle ${styles.title}`}>{titleText}</h1>
 
               {playerNameToShow && (
-                <p className={`text-game ${styles.playerName}`}>
+                <h2 className={`text-game ${styles.playerName}`}>
                   {playerNameToShow}
-                </p>
+                </h2>
               )}
 
               {error && <p className={styles.errorText}>&quot;{error}&quot;</p>}
 
               {!error && !hasAnyVotes && (
-                <p className={styles.extraMessage}>No votes this round.</p>
+                <h3 className={styles.extraMessage}>No votes this round.</h3>
               )}
 
               {!error && hasAnyVotes && (
                 <>
                   {view === "civilian" && !topCivilianTarget && (
-                    <p className={styles.extraMessage}>
+                    <h3 className={styles.extraMessage}>
                       No civilian votes were cast this round.
-                    </p>
+                    </h3>
                   )}
 
                   {view === "imposter" && !topImposterTarget && (
-                    <p className={styles.extraMessage}>
+                    <h3 className={styles.extraMessage}>
                       No imposter votes were cast this round.
-                    </p>
+                    </h3>
                   )}
                 </>
               )}

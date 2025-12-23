@@ -11,7 +11,7 @@ export const BlockCard: React.FC<BlockCardProps> = ({ disabled, onClick }) => {
   return (
     <GameCard disabled={disabled} onClick={onClick}>
       <div className={styles.cardHeader}>
-        <p className="text-subtitle">Block</p>
+        <h1 className="text-subtitle">Block</h1>
       </div>
 
       <div className={styles.iconArea}>
@@ -20,9 +20,9 @@ export const BlockCard: React.FC<BlockCardProps> = ({ disabled, onClick }) => {
         </div>
       </div>
 
-      <p className="text-subtitle">
+      <h2 className="text-subtitle">
         Other players can’t pass Boomi to you this round.
-      </p>
+      </h2>
     </GameCard>
   );
 };

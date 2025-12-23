@@ -14,7 +14,7 @@ export const PassOnCard: React.FC<PassOnCardProps> = ({
   return (
     <GameCard disabled={disabled} onClick={onClick}>
       <div className={styles.cardHeader}>
-        <p className="text-subtitle">Pass on</p>
+        <h1 className="text-subtitle">Pass on</h1>
       </div>
 
       <div className={styles.iconArea}>
@@ -23,9 +23,9 @@ export const PassOnCard: React.FC<PassOnCardProps> = ({
         </div>
       </div>
 
-      <p className={`text-subtitle ${styles.cardHint}`}>
+      <h2 className={`text-subtitle ${styles.cardHint}`}>
         Tap to choose who to pass Boomi to.
-      </p>
+      </h2>
     </GameCard>
   );
 };
