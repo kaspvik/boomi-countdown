@@ -27,7 +27,7 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
           </h2>
 
           {isCivilian && (
-            <p className="text-body">
+            <p className="text-body-black">
               Stay calm, watch the others and try to figure out who is placing
               Boomi. Work together with the other civilians and don&apos;t get
               blown up.
@@ -35,7 +35,7 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
           )}
 
           {!isCivilian && (
-            <p className="text-body">
+            <p className="text-body-black">
               You are secretly on Boomi&apos;s side. Place the bomb cleverly,
               create chaos and try not to get caught.
             </p>
