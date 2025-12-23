@@ -1,5 +1,6 @@
 import React from "react";
 import { GameCard } from "../../layout/GameCard/GameCard";
+import { BoomiCardAnim } from "../Boomi/BoomiCardAnimation/BoomiCardAnim";
 import styles from "./CardPanel.module.css";
 
 interface PassOnCardProps {
@@ -19,7 +20,7 @@ export const PassOnCard: React.FC<PassOnCardProps> = ({
 
       <div className={styles.iconArea}>
         <div className={styles.boomiPlaceholder}>
-          <span className="text-subtitle">Boomi goes here</span>
+          <BoomiCardAnim anim="pass" scale={4} />
         </div>
       </div>
 
