@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
@@ -83,34 +83,45 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const setSpotlight = useGameStore((s) => s.setSpotlight);
   const resetRoomFx = useGameStore((s) => s.resetRoomFx);
 
+  const spotlightTimerRef = useRef<number | null>(null);
+
   const boomiOnTable = isAlive && isCurrentHolder;
 
   useEffect(() => {
+    if (spotlightTimerRef.current) {
+      window.clearTimeout(spotlightTimerRef.current);
+      spotlightTimerRef.current = null;
+    }
+
     if (!boomiOnTable) {
       resetRoomFx();
       return;
     }
 
+    const baseDim =
+      boomiAnim === "explode" ? 0.85 : boomiAnim === "tick" ? 0.7 : 0.6;
+
+    setDim(baseDim);
     setSpotlight({
-      enabled: true,
+      enabled: false,
       x: 50,
       y: 84,
-      sizePx: 280,
+      sizePx: boomiAnim === "explode" ? 220 : boomiAnim === "tick" ? 260 : 280,
       strength: 1,
     });
 
-    if (boomiAnim === "explode") {
-      setDim(0.85);
-      setSpotlight({ sizePx: 220 });
-    } else if (boomiAnim === "tick") {
-      setDim(0.7);
-      setSpotlight({ sizePx: 260 });
-    } else {
-      setDim(0.6);
-      setSpotlight({ sizePx: 280 });
-    }
+    const delayMs = 400;
+    spotlightTimerRef.current = window.setTimeout(() => {
+      setSpotlight({ enabled: true });
+    }, delayMs);
 
-    return () => resetRoomFx();
+    return () => {
+      if (spotlightTimerRef.current) {
+        window.clearTimeout(spotlightTimerRef.current);
+        spotlightTimerRef.current = null;
+      }
+      resetRoomFx();
+    };
   }, [boomiOnTable, boomiAnim, resetRoomFx, setDim, setSpotlight]);
 
   const requestBoomiExit = useCallback(

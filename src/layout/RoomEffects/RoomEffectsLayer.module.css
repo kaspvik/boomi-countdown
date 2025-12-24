@@ -6,16 +6,52 @@
 
   --fx-dim: 0;
   --fx-spot-x: 50%;
-  --fx-spot-y: 80%;
-  --fx-spot-size: 260px;
+  --fx-spot-y: 84%;
+  --fx-spot-size: 280px;
   --fx-spot-strength: 1;
+}
 
-  background:
-    radial-gradient(
-      circle var(--fx-spot-size) at var(--fx-spot-x) var(--fx-spot-y),
-      rgba(212, 15, 15, 0) 0%,
-      rgba(0, 0, 0, 0) 45%,
-      rgba(0, 0, 0, calc(var(--fx-dim) * var(--fx-spot-strength))) 75%,
-      rgba(0, 0, 0, var(--fx-dim)) 100%
-    );
+.overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--fx-dim));
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle var(--fx-spot-size) at var(--fx-spot-x) var(--fx-spot-y),
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 44%,
+    rgba(0, 0, 0, calc(var(--fx-dim) * var(--fx-spot-strength))) 70%,
+    rgba(0, 0, 0, var(--fx-dim)) 100%
+  );
+
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.overlay[data-mode="off"]::before,
+.overlay[data-mode="off"]::after {
+  opacity: 0;
+}
+
+.overlay[data-mode="dim"]::before {
+  opacity: 1;
+}
+.overlay[data-mode="dim"]::after {
+  opacity: 0;
+}
+
+.overlay[data-mode="spotlight"]::before {
+  opacity: 0;
+}
+.overlay[data-mode="spotlight"]::after {
+  opacity: 1;
 }
