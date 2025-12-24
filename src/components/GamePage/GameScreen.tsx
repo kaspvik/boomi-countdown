@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
+import { useGameStore } from "../../store/gameStore";
 import type { Player } from "../../types/game";
 import { BoomiCanvas } from "../Boomi/BoomiCanvas";
 import styles from "../GamePage/GameScreen.module.css";
@@ -78,6 +79,40 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   const [, setAfterExitAction] = useState<null | (() => void)>(null);
 
+  const setDim = useGameStore((s) => s.setDim);
+  const setSpotlight = useGameStore((s) => s.setSpotlight);
+  const resetRoomFx = useGameStore((s) => s.resetRoomFx);
+
+  const boomiOnTable = isAlive && isCurrentHolder;
+
+  useEffect(() => {
+    if (!boomiOnTable) {
+      resetRoomFx();
+      return;
+    }
+
+    setSpotlight({
+      enabled: true,
+      x: 50,
+      y: 84,
+      sizePx: 280,
+      strength: 1,
+    });
+
+    if (boomiAnim === "explode") {
+      setDim(0.85);
+      setSpotlight({ sizePx: 220 });
+    } else if (boomiAnim === "tick") {
+      setDim(0.7);
+      setSpotlight({ sizePx: 260 });
+    } else {
+      setDim(0.6);
+      setSpotlight({ sizePx: 280 });
+    }
+
+    return () => resetRoomFx();
+  }, [boomiOnTable, boomiAnim, resetRoomFx, setDim, setSpotlight]);
+
   const requestBoomiExit = useCallback(
     (afterExit: () => void) => {
       if (!isAlive || !isCurrentHolder) {
@@ -106,6 +141,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   return (
     <main className={styles.main}>
       <GameHeader
+        className={styles.uiAboveFx}
         onLeave={onLeave}
         center={
           <GameTimer
@@ -117,7 +153,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         }
       />
 
-      <section className={styles.content}>
+      <section className={`${styles.content} ${styles.uiAboveFx}`}>
         <div className={styles.contentInner}>
           {showInfoBox &&
             bombHolderName &&
@@ -150,12 +186,16 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       </section>
 
       <section className={styles.bottomBar}>
-        <div className={styles.tableBg} aria-hidden="true">
+        <div
+          className={`${styles.tableBg} ${styles.worldBelowFx}`}
+          aria-hidden="true">
           <Table />
         </div>
 
         {isAlive && isCurrentHolder ? (
-          <div className={styles.boomiLayer} aria-hidden="true">
+          <div
+            className={`${styles.boomiLayer} ${styles.worldBelowFx}`}
+            aria-hidden="true">
             <BoomiCanvas
               visibleKey={bombHolderName ?? "none"}
               anim={boomiAnim}
@@ -167,7 +207,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           </div>
         ) : null}
 
-        <div className={styles.left}>
+        <div className={`${styles.left} ${styles.uiAboveFx}`}>
           {isAlive && isCurrentHolder ? (
             <PixelButton
               onClick={onOpenGuess}
@@ -178,9 +218,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           ) : null}
         </div>
 
-        <div className={styles.center} />
+        <div className={`${styles.center} ${styles.uiAboveFx}`} />
 
-        <div className={styles.right}>
+        <div className={`${styles.right} ${styles.uiAboveFx}`}>
           {isAlive ? (
             <PixelButton
               className="text-button"

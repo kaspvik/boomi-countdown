@@ -1,4 +1,5 @@
 import React from "react";
+import { RoomEffectsLayer } from "../RoomEffects/RoomEffectsLayer";
 import styles from "./GameLayout.module.css";
 
 interface GameLayoutProps {
@@ -11,6 +12,7 @@ export const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
       <div className={styles.greenhouse}>
         <div className={styles.content}>{children}</div>
       </div>
+      <RoomEffectsLayer />
     </div>
   );
 };
