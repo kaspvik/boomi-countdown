@@ -10,6 +10,17 @@
   box-sizing: border-box;
 }
 
+.worldBelowFx {
+  position: relative;
+  z-index: 10;
+}
+
+.uiAboveFx {
+  position: relative;
+  z-index: 30;
+}
+
+
 .content {
   flex: 1;
   display: flex;
