@@ -14,8 +14,11 @@ export const RoomEffectsLayer: React.FC = () => {
   const dim = useGameStore((s) => s.roomFx.dim);
   const spotlight = useGameStore((s) => s.roomFx.spotlight);
 
-  const isActive = dim > 0 || spotlight.enabled;
-  if (!isActive) return null;
+  const mode: "off" | "dim" | "spotlight" = spotlight.enabled
+    ? "spotlight"
+    : dim > 0
+    ? "dim"
+    : "off";
 
   const style: CSSVars = {
     "--fx-dim": String(dim),
@@ -25,5 +28,12 @@ export const RoomEffectsLayer: React.FC = () => {
     "--fx-spot-strength": String(spotlight.strength),
   };
 
-  return <div className={styles.overlay} aria-hidden="true" style={style} />;
+  return (
+    <div
+      className={styles.overlay}
+      aria-hidden="true"
+      data-mode={mode}
+      style={style}
+    />
+  );
 };
