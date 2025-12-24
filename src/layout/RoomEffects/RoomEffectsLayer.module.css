@@ -1,0 +1,21 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20; 
+  pointer-events: none;
+
+  --fx-dim: 0;
+  --fx-spot-x: 50%;
+  --fx-spot-y: 80%;
+  --fx-spot-size: 260px;
+  --fx-spot-strength: 1;
+
+  background:
+    radial-gradient(
+      circle var(--fx-spot-size) at var(--fx-spot-x) var(--fx-spot-y),
+      rgba(212, 15, 15, 0) 0%,
+      rgba(0, 0, 0, 0) 45%,
+      rgba(0, 0, 0, calc(var(--fx-dim) * var(--fx-spot-strength))) 75%,
+      rgba(0, 0, 0, var(--fx-dim)) 100%
+    );
+}
