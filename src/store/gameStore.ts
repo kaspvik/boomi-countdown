@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type BoomiAnim = "idle" | "tick" | "pass" | "explode";
+export type BoomiAnim = "idle" | "tick" | "pass" | "explode";
 
 type SpotlightState = {
   enabled: boolean;
@@ -13,6 +13,7 @@ type SpotlightState = {
 type RoomFxState = {
   dim: number;
   flicker: number;
+  alertRed: number; // 0..1
   spotlight: SpotlightState;
 };
 
@@ -36,11 +37,15 @@ interface GameSessionState {
   setDim: (dim: number) => void;
   setSpotlight: (spotlight: Partial<SpotlightState>) => void;
   setFlicker: (flicker: number) => void;
+  setAlertRed: (strength: number) => void;
 
   fxReset: () => void;
   fxBoomiFocus: (anim: BoomiAnim, options?: BoomiFocusOptions) => void;
   fxSetFlickerBySeconds: (secondsLeft: number, enabled: boolean) => void;
   fxClearFlicker: () => void;
+
+  fxRedPulseOn: (strength?: number) => void;
+  fxRedPulseOff: () => void;
 
   _fxSpotlightTimeoutId: number | null;
 }
@@ -59,6 +64,7 @@ const defaultSpotlight: SpotlightState = {
 const defaultRoomFx: RoomFxState = {
   dim: 0,
   flicker: 0,
+  alertRed: 0,
   spotlight: { ...defaultSpotlight },
 };
 
@@ -73,9 +79,10 @@ export const useGameStore = create<GameSessionState>((set, get) => ({
   currentPlayerId: null,
   enterLobby: (roomId, playerId) =>
     set({ activeRoomId: roomId, currentPlayerId: playerId }),
+
   leaveLobby: () => {
-    const id = get()._fxSpotlightTimeoutId;
-    if (id) window.clearTimeout(id);
+    const spotId = get()._fxSpotlightTimeoutId;
+    if (spotId) window.clearTimeout(spotId);
 
     set({
       activeRoomId: null,
@@ -125,9 +132,14 @@ export const useGameStore = create<GameSessionState>((set, get) => ({
       roomFx: { ...s.roomFx, flicker: clamp01(flicker) },
     })),
 
+  setAlertRed: (strength) =>
+    set((s) => ({
+      roomFx: { ...s.roomFx, alertRed: clamp01(strength) },
+    })),
+
   fxReset: () => {
-    const id = get()._fxSpotlightTimeoutId;
-    if (id) window.clearTimeout(id);
+    const spotId = get()._fxSpotlightTimeoutId;
+    if (spotId) window.clearTimeout(spotId);
 
     set({
       roomFx: { ...defaultRoomFx, spotlight: { ...defaultSpotlight } },
@@ -151,6 +163,7 @@ export const useGameStore = create<GameSessionState>((set, get) => ({
         ...s.roomFx,
         dim: clamp01(dim),
         flicker: 0,
+        // lämna alertRed som den är (pulse styrs separat)
         spotlight: {
           ...s.roomFx.spotlight,
           enabled: false,
@@ -192,5 +205,15 @@ export const useGameStore = create<GameSessionState>((set, get) => ({
   fxClearFlicker: () =>
     set((s) => ({
       roomFx: { ...s.roomFx, flicker: 0 },
+    })),
+
+  fxRedPulseOn: (strength = 0.95) =>
+    set((s) => ({
+      roomFx: { ...s.roomFx, alertRed: clamp01(strength) },
+    })),
+
+  fxRedPulseOff: () =>
+    set((s) => ({
+      roomFx: { ...s.roomFx, alertRed: 0 },
     })),
 }));

@@ -84,6 +84,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const fxSetFlickerBySeconds = useGameStore((s) => s.fxSetFlickerBySeconds);
   const fxClearFlicker = useGameStore((s) => s.fxClearFlicker);
 
+  const fxRedPulseOn = useGameStore((s) => s.fxRedPulseOn);
+  const fxRedPulseOff = useGameStore((s) => s.fxRedPulseOff);
+
   const boomiOnTable = isAlive && isCurrentHolder;
 
   useEffect(() => {
@@ -98,6 +101,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
     fxBoomiFocus(boomiAnim);
   }, [boomiOnTable, boomiAnim, fxBoomiFocus, fxReset]);
+
+  useEffect(() => {
+    if (boomiOnTable && boomiAnim === "explode") {
+      fxRedPulseOn(0.95);
+    } else {
+      fxRedPulseOff();
+    }
+  }, [boomiOnTable, boomiAnim, fxRedPulseOn, fxRedPulseOff]);
 
   const handleTick = useCallback(
     (sLeft: number) => {
