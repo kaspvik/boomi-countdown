@@ -8,11 +8,13 @@ type CSSVars = React.CSSProperties & {
   "--fx-spot-y"?: string;
   "--fx-spot-size"?: string;
   "--fx-spot-strength"?: string;
+  "--fx-flicker"?: string;
 };
 
 export const RoomEffectsLayer: React.FC = () => {
   const dim = useGameStore((s) => s.roomFx.dim);
   const spotlight = useGameStore((s) => s.roomFx.spotlight);
+  const flicker = useGameStore((s) => s.roomFx.flicker);
 
   const mode: "off" | "dim" | "spotlight" = spotlight.enabled
     ? "spotlight"
@@ -26,6 +28,7 @@ export const RoomEffectsLayer: React.FC = () => {
     "--fx-spot-y": `${spotlight.y}%`,
     "--fx-spot-size": `${spotlight.sizePx}px`,
     "--fx-spot-strength": String(spotlight.strength),
+    "--fx-flicker": String(flicker),
   };
 
   return (
@@ -33,6 +36,7 @@ export const RoomEffectsLayer: React.FC = () => {
       className={styles.overlay}
       aria-hidden="true"
       data-mode={mode}
+      data-flicker={flicker > 0 ? "on" : "off"}
       style={style}
     />
   );
