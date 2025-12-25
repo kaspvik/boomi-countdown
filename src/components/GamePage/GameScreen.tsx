@@ -81,11 +81,35 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   const setDim = useGameStore((s) => s.setDim);
   const setSpotlight = useGameStore((s) => s.setSpotlight);
+  const setFlicker = useGameStore((s) => s.setFlicker);
   const resetRoomFx = useGameStore((s) => s.resetRoomFx);
 
   const spotlightTimerRef = useRef<number | null>(null);
 
+  const secondsLeftRef = useRef<number>(durationSeconds);
+
+  useEffect(() => {
+    secondsLeftRef.current = durationSeconds;
+    setFlicker(0);
+  }, [timerKey, durationSeconds, setFlicker]);
+
   const boomiOnTable = isAlive && isCurrentHolder;
+
+  const handleTick = useCallback(
+    (sLeft: number) => {
+      secondsLeftRef.current = sLeft;
+      onTimerTick(sLeft);
+
+      if (!boomiOnTable) {
+        setFlicker(0);
+        return;
+      }
+
+      const intensity = sLeft <= 3 ? 1 : sLeft <= 10 ? 0.75 : 0;
+      setFlicker(intensity);
+    },
+    [boomiOnTable, onTimerTick, setFlicker]
+  );
 
   useEffect(() => {
     if (spotlightTimerRef.current) {
@@ -110,7 +134,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       strength: 1,
     });
 
-    const delayMs = 400;
+    const delayMs = 180;
     spotlightTimerRef.current = window.setTimeout(() => {
       setSpotlight({ enabled: true });
     }, delayMs);
@@ -159,7 +183,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             key={timerKey}
             durationSeconds={durationSeconds}
             onTimeout={onTimeout}
-            onTick={onTimerTick}
+            onTick={handleTick}
           />
         }
       />

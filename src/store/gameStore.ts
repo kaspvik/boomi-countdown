@@ -6,11 +6,13 @@ type SpotlightState = {
   y: number;
   sizePx: number;
   strength: number;
+  flicker: number;
 };
 
 type RoomFxState = {
   dim: number;
   spotlight: SpotlightState;
+  flicker: number;
 };
 
 interface GameSessionState {
@@ -22,6 +24,7 @@ interface GameSessionState {
   roomFx: RoomFxState;
   setDim: (dim: number) => void;
   setSpotlight: (spotlight: Partial<SpotlightState>) => void;
+  setFlicker: (flicker: number) => void;
   resetRoomFx: () => void;
 }
 
@@ -39,7 +42,15 @@ export const useGameStore = create<GameSessionState>((set) => ({
       currentPlayerId: null,
       roomFx: {
         dim: 0,
-        spotlight: { enabled: false, x: 50, y: 82, sizePx: 260, strength: 1 },
+        spotlight: {
+          enabled: false,
+          x: 50,
+          y: 82,
+          sizePx: 260,
+          strength: 1,
+          flicker: 0,
+        },
+        flicker: 0,
       },
     }),
 
@@ -51,7 +62,9 @@ export const useGameStore = create<GameSessionState>((set) => ({
       y: 82,
       sizePx: 260,
       strength: 1,
+      flicker: 0,
     },
+    flicker: 0,
   },
 
   setDim: (dim) =>
@@ -82,6 +95,14 @@ export const useGameStore = create<GameSessionState>((set) => ({
               ? s.roomFx.spotlight.strength
               : clamp01(spotlight.strength),
         },
+      },
+    })),
+
+  setFlicker: (flicker: number) =>
+    set((s) => ({
+      roomFx: {
+        ...s.roomFx,
+        flicker: clamp01(flicker),
       },
     })),
 

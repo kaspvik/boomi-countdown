@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 20; 
+  z-index: 20;
   pointer-events: none;
 
   --fx-dim: 0;
@@ -34,7 +34,7 @@
   );
 
   opacity: 0;
-  transition: opacity 900ms ease;
+  transition: opacity 180ms ease;
 }
 
 .overlay[data-mode="off"]::before,
@@ -54,4 +54,18 @@
 }
 .overlay[data-mode="spotlight"]::after {
   opacity: 1;
+}
+
+@keyframes fxFlicker {
+  0% { opacity: 1; }
+  12% { opacity: calc(1 - (var(--fx-flicker) * 0.25)); }
+  25% { opacity: 1; }
+  40% { opacity: calc(1 - (var(--fx-flicker) * 0.35)); }
+  55% { opacity: 1; }
+  70% { opacity: calc(1 - (var(--fx-flicker) * 0.3)); }
+  100% { opacity: 1; }
+}
+
+.overlay[data-mode="spotlight"][data-flicker="on"]::after {
+  animation: fxFlicker 120ms infinite steps(2, end);
 }
