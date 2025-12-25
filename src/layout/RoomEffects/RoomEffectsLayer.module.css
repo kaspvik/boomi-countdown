@@ -1,0 +1,96 @@
+@property --fx-red-pulse {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+
+  --fx-dim: 0;
+  --fx-spot-x: 50%;
+  --fx-spot-y: 84%;
+  --fx-spot-size: 280px;
+  --fx-spot-strength: 1;
+  --fx-flicker: 0;
+  --fx-red: 0;
+
+  --fx-red-pulse: 1;
+}
+
+.overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--fx-dim));
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      rgba(255, 0, 0, calc(var(--fx-red) * var(--fx-red-pulse) * 0.45)),
+      rgba(255, 0, 0, calc(var(--fx-red) * var(--fx-red-pulse) * 0.45))
+    ),
+    radial-gradient(
+      circle var(--fx-spot-size) at var(--fx-spot-x) var(--fx-spot-y),
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 44%,
+      rgba(0, 0, 0, calc(var(--fx-dim) * var(--fx-spot-strength))) 70%,
+      rgba(0, 0, 0, var(--fx-dim)) 100%
+    );
+
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.overlay[data-mode="off"]::before,
+.overlay[data-mode="off"]::after {
+  opacity: 0;
+}
+
+.overlay[data-mode="dim"]::before {
+  opacity: 1;
+}
+.overlay[data-mode="dim"]::after {
+  opacity: 0;
+}
+
+.overlay[data-mode="spotlight"]::before {
+  opacity: 0;
+}
+.overlay[data-mode="spotlight"]::after {
+  opacity: 1;
+}
+
+@keyframes fxFlicker {
+  0% { opacity: 1; }
+  12% { opacity: calc(1 - (var(--fx-flicker) * 0.25)); }
+  25% { opacity: 1; }
+  40% { opacity: calc(1 - (var(--fx-flicker) * 0.35)); }
+  55% { opacity: 1; }
+  70% { opacity: calc(1 - (var(--fx-flicker) * 0.3)); }
+  100% { opacity: 1; }
+}
+
+.overlay[data-mode="spotlight"][data-flicker="on"]::after {
+  animation: fxFlicker 120ms infinite steps(2, end);
+}
+
+@keyframes fxRedPulse {
+  0% { --fx-red-pulse: 0.25; }
+  50% { --fx-red-pulse: 1; }
+  100% { --fx-red-pulse: 0.25; }
+}
+
+.overlay[data-red="on"] {
+  animation: fxRedPulse 220ms infinite ease-in-out;
+}

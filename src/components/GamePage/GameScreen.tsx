@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
+import { useGameStore } from "../../store/gameStore";
 import type { Player } from "../../types/game";
 import { BoomiCanvas } from "../Boomi/BoomiCanvas";
 import styles from "../GamePage/GameScreen.module.css";
@@ -78,6 +79,45 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   const [, setAfterExitAction] = useState<null | (() => void)>(null);
 
+  const fxBoomiFocus = useGameStore((s) => s.fxBoomiFocus);
+  const fxReset = useGameStore((s) => s.fxReset);
+  const fxSetFlickerBySeconds = useGameStore((s) => s.fxSetFlickerBySeconds);
+  const fxClearFlicker = useGameStore((s) => s.fxClearFlicker);
+
+  const fxRedPulseOn = useGameStore((s) => s.fxRedPulseOn);
+  const fxRedPulseOff = useGameStore((s) => s.fxRedPulseOff);
+
+  const boomiOnTable = isAlive && isCurrentHolder;
+
+  useEffect(() => {
+    fxClearFlicker();
+  }, [timerKey, fxClearFlicker]);
+
+  useEffect(() => {
+    if (!boomiOnTable) {
+      fxReset();
+      return;
+    }
+
+    fxBoomiFocus(boomiAnim);
+  }, [boomiOnTable, boomiAnim, fxBoomiFocus, fxReset]);
+
+  useEffect(() => {
+    if (boomiOnTable && boomiAnim === "explode") {
+      fxRedPulseOn(0.95);
+    } else {
+      fxRedPulseOff();
+    }
+  }, [boomiOnTable, boomiAnim, fxRedPulseOn, fxRedPulseOff]);
+
+  const handleTick = useCallback(
+    (sLeft: number) => {
+      onTimerTick(sLeft);
+      fxSetFlickerBySeconds(sLeft, boomiOnTable);
+    },
+    [onTimerTick, fxSetFlickerBySeconds, boomiOnTable]
+  );
+
   const requestBoomiExit = useCallback(
     (afterExit: () => void) => {
       if (!isAlive || !isCurrentHolder) {
@@ -106,18 +146,19 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   return (
     <main className={styles.main}>
       <GameHeader
+        className={styles.uiAboveFx}
         onLeave={onLeave}
         center={
           <GameTimer
             key={timerKey}
             durationSeconds={durationSeconds}
             onTimeout={onTimeout}
-            onTick={onTimerTick}
+            onTick={handleTick}
           />
         }
       />
 
-      <section className={styles.content}>
+      <section className={`${styles.content} ${styles.uiAboveFx}`}>
         <div className={styles.contentInner}>
           {showInfoBox &&
             bombHolderName &&
@@ -150,12 +191,16 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       </section>
 
       <section className={styles.bottomBar}>
-        <div className={styles.tableBg} aria-hidden="true">
+        <div
+          className={`${styles.tableBg} ${styles.worldBelowFx}`}
+          aria-hidden="true">
           <Table />
         </div>
 
         {isAlive && isCurrentHolder ? (
-          <div className={styles.boomiLayer} aria-hidden="true">
+          <div
+            className={`${styles.boomiLayer} ${styles.worldBelowFx}`}
+            aria-hidden="true">
             <BoomiCanvas
               visibleKey={bombHolderName ?? "none"}
               anim={boomiAnim}
@@ -167,7 +212,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           </div>
         ) : null}
 
-        <div className={styles.left}>
+        <div className={`${styles.left} ${styles.uiAboveFx}`}>
           {isAlive && isCurrentHolder ? (
             <PixelButton
               onClick={onOpenGuess}
@@ -178,9 +223,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           ) : null}
         </div>
 
-        <div className={styles.center} />
+        <div className={`${styles.center} ${styles.uiAboveFx}`} />
 
-        <div className={styles.right}>
+        <div className={`${styles.right} ${styles.uiAboveFx}`}>
           {isAlive ? (
             <PixelButton
               className="text-button"
