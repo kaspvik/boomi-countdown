@@ -33,10 +33,11 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     ? "Choose who should secretly receive Boomi this round."
     : "Who do you suspect the most this round?";
 
-  const possibleTargets = useMemo(
-    () => players.filter((p) => p.alive !== false && p.id !== currentPlayer.id),
-    [players, currentPlayer.id]
-  );
+  const possibleTargets = useMemo(() => {
+    return players
+      .filter((p) => p.alive !== false && p.id !== currentPlayer.id)
+      .filter((p) => (isImposter ? p.role !== "imposter" : true));
+  }, [players, currentPlayer.id, isImposter]);
 
   const handleSelectPlayer = (playerId: string) => {
     if (hasVoted || isSubmitting) return;
@@ -45,6 +46,15 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   const handleSubmit = async () => {
     if (!selectedTargetId || isSubmitting || hasVoted) return;
+    if (isImposter) {
+      const target = players.find((p) => p.id === selectedTargetId);
+      if (target?.role === "imposter") {
+        console.warn(
+          "Imposter cannot target another imposter for bomb receive."
+        );
+        return;
+      }
+    }
 
     setIsSubmitting(true);
     try {
