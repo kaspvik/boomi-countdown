@@ -79,7 +79,6 @@ export const CardPanel: React.FC<CardPanelProps> = ({
         confirmLabel="Use card"
         onConfirm={handleConfirmPass}
         confirmDisabled={!selectedTargetId || !canUsePassCard}
-        secondaryLabel="Back"
         onSecondary={handleBack}
         secondaryDisabled={false}
         disabled={!canUsePassCard}
