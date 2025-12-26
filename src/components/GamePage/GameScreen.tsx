@@ -179,7 +179,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               selectedTargetId={selectedGuessTargetId}
               onSelectTarget={onSelectGuessTarget}
               onConfirm={() => requestBoomiExit(onConfirmGuess)}
-              onCancel={onCancelGuess}
+              handleBack={onCancelGuess}
             />
           )}
 
@@ -215,10 +215,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         <div className={`${styles.left} ${styles.uiAboveFx}`}>
           {isAlive && isCurrentHolder ? (
             <PixelButton
-              onClick={onOpenGuess}
+              onClick={() => (isGuessOpen ? onCancelGuess() : onOpenGuess())}
               className="text-button"
-              disabled={isGuessOpen || isPassPanelOpen}>
-              Guess
+              disabled={isPassPanelOpen}>
+              {isGuessOpen ? "Go back" : "Guess"}
             </PixelButton>
           ) : null}
         </div>
