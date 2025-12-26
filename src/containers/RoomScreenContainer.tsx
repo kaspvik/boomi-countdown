@@ -106,6 +106,13 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     const role = currentPlayer.role ?? "civilian";
     const hasAcknowledged = !!currentPlayer.hasAcknowledgedRole;
 
+    const imposterTeammates =
+      role === "imposter"
+        ? players
+            .filter((p) => p.role === "imposter" && p.id !== currentPlayer.id)
+            .map((p) => p.name ?? "Unknown")
+        : [];
+
     return (
       <main className={lobbyStyles.main}>
         <section className={lobbyStyles.frameSection}>
@@ -115,6 +122,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
             hasAcknowledged={hasAcknowledged}
             allReady={derived.allPlayersReady}
             onAcknowledge={actions.handleAcknowledgeRole}
+            imposterTeammates={imposterTeammates}
           />
         </section>
       </main>
