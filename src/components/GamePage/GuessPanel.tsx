@@ -7,7 +7,7 @@ interface GuessPanelProps {
   selectedTargetId: string | null;
   onSelectTarget: (playerId: string) => void;
   onConfirm: () => void;
-  onCancel: () => void;
+  handleBack: () => void;
   disabled?: boolean;
 }
 
@@ -16,7 +16,7 @@ export const GuessPanel: React.FC<GuessPanelProps> = ({
   selectedTargetId,
   onSelectTarget,
   onConfirm,
-  onCancel,
+  handleBack,
   disabled = false,
 }) => {
   return (
@@ -28,8 +28,7 @@ export const GuessPanel: React.FC<GuessPanelProps> = ({
       confirmLabel="Confirm guess"
       onConfirm={onConfirm}
       confirmDisabled={disabled || !selectedTargetId}
-      secondaryLabel="Cancel"
-      onSecondary={onCancel}
+      onSecondary={handleBack}
       disabled={disabled}
     />
   );
