@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
+import {
+  getCivilianQuestionForRound,
+  IMPOSTER_QUESTION,
+} from "../../questions/questions";
 import { submitVote } from "../../services/voting/submitVote";
 import type { Player } from "../../types/game";
 import styles from "./QuestionForm.module.css";
@@ -33,8 +37,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   const isImposter = currentPlayer.role === "imposter";
 
   const questionText = isImposter
-    ? "Choose who should secretly receive Boomi this round."
-    : "Who do you suspect the most this round?";
+    ? IMPOSTER_QUESTION
+    : getCivilianQuestionForRound(round);
 
   const possibleTargets = useMemo(() => {
     return players
