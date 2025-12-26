@@ -89,7 +89,7 @@
   }
 
   .buttonRow {
-    flex-direction: row;
+    flex-direction: column-reverse;
     align-items: stretch;
     padding: 0 1rem;
   }
