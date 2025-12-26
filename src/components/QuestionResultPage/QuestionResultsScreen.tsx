@@ -1,3 +1,4 @@
+// QuestionResultsScreen.tsx
 import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
@@ -15,6 +16,11 @@ interface QuestionResultsScreenProps {
   topImposterTarget: Player | null;
   isCurrentCivilianTop: boolean;
   isCurrentImposterTop: boolean;
+
+  civilianQuestionText: string;
+  imposterQuestionText: string;
+
+  isViewerImposter: boolean;
 }
 
 export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
@@ -27,8 +33,18 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   topImposterTarget,
   isCurrentCivilianTop,
   isCurrentImposterTop,
+  civilianQuestionText,
+  imposterQuestionText,
+  isViewerImposter,
 }) => {
   const [view, setView] = useState<"civilian" | "imposter">("civilian");
+
+  const shownQuestionText =
+    view === "civilian"
+      ? civilianQuestionText
+      : isViewerImposter
+      ? imposterQuestionText
+      : "A secret Boomi assignment was made!";
 
   let titleText = `Round ${room.round} – results`;
   let playerNameToShow: string | null = null;
@@ -84,10 +100,18 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <h1 className={`text-subtitle ${styles.title}`}>{titleText}</h1>
+              {!!shownQuestionText && (
+                <p
+                  className={`text-subtitle ${styles.title}`}
+                  style={{ marginBottom: 10 }}>
+                  {shownQuestionText}
+                </p>
+              )}
+
+              <h1 className={`text-body-black ${styles.title}`}>{titleText}</h1>
 
               {playerNameToShow && (
-                <h2 className={`text-game ${styles.playerName}`}>
+                <h2 className={`text-subtitle ${styles.playerName}`}>
                   {playerNameToShow}
                 </h2>
               )}
