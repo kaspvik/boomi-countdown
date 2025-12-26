@@ -102,7 +102,7 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     killOnTimeout,
   ]);
 
-  const showInfoBox = !isCurrentHolder && isAlive && !!bombHolder;
+  const showInfoBox = !!bombHolder && (!isCurrentHolder || !isAlive);
 
   const effectiveExplodeKey =
     explodeKey ??

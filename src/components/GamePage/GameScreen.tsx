@@ -90,6 +90,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const boomiOnTable = isAlive && isCurrentHolder;
 
   useEffect(() => {
+    if (!isAlive) {
+      if (isGuessOpen) onCancelGuess();
+      if (isPassPanelOpen) onCancelPassPanel();
+    }
+  }, [isAlive, isGuessOpen, isPassPanelOpen, onCancelGuess, onCancelPassPanel]);
+
+  useEffect(() => {
     fxClearFlicker();
   }, [timerKey, fxClearFlicker]);
 
@@ -143,6 +150,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     setBoomiExitKey(undefined);
   }, []);
 
+  const hideInfoBoxForAlive = isAlive && isPassPanelOpen && !isCurrentHolder;
+
   return (
     <main className={styles.main}>
       <GameHeader
@@ -160,18 +169,22 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
       <section className={`${styles.content} ${styles.uiAboveFx}`}>
         <div className={styles.contentInner}>
-          {showInfoBox &&
-            bombHolderName &&
-            !(isPassPanelOpen && !isCurrentHolder) && (
-              <PixelFrame>
-                <div className={styles.header}>
-                  <h1 className="text-subtitle">
-                    Current Boomi holder: <br />
-                    <span className="text-game">{bombHolderName}</span>
-                  </h1>
-                </div>
-              </PixelFrame>
-            )}
+          {showInfoBox && bombHolderName && !hideInfoBoxForAlive && (
+            <PixelFrame>
+              <div className={styles.header}>
+                <h1 className="text-subtitle">
+                  Current Boomi holder: <br />
+                  <span className="text-game">{bombHolderName}</span>
+                </h1>
+
+                {!isAlive && (
+                  <p className="text-body-black" style={{ marginTop: 8 }}>
+                    Spectator mode — you’ve been eliminated.
+                  </p>
+                )}
+              </div>
+            </PixelFrame>
+          )}
 
           {isCurrentHolder && isAlive && isGuessOpen && (
             <GuessPanel
