@@ -21,6 +21,9 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
 
+  const isAlive = currentPlayer.alive !== false;
+  const canVote = isAlive;
+
   useEffect(() => {
     setSelectedTargetId("");
     setHasVoted(false);
@@ -40,12 +43,13 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   }, [players, currentPlayer.id, isImposter]);
 
   const handleSelectPlayer = (playerId: string) => {
-    if (hasVoted || isSubmitting) return;
+    if (!canVote || hasVoted || isSubmitting) return;
     setSelectedTargetId(playerId);
   };
 
   const handleSubmit = async () => {
-    if (!selectedTargetId || isSubmitting || hasVoted) return;
+    if (!canVote || !selectedTargetId || isSubmitting || hasVoted) return;
+
     if (isImposter) {
       const target = players.find((p) => p.id === selectedTargetId);
       if (target?.role === "imposter") {
@@ -73,6 +77,19 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     }
   };
 
+  if (!canVote) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.questionBox}>
+          <h1 className="text-subtitle">You’ve been eliminated</h1>
+          <h2 className="text-body-black">
+            You can’t vote anymore. <br /> Wait for the next phase.
+          </h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.questionBox}>
@@ -93,7 +110,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                   isSelected ? styles.playerItemSelected : ""
                 }`}
                 onClick={() => handleSelectPlayer(p.id)}
-                disabled={hasVoted || isSubmitting}>
+                disabled={!canVote || hasVoted || isSubmitting}>
                 <span className={styles.playerName}>
                   {p.name}
                   {p.isHost ? " (host)" : ""}
@@ -108,7 +125,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         <PixelButton
           onClick={handleSubmit}
           className="text-button"
-          disabled={!selectedTargetId || hasVoted || isSubmitting}>
+          disabled={!canVote || !selectedTargetId || hasVoted || isSubmitting}>
           {hasVoted ? "Vote submitted" : "Submit vote"}
         </PixelButton>
       </div>
