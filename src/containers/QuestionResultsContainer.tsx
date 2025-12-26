@@ -1,6 +1,11 @@
+// QuestionResultsContainer.tsx
 import React from "react";
 import { QuestionResultsScreen } from "../components/QuestionResultPage/QuestionResultsScreen";
 import { useRoundVotes } from "../hooks/useRoundVotes";
+import {
+  getCivilianQuestionForRound,
+  IMPOSTER_QUESTION,
+} from "../questions/questions";
 import { getTopVotedPlayerForRole } from "../services/voting/voteHelpers";
 import type { Player, Room } from "../types/game";
 
@@ -39,6 +44,8 @@ export const QuestionResultsContainer: React.FC<
   const isCurrentImposterTop =
     !!topImposterTarget && topImposterTarget.id === currentPlayer.id;
 
+  const isViewerImposter = currentPlayer.role === "imposter";
+
   return (
     <QuestionResultsScreen
       room={room}
@@ -50,6 +57,9 @@ export const QuestionResultsContainer: React.FC<
       topImposterTarget={topImposterTarget ?? null}
       isCurrentCivilianTop={isCurrentCivilianTop}
       isCurrentImposterTop={isCurrentImposterTop}
+      civilianQuestionText={getCivilianQuestionForRound(room.round)}
+      imposterQuestionText={IMPOSTER_QUESTION}
+      isViewerImposter={isViewerImposter}
     />
   );
 };
