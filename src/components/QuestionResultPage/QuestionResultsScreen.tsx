@@ -1,7 +1,7 @@
-// QuestionResultsScreen.tsx
 import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
 import { GameTimer } from "../GamePage/GameTimer";
 import styles from "./QuestionResultsScreen.module.css";
@@ -34,16 +34,12 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   isCurrentCivilianTop,
   isCurrentImposterTop,
   civilianQuestionText,
-  imposterQuestionText,
-  isViewerImposter,
 }) => {
   const [view, setView] = useState<"civilian" | "imposter">("civilian");
 
   const shownQuestionText =
     view === "civilian"
       ? civilianQuestionText
-      : isViewerImposter
-      ? imposterQuestionText
       : "A secret Boomi assignment was made!";
 
   let titleText = `Round ${room.round} – results`;
@@ -83,6 +79,12 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   const timerKey = `${room.round}-${view}-${timerStep}`;
 
+  const questionTypingKey = `${timerKey}-question`;
+  const titleTypingKey = `${timerKey}-title`;
+  const nameTypingKey = `${timerKey}-name`;
+  const errorTypingKey = `${timerKey}-error`;
+  const extraTypingKey = `${timerKey}-extra`;
+
   return (
     <main className={styles.main}>
       <GameHeader
@@ -90,7 +92,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         center={
           <GameTimer
             key={timerKey}
-            durationSeconds={10}
+            durationSeconds={10000}
             onTimeout={handleTimerTimeout}
           />
         }
@@ -104,35 +106,78 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                 <p
                   className={`text-subtitle ${styles.title}`}
                   style={{ marginBottom: 10 }}>
-                  {shownQuestionText}
+                  <Typewriter
+                    key={questionTypingKey}
+                    text={shownQuestionText}
+                    speedMs={38}
+                    startDelayMs={50}
+                  />
                 </p>
               )}
 
-              <h1 className={`text-body-black ${styles.title}`}>{titleText}</h1>
+              <h1 className={`text-body-black ${styles.title}`}>
+                <Typewriter
+                  key={titleTypingKey}
+                  text={titleText}
+                  speedMs={108}
+                  startDelayMs={250}
+                />
+              </h1>
 
               {playerNameToShow && (
                 <h2 className={`text-subtitle ${styles.playerName}`}>
-                  {playerNameToShow}
+                  <Typewriter
+                    key={nameTypingKey}
+                    text={playerNameToShow}
+                    speedMs={30}
+                    startDelayMs={500}
+                  />
                 </h2>
               )}
 
-              {error && <p className={styles.errorText}>&quot;{error}&quot;</p>}
+              {error && (
+                <p className={styles.errorText}>
+                  <Typewriter
+                    key={errorTypingKey}
+                    text={`"${error}"`}
+                    speedMs={36}
+                    startDelayMs={150}
+                  />
+                </p>
+              )}
 
               {!error && !hasAnyVotes && (
-                <h3 className={styles.extraMessage}>No votes this round.</h3>
+                <h3 className={styles.extraMessage}>
+                  <Typewriter
+                    key={extraTypingKey}
+                    text="No votes this round."
+                    speedMs={38}
+                    startDelayMs={300}
+                  />
+                </h3>
               )}
 
               {!error && hasAnyVotes && (
                 <>
                   {view === "civilian" && !topCivilianTarget && (
                     <h3 className={styles.extraMessage}>
-                      No civilian votes were cast this round.
+                      <Typewriter
+                        key={`${timerKey}-extra-civ`}
+                        text="No civilian votes were cast this round."
+                        speedMs={38}
+                        startDelayMs={300}
+                      />
                     </h3>
                   )}
 
                   {view === "imposter" && !topImposterTarget && (
                     <h3 className={styles.extraMessage}>
-                      No imposter votes were cast this round.
+                      <Typewriter
+                        key={`${timerKey}-extra-imp`}
+                        text="No imposter votes were cast this round."
+                        speedMs={38}
+                        startDelayMs={300}
+                      />
                     </h3>
                   )}
                 </>
