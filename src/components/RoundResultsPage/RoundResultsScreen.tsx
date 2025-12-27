@@ -1,7 +1,7 @@
-// src/components/RoundPage/RoundResultsScreen.tsx
 import React from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import styles from "./RoundResultsScreen.module.css";
 
 interface RoundResultsScreenProps {
@@ -32,6 +32,12 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
   onPrimaryClick,
   onLeave,
 }) => {
+  // ✅ En stabil key som ändras när "vyn" byts
+  // (räcker ofta med step + hasRoleReveal + relevant title)
+  const typingKey = hasRoleReveal
+    ? `step-${step}-reveal-${roleTitleText ?? "none"}`
+    : `step-${step}-normal-${titleText}`;
+
   return (
     <main className={styles.main}>
       <section className={styles.topBar}>
@@ -48,9 +54,22 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
             <div className={styles.frameBody}>
               {step === 0 && (
                 <>
-                  <h1 className={`text-title ${styles.title}`}>{titleText}</h1>
+                  <h1 className={`text-title ${styles.title}`}>
+                    <Typewriter
+                      key={`${typingKey}-title`}
+                      text={titleText}
+                      speedMs={45}
+                      startDelayMs={80}
+                    />
+                  </h1>
+
                   <h2 className={`text-body ${styles.message}`}>
-                    {messageText}
+                    <Typewriter
+                      key={`${typingKey}-msg`}
+                      text={messageText}
+                      speedMs={22}
+                      startDelayMs={280}
+                    />
                   </h2>
                 </>
               )}
@@ -58,11 +77,22 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
               {step === 1 && hasRoleReveal && roleTitleText && (
                 <>
                   <h1 className={`text-title ${styles.title}`}>
-                    {roleTitleText}
+                    <Typewriter
+                      key={`${typingKey}-role-title`}
+                      text={roleTitleText}
+                      speedMs={45}
+                      startDelayMs={80}
+                    />
                   </h1>
+
                   {roleMessageText && (
                     <h2 className={`text-body ${styles.message}`}>
-                      {roleMessageText}
+                      <Typewriter
+                        key={`${typingKey}-role-msg`}
+                        text={roleMessageText}
+                        speedMs={22}
+                        startDelayMs={280}
+                      />
                     </h2>
                   )}
                 </>
@@ -70,8 +100,23 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
 
               {step === 1 && !hasRoleReveal && (
                 <>
-                  <p className={`text-title ${styles.title}`}>{titleText}</p>
-                  <p className={`text-body ${styles.message}`}>{messageText}</p>
+                  <p className={`text-title ${styles.title}`}>
+                    <Typewriter
+                      key={`${typingKey}-plain-title`}
+                      text={titleText}
+                      speedMs={45}
+                      startDelayMs={80}
+                    />
+                  </p>
+
+                  <p className={`text-body ${styles.message}`}>
+                    <Typewriter
+                      key={`${typingKey}-plain-msg`}
+                      text={messageText}
+                      speedMs={22}
+                      startDelayMs={280}
+                    />
+                  </p>
                 </>
               )}
 

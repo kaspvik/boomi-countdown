@@ -33,32 +33,35 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   topImposterTarget,
   isCurrentCivilianTop,
   isCurrentImposterTop,
-  civilianQuestionText,
 }) => {
   const [view, setView] = useState<"civilian" | "imposter">("civilian");
 
-  const shownQuestionText =
-    view === "civilian"
-      ? civilianQuestionText
-      : "A secret Boomi assignment was made!";
-
-  let titleText = `Round ${room.round} – results`;
-  let playerNameToShow: string | null = null;
+  let titlePrefix = `Round ${room.round} – results`;
+  let titleName: string | null = null;
+  let titleSuffix = "";
 
   if (!error && hasAnyVotes) {
     if (view === "civilian") {
       if (isCurrentCivilianTop) {
-        titleText = "You got the most votes!";
+        const name = topCivilianTarget?.name ?? "Player";
+        titlePrefix = "You got the most votes";
+        titleName = name;
+        titleSuffix = "!";
       } else if (topCivilianTarget) {
-        titleText = "The player with most votes:";
-        playerNameToShow = topCivilianTarget.name;
+        titlePrefix = "The player with most votes was";
+        titleName = topCivilianTarget.name;
+        titleSuffix = "!";
       }
     } else {
       if (isCurrentImposterTop) {
-        titleText = "You got Boomi!";
+        const name = topImposterTarget?.name ?? "Player";
+        titlePrefix = "You got Boomi";
+        titleName = name;
+        titleSuffix = "!";
       } else if (topImposterTarget) {
-        titleText = "The player that got Boomi was:";
-        playerNameToShow = topImposterTarget.name;
+        titlePrefix = "The player that got Boomi was";
+        titleName = topImposterTarget.name;
+        titleSuffix = "!";
       }
     }
   }
@@ -79,9 +82,10 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   const timerKey = `${room.round}-${view}-${timerStep}`;
 
-  const questionTypingKey = `${timerKey}-question`;
-  const titleTypingKey = `${timerKey}-title`;
-  const nameTypingKey = `${timerKey}-name`;
+  const titlePrefixKey = `${timerKey}-title-prefix`;
+  const titleNameKey = `${timerKey}-title-name`;
+  const titleSuffixKey = `${timerKey}-title-suffix`;
+
   const errorTypingKey = `${timerKey}-error`;
   const extraTypingKey = `${timerKey}-extra`;
 
@@ -92,7 +96,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         center={
           <GameTimer
             key={timerKey}
-            durationSeconds={10000}
+            durationSeconds={10}
             onTimeout={handleTimerTimeout}
           />
         }
@@ -102,48 +106,48 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              {!!shownQuestionText && (
-                <p
-                  className={`text-subtitle ${styles.title}`}
-                  style={{ marginBottom: 10 }}>
-                  <Typewriter
-                    key={questionTypingKey}
-                    text={shownQuestionText}
-                    speedMs={38}
-                    startDelayMs={50}
-                  />
-                </p>
-              )}
-
-              <h1 className={`text-body-black ${styles.title}`}>
+              <h2 className={`text-body-black ${styles.title}`}>
                 <Typewriter
-                  key={titleTypingKey}
-                  text={titleText}
-                  speedMs={108}
-                  startDelayMs={250}
+                  key={titlePrefixKey}
+                  text={titlePrefix}
+                  speedMs={28}
+                  startDelayMs={50}
                 />
-              </h1>
 
-              {playerNameToShow && (
-                <h2 className={`text-subtitle ${styles.playerName}`}>
+                {titleName && (
+                  <>
+                    <br />
+                    <strong>
+                      <Typewriter
+                        key={titleNameKey}
+                        text={titleName}
+                        speedMs={25}
+                        startDelayMs={950}
+                      />
+                    </strong>
+                  </>
+                )}
+
+                {titleName && titleSuffix && (
                   <Typewriter
-                    key={nameTypingKey}
-                    text={playerNameToShow}
-                    speedMs={30}
-                    startDelayMs={500}
+                    key={titleSuffixKey}
+                    text={titleSuffix}
+                    speedMs={90}
+                    startDelayMs={650}
+                    cursor={false}
                   />
-                </h2>
-              )}
+                )}
+              </h2>
 
               {error && (
-                <p className={styles.errorText}>
+                <h3 className={styles.errorText}>
                   <Typewriter
                     key={errorTypingKey}
                     text={`"${error}"`}
                     speedMs={36}
                     startDelayMs={150}
                   />
-                </p>
+                </h3>
               )}
 
               {!error && !hasAnyVotes && (
@@ -152,7 +156,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                     key={extraTypingKey}
                     text="No votes this round."
                     speedMs={38}
-                    startDelayMs={300}
+                    startDelayMs={250}
                   />
                 </h3>
               )}
@@ -165,7 +169,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                         key={`${timerKey}-extra-civ`}
                         text="No civilian votes were cast this round."
                         speedMs={38}
-                        startDelayMs={300}
+                        startDelayMs={250}
                       />
                     </h3>
                   )}
@@ -176,7 +180,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                         key={`${timerKey}-extra-imp`}
                         text="No imposter votes were cast this round."
                         speedMs={38}
-                        startDelayMs={300}
+                        startDelayMs={250}
                       />
                     </h3>
                   )}
