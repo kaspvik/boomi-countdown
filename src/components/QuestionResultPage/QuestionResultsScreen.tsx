@@ -33,11 +33,17 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   topImposterTarget,
   isCurrentCivilianTop,
   isCurrentImposterTop,
+  civilianQuestionText,
 }) => {
   const [view, setView] = useState<"civilian" | "imposter">("civilian");
 
-  let titlePrefix = `Round ${room.round} – results`;
-  let titleName: string | null = null;
+  const shownQuestionText =
+    view === "civilian"
+      ? civilianQuestionText
+      : "A secret Boomi assignment was made!";
+
+  let titleText = `Round ${room.round} – results`;
+  let playerNameToShow: string | null = null;
 
   if (!error && hasAnyVotes) {
     if (view === "civilian") {
@@ -77,7 +83,9 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   const timerKey = `${room.round}-${view}-${timerStep}`;
 
-  const titleNameKey = `${timerKey}-title-name`;
+  const questionTypingKey = `${timerKey}-question`;
+  const titleTypingKey = `${timerKey}-title`;
+  const nameTypingKey = `${timerKey}-name`;
   const errorTypingKey = `${timerKey}-error`;
   const extraTypingKey = `${timerKey}-extra`;
 
@@ -100,33 +108,48 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <h2 className={`text-body-black ${styles.title}`}>
-                {titlePrefix}
+              {!!shownQuestionText && (
+                <p
+                  className={`text-subtitle ${styles.title}`}
+                  style={{ marginBottom: 10 }}>
+                  <Typewriter
+                    key={questionTypingKey}
+                    text={shownQuestionText}
+                    speedMs={38}
+                    startDelayMs={50}
+                  />
+                </p>
+              )}
 
-                {titleName && (
-                  <>
-                    <br />
-                    <strong>
-                      <Typewriter
-                        key={titleNameKey}
-                        text={`${titleName}!`}
-                        speedMs={30}
-                        startDelayMs={950}
-                      />
-                    </strong>
-                  </>
-                )}
-              </h2>
+              <h1 className={`text-body-black ${styles.title}`}>
+                <Typewriter
+                  key={titleTypingKey}
+                  text={titleText}
+                  speedMs={108}
+                  startDelayMs={250}
+                />
+              </h1>
+
+              {playerNameToShow && (
+                <h2 className={`text-subtitle ${styles.playerName}`}>
+                  <Typewriter
+                    key={nameTypingKey}
+                    text={playerNameToShow}
+                    speedMs={30}
+                    startDelayMs={500}
+                  />
+                </h2>
+              )}
 
               {error && (
-                <h3 className={styles.errorText}>
+                <p className={styles.errorText}>
                   <Typewriter
                     key={errorTypingKey}
                     text={`"${error}"`}
                     speedMs={36}
                     startDelayMs={150}
                   />
-                </h3>
+                </p>
               )}
 
               {!error && !hasAnyVotes && (
@@ -135,7 +158,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                     key={extraTypingKey}
                     text="No votes this round."
                     speedMs={38}
-                    startDelayMs={250}
+                    startDelayMs={300}
                   />
                 </h3>
               )}
@@ -148,7 +171,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                         key={`${timerKey}-extra-civ`}
                         text="No civilian votes were cast this round."
                         speedMs={38}
-                        startDelayMs={250}
+                        startDelayMs={300}
                       />
                     </h3>
                   )}
@@ -159,7 +182,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                         key={`${timerKey}-extra-imp`}
                         text="No imposter votes were cast this round."
                         speedMs={38}
-                        startDelayMs={250}
+                        startDelayMs={300}
                       />
                     </h3>
                   )}
