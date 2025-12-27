@@ -33,7 +33,6 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
   isHost,
   primaryButtonLabel,
   onPrimaryClick,
-  onLeave,
   statusTitleText,
   statusMessageText,
 }) => {
@@ -46,21 +45,13 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
 
   return (
     <main className={styles.main}>
-      <section className={styles.topBar}>
-        <div className={styles.leaveButton}>
-          <PixelButton onClick={onLeave} className="text-button">
-            Leave game
-          </PixelButton>
-        </div>
-      </section>
-
       <section className={styles.content}>
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
               {step === 0 && (
                 <>
-                  <h1 className={`text-title ${styles.title}`}>
+                  <h1 className={`text-game ${styles.title}`}>
                     <Typewriter
                       key={`${typingKey}-title`}
                       text={titleText}
@@ -69,7 +60,7 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
                     />
                   </h1>
 
-                  <h2 className={`text-body ${styles.message}`}>
+                  <h2 className={`text-body-black ${styles.message}`}>
                     <Typewriter
                       key={`${typingKey}-msg`}
                       text={messageText}
@@ -82,7 +73,7 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
 
               {step === 1 && hasRoleReveal && roleTitleText && (
                 <>
-                  <h1 className={`text-title ${styles.title}`}>
+                  <h1 className={`text-game ${styles.title}`}>
                     <Typewriter
                       key={`${typingKey}-role-title`}
                       text={roleTitleText}
@@ -92,7 +83,7 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
                   </h1>
 
                   {roleMessageText && (
-                    <h2 className={`text-body ${styles.message}`}>
+                    <h2 className={`text-body-black ${styles.message}`}>
                       <Typewriter
                         key={`${typingKey}-role-msg`}
                         text={roleMessageText}
@@ -106,7 +97,7 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
 
               {step === 1 && !hasRoleReveal && (
                 <>
-                  <p className={`text-title ${styles.title}`}>
+                  <p className={`text-game ${styles.title}`}>
                     <Typewriter
                       key={`${typingKey}-plain-title`}
                       text={titleText}
@@ -115,7 +106,7 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
                     />
                   </p>
 
-                  <p className={`text-body ${styles.message}`}>
+                  <p className={`text-body-black ${styles.message}`}>
                     <Typewriter
                       key={`${typingKey}-plain-msg`}
                       text={messageText}
@@ -128,7 +119,7 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
 
               {step === 2 && (
                 <>
-                  <h1 className={`text-title ${styles.title}`}>
+                  <h1 className={`text-game ${styles.title}`}>
                     <Typewriter
                       key={`${typingKey}-status-title`}
                       text={statusTitleText ?? ""}
@@ -137,7 +128,7 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
                     />
                   </h1>
 
-                  <h2 className={`text-body ${styles.message}`}>
+                  <h2 className={`text-body-black ${styles.message}`}>
                     <Typewriter
                       key={`${typingKey}-status-msg`}
                       text={statusMessageText ?? ""}
