@@ -1,6 +1,7 @@
 import React from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import styles from "./RoleScreen.module.css";
 
 interface RoleScreenProps {
@@ -28,20 +29,46 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
 }) => {
   const isCivilian = role === "civilian";
   const teammates = imposterTeammates.filter(Boolean);
+  const teammateNames = formatNames(teammates);
+
+  const titleText = isCivilian ? "You are a CIVILIAN" : "You are an IMPOSTER";
+
+  const civilianBody =
+    "Stay calm, watch the others and try to figure out who is placing Boomi. Work together with the other civilians and don't get blown up.";
+
+  const imposterIntroWithTeam =
+    "You are secretly on Boomi's side, together with ";
+  const imposterOutroWithTeam =
+    ". Place the bomb cleverly, create chaos and try not to get caught.";
+  const imposterSolo =
+    "You are secretly on Boomi's side. Place the bomb cleverly, create chaos and try not to get caught.";
+
+  const waitingText = "Waiting for other players to confirm their role...";
+  const allReadyText = "Everyone is ready! The round will start...";
+
+  const typingKey = `${role}-${teammateNames || "solo"}`;
 
   return (
     <PixelFrame>
       <div className={styles.container}>
         <div className={styles.textBlock}>
           <h2 className={styles.titel}>
-            {isCivilian ? "You are a CIVILIAN" : "You are an IMPOSTER"}
+            <Typewriter
+              key={`${typingKey}-title`}
+              text={titleText}
+              speedMs={45}
+              startDelayMs={80}
+            />
           </h2>
 
           {isCivilian && (
             <p className="text-body-black">
-              Stay calm, watch the others and try to figure out who is placing
-              Boomi. Work together with the other civilians and don&apos;t get
-              blown up.
+              <Typewriter
+                key={`${typingKey}-civ-body`}
+                text={civilianBody}
+                speedMs={22}
+                startDelayMs={260}
+              />
             </p>
           )}
 
@@ -49,17 +76,34 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
             <p className="text-body-black">
               {teammates.length > 0 ? (
                 <>
-                  You are secretly on Boomi&apos;s side, together with{" "}
-                  <strong>{formatNames(teammates)}</strong>. Place the bomb
-                  cleverly, create
-                  {formatNames(teammates)}. Place the bomb cleverly, create
-                  chaos and try not to get caught.
+                  <Typewriter
+                    key={`${typingKey}-imp-intro`}
+                    text={imposterIntroWithTeam}
+                    speedMs={22}
+                    startDelayMs={260}
+                  />
+                  <strong>
+                    <Typewriter
+                      key={`${typingKey}-imp-names`}
+                      text={teammateNames}
+                      speedMs={22}
+                      startDelayMs={260 + 350} // lite efter intro
+                    />
+                  </strong>
+                  <Typewriter
+                    key={`${typingKey}-imp-outro`}
+                    text={imposterOutroWithTeam}
+                    speedMs={22}
+                    startDelayMs={260 + 650} // lite efter namnen
+                  />
                 </>
               ) : (
-                <>
-                  You are secretly on Boomi&apos;s side. Place the bomb
-                  cleverly, create chaos and try not to get caught.
-                </>
+                <Typewriter
+                  key={`${typingKey}-imp-solo`}
+                  text={imposterSolo}
+                  speedMs={22}
+                  startDelayMs={260}
+                />
               )}
             </p>
           )}
@@ -75,13 +119,23 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
 
         {hasAcknowledged && !allReady && (
           <p className={styles.waitingText}>
-            Waiting for other players to confirm their role...
+            <Typewriter
+              key={`waiting-${role}`}
+              text={waitingText}
+              speedMs={44}
+              startDelayMs={120}
+            />
           </p>
         )}
 
         {allReady && (
           <p className={styles.allReadyText}>
-            Everyone is ready! The round will start...
+            <Typewriter
+              key={`allready-${role}`}
+              text={allReadyText}
+              speedMs={44}
+              startDelayMs={120}
+            />
           </p>
         )}
       </div>
