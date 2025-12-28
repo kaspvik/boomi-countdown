@@ -1,13 +1,31 @@
 .wrap {
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100%;
-overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
 }
 
 .image {
   width: min(420px, 55vw);
   height: auto;
   min-width: 300px;
+  opacity: 0;
+  transform: translateY(24px);
+  animation: tableSlideIn 340ms ease-out forwards;
+}
+
+@keyframes tableSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
