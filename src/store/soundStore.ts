@@ -2,7 +2,16 @@ import { create } from "zustand";
 import { BGM, type BgmKey } from "../services/audio/bgm";
 import { SFX } from "../services/audio/sfx";
 
-export type SfxKey = "hello1" | "hello2" | "hello3" | "laugh" | "ohno" | "pass";
+export type SfxKey =
+  | "hello1"
+  | "hello2"
+  | "hello3"
+  | "laugh"
+  | "ohno"
+  | "pass"
+  | "click"
+  | "tickdown"
+  | "explosion";
 
 type SoundState = {
   sfxMuted: boolean;
@@ -12,6 +21,7 @@ type SoundState = {
   setSfxVolume: (volume: number) => void;
 
   playSfx: (key: SfxKey) => void;
+  stopSfx: (key: SfxKey) => void;
   playRandomHello: () => void;
 
   bgmMuted: boolean;
@@ -80,5 +90,9 @@ export const useSoundStore = create<SoundState>((set, get) => ({
   stopBgm: () => {
     set({ currentBgm: null });
     BGM.stopWithFade(500);
+  },
+
+  stopSfx: (key) => {
+    SFX.stop(key);
   },
 }));
