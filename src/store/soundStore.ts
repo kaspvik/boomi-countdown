@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { BGM, type BgmKey } from "../services/audio/bgm";
 import { SFX } from "../services/audio/sfx";
 
 export type SfxKey = "hello1" | "hello2" | "hello3" | "laugh" | "ohno" | "pass";
@@ -12,6 +13,16 @@ type SoundState = {
 
   playSfx: (key: SfxKey) => void;
   playRandomHello: () => void;
+
+  bgmMuted: boolean;
+  bgmVolume: number;
+  currentBgm: BgmKey | null;
+
+  setBgmMuted: (muted: boolean) => void;
+  setBgmVolume: (volume: number) => void;
+
+  playBgm: (key: BgmKey) => void;
+  stopBgm: () => void;
 };
 
 const helloKeys: SfxKey[] = ["hello1", "hello2", "hello3"];
@@ -40,5 +51,33 @@ export const useSoundStore = create<SoundState>((set, get) => ({
     if (get().sfxMuted) return;
     const key = helloKeys[Math.floor(Math.random() * helloKeys.length)];
     SFX.play(key);
+  },
+
+  bgmMuted: false,
+  bgmVolume: 0.35,
+  currentBgm: null,
+
+  setBgmMuted: (muted) => {
+    set({ bgmMuted: muted });
+    BGM.setMuted(muted);
+  },
+
+  setBgmVolume: (volume) => {
+    const v = Math.max(0, Math.min(1, volume));
+    set({ bgmVolume: v });
+    BGM.setVolume(v);
+  },
+
+  playBgm: (key) => {
+    const { bgmMuted, bgmVolume } = get();
+    set({ currentBgm: key });
+    BGM.play(key);
+    BGM.setMuted(bgmMuted);
+    BGM.setVolume(bgmVolume);
+  },
+
+  stopBgm: () => {
+    set({ currentBgm: null });
+    BGM.stop();
   },
 }));
