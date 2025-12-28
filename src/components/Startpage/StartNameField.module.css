@@ -1,8 +1,3 @@
-.title {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
 .roomInfo {
   margin-bottom: 0.75rem;
 }
@@ -18,7 +13,7 @@
   justify-content: flex-start;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 300px) {
   .buttonsRow {
     flex-direction: column;
     align-items: center;
