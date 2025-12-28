@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
+import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
@@ -7,7 +8,6 @@ import { useGameStore } from "../../store/gameStore";
 import type { Player } from "../../types/game";
 import { BoomiCanvas } from "../Boomi/BoomiCanvas";
 import styles from "../GamePage/GameScreen.module.css";
-import { GameTimer } from "./GameTimer";
 import { GuessPanel } from "./GuessPanel";
 
 interface GameScreenProps {
