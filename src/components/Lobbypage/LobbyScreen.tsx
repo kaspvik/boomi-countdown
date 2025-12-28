@@ -50,7 +50,8 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
           )}
 
           {players.length > 0 && (
-            <ul className={panelStyles.playersGrid}>
+            <ul
+              className={`${panelStyles.playersGrid} ${styles.playersFadeIn}`}>
               {players.map((player) => (
                 <li key={player.id} className={panelStyles.playerItem}>
                   {player.name}
