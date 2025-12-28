@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { GameTimer } from "../../layout";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
-import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
