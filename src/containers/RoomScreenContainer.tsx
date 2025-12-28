@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { GameOverScreen } from "../components/GameOverPage/GameOverScreen";
 import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
@@ -11,6 +12,7 @@ import { useRoomDerivedState } from "../hooks/useRoomDerivedState";
 import { useRoomPhaseTransitions } from "../hooks/useRoomPhaseTransitions";
 import { useRoundVotes } from "../hooks/useRoundVotes";
 import { GameLogo } from "../layout/GameLogo/GameLogo";
+import { leaveRoom } from "../services/rooms/leaveRoom";
 import { useGameStore } from "../store/gameStore";
 import { GameScreenContainer } from "./GameScreenContainer";
 import { QuestionResultsContainer } from "./QuestionResultsContainer";
@@ -72,6 +74,26 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     isHost: derived.isCurrentPlayerHost,
   });
 
+  const currentPlayer = derived.currentPlayer ?? null;
+
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const handleLeaveGame = useCallback(async () => {
+    if (isLeaving) return;
+
+    setIsLeaving(true);
+    try {
+      if (currentPlayer) {
+        await leaveRoom(roomId, currentPlayer.id); // ✅ hard delete player-doc
+      }
+    } catch (err) {
+      console.error("Failed to leave room:", err);
+    } finally {
+      setIsLeaving(false);
+      onLeave();
+    }
+  }, [currentPlayer, isLeaving, onLeave, roomId]);
+
   // --- Loading / error ---
   if (roomLoading || playersLoading) {
     return (
@@ -98,8 +120,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       </main>
     );
   }
-
-  const currentPlayer = derived.currentPlayer;
 
   // 1) ROLE REVEAL
   if (derived.gameStarted && room.phase === "role_reveal" && currentPlayer) {
@@ -138,7 +158,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         round={room.round}
         players={players}
         currentPlayer={currentPlayer}
-        onLeave={onLeave}
+        onLeave={handleLeaveGame}
         onHostStartRound={actions.handleHostStartRound}
         isHost={derived.isCurrentPlayerHost}
       />
@@ -158,7 +178,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         players={players}
         currentPlayer={currentPlayer}
         isHost={derived.isCurrentPlayerHost}
-        onLeave={onLeave}
+        onLeave={handleLeaveGame}
         onContinue={actions.handleHostStartRound}
       />
     );
@@ -172,7 +192,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         roomId={roomId}
         players={players}
         currentPlayer={currentPlayer}
-        onLeave={onLeave}
+        onLeave={handleLeaveGame}
       />
     );
   }
@@ -185,7 +205,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         players={players}
         currentPlayer={currentPlayer}
         isHost={derived.isCurrentPlayerHost}
-        onLeave={onLeave}
+        onLeave={handleLeaveGame}
         onNext={actions.handleHostStartNextRound}
       />
     );
@@ -202,7 +222,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         room={room}
         players={players}
         currentPlayer={currentPlayer}
-        onLeave={onLeave}
+        onLeave={handleLeaveGame}
       />
     );
   }
@@ -214,7 +234,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
       players={players}
       playersLoading={playersLoading}
       playersError={playersError}
-      onLeave={onLeave}
+      onLeave={handleLeaveGame}
       onStartGame={actions.handleStartGame}
       canStartGame={derived.isCurrentPlayerHost && room.status === "lobby"}
     />
