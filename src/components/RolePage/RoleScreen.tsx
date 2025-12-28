@@ -52,14 +52,7 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
     <PixelFrame>
       <div className={styles.container}>
         <div className={styles.textBlock}>
-          <h2 className={styles.titel}>
-            <Typewriter
-              key={`${typingKey}-title`}
-              text={titleText}
-              speedMs={45}
-              startDelayMs={80}
-            />
-          </h2>
+          <h2 className={styles.titel}>{titleText}</h2>
 
           {isCivilian && (
             <p className="text-body-black">
@@ -87,14 +80,14 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
                       key={`${typingKey}-imp-names`}
                       text={teammateNames}
                       speedMs={22}
-                      startDelayMs={260 + 350} // lite efter intro
+                      startDelayMs={260 + 350}
                     />
                   </strong>
                   <Typewriter
                     key={`${typingKey}-imp-outro`}
                     text={imposterOutroWithTeam}
                     speedMs={22}
-                    startDelayMs={260 + 650} // lite efter namnen
+                    startDelayMs={260 + 650}
                   />
                 </>
               ) : (
@@ -118,26 +111,10 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
         )}
 
         {hasAcknowledged && !allReady && (
-          <p className={styles.waitingText}>
-            <Typewriter
-              key={`waiting-${role}`}
-              text={waitingText}
-              speedMs={44}
-              startDelayMs={120}
-            />
-          </p>
+          <p className={styles.waitingText}>{waitingText}</p>
         )}
 
-        {allReady && (
-          <p className={styles.allReadyText}>
-            <Typewriter
-              key={`allready-${role}`}
-              text={allReadyText}
-              speedMs={44}
-              startDelayMs={120}
-            />
-          </p>
-        )}
+        {allReady && <p className={styles.allReadyText}>{allReadyText}</p>}
       </div>
     </PixelFrame>
   );
