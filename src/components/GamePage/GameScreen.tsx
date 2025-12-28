@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useBoomiHelloSfx } from "../../hooks/useBoomiHelloSfx";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { GameTimer } from "../../layout/GameTimer/GameTimer";
@@ -92,6 +92,11 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const playBgm = useSoundStore((s) => s.playBgm);
   const stopBgm = useSoundStore((s) => s.stopBgm);
 
+  const playSfx = useSoundStore((s) => s.playSfx);
+  const stopSfx = useSoundStore((s) => s.stopSfx);
+
+  const tickStartedRef = useRef(false);
+
   const boomiOnTable = isAlive && isCurrentHolder;
 
   useEffect(() => {
@@ -136,12 +141,38 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     }
   }, [boomiOnTable, boomiAnim, fxRedPulseOn, fxRedPulseOff]);
 
+  useEffect(() => {
+    if (boomiOnTable && boomiAnim === "explode") {
+      stopSfx("tickdown");
+      playSfx("explosion");
+    }
+  }, [boomiOnTable, boomiAnim, playSfx, stopSfx]);
+
+  useEffect(() => {
+    if (!boomiOnTable) {
+      tickStartedRef.current = false;
+      stopSfx("tickdown");
+    }
+  }, [boomiOnTable, stopSfx]);
+
   const handleTick = useCallback(
     (sLeft: number) => {
       onTimerTick(sLeft);
       fxSetFlickerBySeconds(sLeft, boomiOnTable);
+
+      if (!boomiOnTable) return;
+
+      if (sLeft === 10 && !tickStartedRef.current) {
+        tickStartedRef.current = true;
+        playSfx("tickdown");
+      }
+
+      if (sLeft > 10 && tickStartedRef.current) {
+        tickStartedRef.current = false;
+        stopSfx("tickdown");
+      }
     },
-    [onTimerTick, fxSetFlickerBySeconds, boomiOnTable]
+    [onTimerTick, fxSetFlickerBySeconds, boomiOnTable, playSfx, stopSfx]
   );
 
   const requestBoomiExit = useCallback(
@@ -172,8 +203,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   useEffect(() => {
     return () => {
       stopBgm();
+      stopSfx("tickdown");
     };
-  }, [stopBgm]);
+  }, [stopBgm, stopSfx]);
 
   const hideInfoBoxForAlive = isAlive && isPassPanelOpen && !isCurrentHolder;
 
