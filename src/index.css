@@ -108,3 +108,15 @@ body {
   color: var(--color-text);
   text-transform: uppercase;
 }
+
+/* Mobil: större text (och lite mer läsbar) */
+@media (max-width: 600px) {
+  :root {
+    --font-size-display: 3.4rem;
+    --font-size-game: 2.3rem;
+    --font-size-button: 2.2rem;
+    --font-size-title: 1.8rem;
+    --font-size-subtitle: 1.7rem;
+    --font-size-body: 1.4rem;
+  }
+}
