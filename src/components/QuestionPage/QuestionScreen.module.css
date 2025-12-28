@@ -1,39 +1,28 @@
 .main {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   box-sizing: border-box;
-  padding: 0.75rem 1rem; 
-}
 
-.topBar {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.leaveButton {
-  display: inline-flex;
-}
-
-.leaveButton :global(button) {
-  padding: 0.2rem 0.8rem;
+  min-height: 100dvh;
+  padding: 0.75rem 1rem;
 }
 
 .content {
-  flex: 1; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  flex: 1;
+  display: grid;
+  place-items: center; 
 }
 
 .contentInner {
-  width: 450px;
+  width: min(450px, 100%);
 }
 
-@media (max-width: 600px) {
-  .contentInner {
-  width: 100%;
-}
+@media (max-height: 700px) {
+  .main {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .content {
+    align-items: start;
+  }
 }
