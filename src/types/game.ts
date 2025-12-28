@@ -21,7 +21,7 @@ export interface Room {
   phase?: RoomPhase | null;
 
   lastKilledPlayerId?: string | null;
-  roundResultsStep?: "explosion" | "role" | null;
+  roundResultsStep?: "explosion" | "role" | "status" | null;
   winner?: "civilians" | "imposters" | null;
 
   passCardUsedThisRound?: boolean;

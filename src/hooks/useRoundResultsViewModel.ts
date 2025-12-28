@@ -13,7 +13,14 @@ export function useRoundResultsViewModel(params: {
       players.find((p) => p.id === room.lastKilledPlayerId) ?? null;
     const isCurrentDead = !!deadPlayer && deadPlayer.id === currentPlayer.id;
 
-    const step: 0 | 1 = room.roundResultsStep === "role" ? 1 : 0;
+    const stepValue = room.roundResultsStep ?? "explosion";
+
+    const step: 0 | 1 | 2 =
+      stepValue === "role" ? 1 : stepValue === "status" ? 2 : 0;
+
+    const alivePlayers = players.filter((p) => p.alive);
+    const aliveImposters = alivePlayers.filter((p) => p.role === "imposter");
+    const impostersLeft = aliveImposters.length;
 
     let titleText = "Round result";
     let messageText = "";
@@ -22,13 +29,12 @@ export function useRoundResultsViewModel(params: {
       titleText = "No one exploded...";
       messageText = "Somehow everyone survived this round.";
     } else if (isCurrentDead) {
-      titleText = "You exploded";
+      titleText = "You exploded!";
       messageText =
         "Boomi got you this time. You are out for the rest of the game.";
     } else {
-      titleText = `${deadPlayer.name} exploded`;
-      messageText =
-        "Watch the others carefully. The imposters are still among you...";
+      titleText = `${deadPlayer.name} exploded!`;
+      messageText = "The dust settles… time to reveal what really happened.";
     }
 
     let roleTitleText: string | null = null;
@@ -39,28 +45,42 @@ export function useRoundResultsViewModel(params: {
       hasRoleReveal = true;
       const roleLabel =
         deadPlayer.role === "imposter" ? "IMPOSTER" : "CIVILIAN";
-
       const article = roleLabel === "IMPOSTER" ? "an" : "a";
 
       if (isCurrentDead) {
         roleTitleText = `You were ${article} ${roleLabel}!`;
         roleMessageText =
           deadPlayer.role === "imposter"
-            ? "Your true allegiance has been revealed. The civilians are one step closer."
-            : "You were innocent all along. The imposters are still hiding...";
+            ? "Your true allegiance has been revealed."
+            : "You were innocent all along.";
       } else {
         roleTitleText = `${deadPlayer.name} was ${article} ${roleLabel}.`;
         roleMessageText =
           deadPlayer.role === "imposter"
-            ? "Great job! One imposter is gone. But are there more?"
-            : "That was a mistake. An innocent player is out of the game.";
+            ? "Nice! One imposter is out."
+            : "Ouch. An innocent player is out of the game.";
       }
     }
+
+    const statusTitleText =
+      impostersLeft > 0
+        ? "Imposters are still in the game!"
+        : "All imposters eliminated!";
+    const statusMessageText =
+      impostersLeft > 0
+        ? `There ${
+            impostersLeft === 1 ? "is" : "are"
+          } still ${impostersLeft} imposter${
+            impostersLeft === 1 ? "" : "s"
+          } among the living.`
+        : "Civilians win the game!";
 
     const primaryButtonLabel = !hasRoleReveal
       ? "Continue"
       : step === 0
       ? "Reveal role"
+      : step === 1
+      ? "Continue"
       : "Next round";
 
     return {
@@ -72,6 +92,9 @@ export function useRoundResultsViewModel(params: {
       messageText,
       roleTitleText,
       roleMessageText,
+      statusTitleText,
+      statusMessageText,
+      impostersLeft,
       primaryButtonLabel,
     };
   }, [room.lastKilledPlayerId, room.roundResultsStep, players, currentPlayer]);
