@@ -35,7 +35,7 @@ type SoundState = {
   stopBgm: () => void;
 };
 
-const helloKeys: SfxKey[] = ["hello1", "hello2", "hello3"];
+const helloKeys: SfxKey[] = ["hello1", "hello2", "hello3", "laugh", "ohno"];
 
 export const useSoundStore = create<SoundState>((set, get) => ({
   sfxMuted: false,
