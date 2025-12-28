@@ -5,6 +5,7 @@ export * from "./GameOverPage/GameOverScreen";
 export * from "./GamePage/GameScreen";
 export * from "./Lobbypage/LobbyScreen";
 export * from "./QuestionPage/QuestionScreen";
+export * from "./QuestionResultPage/QuestionResultsScreen";
 export * from "./RolePage/RoleScreen";
 export * from "./RoundResultsPage/RoundResultsScreen";
 export * from "./Startpage/StartActions";

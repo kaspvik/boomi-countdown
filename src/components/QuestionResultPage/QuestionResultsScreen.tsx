@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
+import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
-import { GameTimer } from "../GamePage/GameTimer";
 import styles from "./QuestionResultsScreen.module.css";
 
 interface QuestionResultsScreenProps {
