@@ -169,6 +169,12 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     setBoomiExitKey(undefined);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      stopBgm();
+    };
+  }, [stopBgm]);
+
   const hideInfoBoxForAlive = isAlive && isPassPanelOpen && !isCurrentHolder;
 
   return (

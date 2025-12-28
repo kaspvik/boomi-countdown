@@ -13,7 +13,6 @@ export type BgmKey = keyof typeof tracks;
 
 let currentKey: BgmKey | null = null;
 
-// används för att undvika att en gammal fade/timeout stoppar "ny" musik
 let stopToken = 0;
 
 export const BGM = {
@@ -50,10 +49,8 @@ export const BGM = {
 
     const t = tracks[key];
 
-    // säkerställ tyst start
     t.volume(0);
 
-    // om den redan spelar: bara fadea upp
     if (!t.playing()) {
       t.play();
     }
