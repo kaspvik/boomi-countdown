@@ -5,7 +5,7 @@ import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import styles from "./RoundResultsScreen.module.css";
 
 interface RoundResultsScreenProps {
-  step: 0 | 1;
+  step: 0 | 1 | 2;
 
   titleText: string;
   messageText: string;
@@ -18,6 +18,9 @@ interface RoundResultsScreenProps {
   primaryButtonLabel: string;
   onPrimaryClick: () => void;
   onLeave: () => void;
+
+  statusTitleText?: string;
+  statusMessageText?: string;
 }
 
 export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
@@ -31,12 +34,15 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
   primaryButtonLabel,
   onPrimaryClick,
   onLeave,
+  statusTitleText,
+  statusMessageText,
 }) => {
-  // ✅ En stabil key som ändras när "vyn" byts
-  // (räcker ofta med step + hasRoleReveal + relevant title)
-  const typingKey = hasRoleReveal
-    ? `step-${step}-reveal-${roleTitleText ?? "none"}`
-    : `step-${step}-normal-${titleText}`;
+  const typingKey =
+    step === 0
+      ? `step-0-${titleText}`
+      : step === 1
+      ? `step-1-${roleTitleText ?? "none"}`
+      : `step-2-${statusTitleText ?? "none"}`;
 
   return (
     <main className={styles.main}>
@@ -117,6 +123,28 @@ export const RoundResultsScreen: React.FC<RoundResultsScreenProps> = ({
                       startDelayMs={280}
                     />
                   </p>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  <h1 className={`text-title ${styles.title}`}>
+                    <Typewriter
+                      key={`${typingKey}-status-title`}
+                      text={statusTitleText ?? ""}
+                      speedMs={45}
+                      startDelayMs={80}
+                    />
+                  </h1>
+
+                  <h2 className={`text-body ${styles.message}`}>
+                    <Typewriter
+                      key={`${typingKey}-status-msg`}
+                      text={statusMessageText ?? ""}
+                      speedMs={22}
+                      startDelayMs={280}
+                    />
+                  </h2>
                 </>
               )}
 
