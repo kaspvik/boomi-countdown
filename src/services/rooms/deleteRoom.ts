@@ -1,4 +1,3 @@
-// services/rooms/deleteRoom.ts
 import {
   collection,
   deleteDoc,
