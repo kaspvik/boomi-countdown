@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useBoomiHelloSfx } from "../../hooks/useBoomiHelloSfx";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
 import { useGameStore } from "../../store/gameStore";
+import { useSoundStore } from "../../store/soundStore";
 import type { Player } from "../../types/game";
 import { BoomiCanvas } from "../Boomi/BoomiCanvas";
 import styles from "../GamePage/GameScreen.module.css";
@@ -87,6 +89,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const fxRedPulseOn = useGameStore((s) => s.fxRedPulseOn);
   const fxRedPulseOff = useGameStore((s) => s.fxRedPulseOff);
 
+  const playBgm = useSoundStore((s) => s.playBgm);
+  const stopBgm = useSoundStore((s) => s.stopBgm);
+
+  const playSfx = useSoundStore((s) => s.playSfx);
+  const stopSfx = useSoundStore((s) => s.stopSfx);
+
+  const tickStartedRef = useRef(false);
+
   const boomiOnTable = isAlive && isCurrentHolder;
 
   useEffect(() => {
@@ -110,6 +120,20 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   }, [boomiOnTable, boomiAnim, fxBoomiFocus, fxReset]);
 
   useEffect(() => {
+    if (boomiOnTable) {
+      playBgm("boomi");
+    } else {
+      stopBgm();
+    }
+  }, [boomiOnTable, playBgm, stopBgm]);
+
+  useBoomiHelloSfx({
+    boomiOnTable,
+    visibleKey: bombHolderName ?? "none",
+    playOnHolderChange: true,
+  });
+
+  useEffect(() => {
     if (boomiOnTable && boomiAnim === "explode") {
       fxRedPulseOn(0.95);
     } else {
@@ -117,12 +141,38 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     }
   }, [boomiOnTable, boomiAnim, fxRedPulseOn, fxRedPulseOff]);
 
+  useEffect(() => {
+    if (boomiOnTable && boomiAnim === "explode") {
+      stopSfx("tickdown");
+      playSfx("explosion");
+    }
+  }, [boomiOnTable, boomiAnim, playSfx, stopSfx]);
+
+  useEffect(() => {
+    if (!boomiOnTable) {
+      tickStartedRef.current = false;
+      stopSfx("tickdown");
+    }
+  }, [boomiOnTable, stopSfx]);
+
   const handleTick = useCallback(
     (sLeft: number) => {
       onTimerTick(sLeft);
       fxSetFlickerBySeconds(sLeft, boomiOnTable);
+
+      if (!boomiOnTable) return;
+
+      if (sLeft === 10 && !tickStartedRef.current) {
+        tickStartedRef.current = true;
+        playSfx("tickdown");
+      }
+
+      if (sLeft > 10 && tickStartedRef.current) {
+        tickStartedRef.current = false;
+        stopSfx("tickdown");
+      }
     },
-    [onTimerTick, fxSetFlickerBySeconds, boomiOnTable]
+    [onTimerTick, fxSetFlickerBySeconds, boomiOnTable, playSfx, stopSfx]
   );
 
   const requestBoomiExit = useCallback(
@@ -149,6 +199,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
     setBoomiExitKey(undefined);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      stopBgm();
+      stopSfx("tickdown");
+    };
+  }, [stopBgm, stopSfx]);
 
   const hideInfoBoxForAlive = isAlive && isPassPanelOpen && !isCurrentHolder;
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PlayerSelectPanel } from "../../layout/PlayerSelectPanel/PlayerSelectPanel";
+import { useSoundStore } from "../../store/soundStore";
 import type { Player } from "../../types/game";
 import { BlockCard } from "./BlockCard";
 import styles from "./CardPanel.module.css";
@@ -33,6 +34,7 @@ export const CardPanel: React.FC<CardPanelProps> = ({
   requestBoomiExit,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
+  const playSfx = useSoundStore((s) => s.playSfx);
 
   const handlePassOnCardClick = () => {
     if (!canUsePassCard) return;
@@ -44,6 +46,7 @@ export const CardPanel: React.FC<CardPanelProps> = ({
     if (!canUsePassCard || !selectedTargetId) return;
 
     requestBoomiExit(() => {
+      playSfx("pass");
       onConfirm();
       setIsSelecting(false);
     });
