@@ -83,16 +83,18 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   return (
     <main className={styles.main}>
-      <GameHeader
-        onLeave={onLeave}
-        center={
-          <GameTimer
-            key={timerKey}
-            durationSeconds={10}
-            onTimeout={handleTimerTimeout}
-          />
-        }
-      />
+      <div className={styles.headerSlide}>
+        <GameHeader
+          onLeave={onLeave}
+          center={
+            <GameTimer
+              key={timerKey}
+              durationSeconds={10}
+              onTimeout={handleTimerTimeout}
+            />
+          }
+        />
+      </div>
 
       <section className={styles.content}>
         <div className={styles.contentInner}>
