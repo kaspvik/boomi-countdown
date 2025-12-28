@@ -30,12 +30,24 @@ export const RoundResultsContainer: React.FC<RoundResultsContainerProps> = ({
       return;
     }
 
-    if (room.roundResultsStep !== "role") {
-      const roomRef = doc(db, "rooms", room.id);
+    const stepValue = room.roundResultsStep ?? "explosion";
+    const roomRef = doc(db, "rooms", room.id);
+
+    // explosion -> role
+    if (stepValue === "explosion") {
       try {
         await updateDoc(roomRef, { roundResultsStep: "role" });
       } catch (err) {
         console.error("Failed to set roundResultsStep=role", err);
+      }
+      return;
+    }
+
+    if (stepValue === "role") {
+      try {
+        await updateDoc(roomRef, { roundResultsStep: "status" });
+      } catch (err) {
+        console.error("Failed to set roundResultsStep=status", err);
       }
       return;
     }
@@ -50,6 +62,8 @@ export const RoundResultsContainer: React.FC<RoundResultsContainerProps> = ({
       messageText={vm.messageText}
       roleTitleText={vm.roleTitleText}
       roleMessageText={vm.roleMessageText}
+      statusTitleText={vm.statusTitleText}
+      statusMessageText={vm.statusMessageText}
       hasRoleReveal={vm.hasRoleReveal}
       isHost={isHost}
       primaryButtonLabel={vm.primaryButtonLabel}
