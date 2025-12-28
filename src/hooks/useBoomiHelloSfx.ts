@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useRef } from "react";
-import { SFX } from "../services/audio/sfx";
-
-const helloKeys = ["hello1", "hello2", "hello3"] as const;
+import { useEffect, useRef } from "react";
+import { useSoundStore } from "../store/soundStore";
 
 type Options = {
   boomiOnTable: boolean;
@@ -14,13 +12,10 @@ export const useBoomiHelloSfx = ({
   visibleKey,
   playOnHolderChange = true,
 }: Options) => {
+  const playRandomHello = useSoundStore((s) => s.playRandomHello);
+
   const prevVisibleKeyRef = useRef<string | null>(null);
   const lastHelloForKeyRef = useRef<string | null>(null);
-
-  const playRandomHello = useCallback(() => {
-    const key = helloKeys[Math.floor(Math.random() * helloKeys.length)];
-    SFX.play(key);
-  }, []);
 
   useEffect(() => {
     if (!boomiOnTable) {
