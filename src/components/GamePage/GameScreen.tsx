@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useBoomiHelloSfx } from "../../hooks/useBoomiHelloSfx";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
-import { SFX } from "../../services/audio/sfx";
 import { useGameStore } from "../../store/gameStore";
 import type { Player } from "../../types/game";
 import { BoomiCanvas } from "../Boomi/BoomiCanvas";
@@ -90,15 +90,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   const boomiOnTable = isAlive && isCurrentHolder;
 
-  const helloKeys = ["hello1", "hello2", "hello3"] as const;
-  const prevVisibleKeyRef = useRef<string | null>(null);
-  const lastHelloForKeyRef = useRef<string | null>(null);
-
-  const playRandomHello = useCallback(() => {
-    const key = helloKeys[Math.floor(Math.random() * helloKeys.length)];
-    SFX.play(key);
-  }, []);
-
   useEffect(() => {
     if (!isAlive) {
       if (isGuessOpen) onCancelGuess();
@@ -119,24 +110,11 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     fxBoomiFocus(boomiAnim);
   }, [boomiOnTable, boomiAnim, fxBoomiFocus, fxReset]);
 
-  useEffect(() => {
-    if (!boomiOnTable) {
-      prevVisibleKeyRef.current = null;
-      lastHelloForKeyRef.current = null;
-      return;
-    }
-
-    const visibleKey = bombHolderName ?? "none";
-    const prev = prevVisibleKeyRef.current;
-    prevVisibleKeyRef.current = visibleKey;
-
-    if (prev === null || prev !== visibleKey) {
-      if (lastHelloForKeyRef.current !== visibleKey) {
-        lastHelloForKeyRef.current = visibleKey;
-        playRandomHello();
-      }
-    }
-  }, [boomiOnTable, bombHolderName, playRandomHello]);
+  useBoomiHelloSfx({
+    boomiOnTable,
+    visibleKey: bombHolderName ?? "none",
+    playOnHolderChange: true,
+  });
 
   useEffect(() => {
     if (boomiOnTable && boomiAnim === "explode") {
