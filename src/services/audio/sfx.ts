@@ -1,6 +1,13 @@
 import { Howl } from "howler";
 
-type SfxKey = "hello1" | "hello2" | "hello3" | "laugh" | "ohno" | "pass";
+type SfxKey =
+  | "hello1"
+  | "hello2"
+  | "hello3"
+  | "laugh"
+  | "ohno"
+  | "pass"
+  | "click";
 
 const make = (src: string, volume = 0.6) =>
   new Howl({
@@ -16,6 +23,7 @@ const sfx: Record<SfxKey, Howl> = {
   laugh: make("/audio/laugh.mp3", 0.6),
   ohno: make("/audio/ohno.mp3", 0.55),
   pass: make("/audio/pass.mp3", 0.55),
+  click: make("/audio/button-press-382713.mp3", 0.6),
 };
 
 let muted = false;
