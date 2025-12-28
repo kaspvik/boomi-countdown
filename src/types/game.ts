@@ -8,6 +8,7 @@ export type RoomPhase =
   | "round"
   | "round_results"
   | "game_over";
+
 export type Role = "imposter" | "civilian";
 
 export interface Room {
