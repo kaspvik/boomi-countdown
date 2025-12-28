@@ -1,6 +1,7 @@
 import React from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import styles from "./RoleScreen.module.css";
 
 interface RoleScreenProps {
@@ -28,20 +29,39 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
 }) => {
   const isCivilian = role === "civilian";
   const teammates = imposterTeammates.filter(Boolean);
+  const teammateNames = formatNames(teammates);
+
+  const titleText = isCivilian ? "You are a CIVILIAN" : "You are an IMPOSTER";
+
+  const civilianBody =
+    "Stay calm, watch the others and try to figure out who is placing Boomi. Work together with the other civilians and don't get blown up.";
+
+  const imposterIntroWithTeam =
+    "You are secretly on Boomi's side, together with ";
+  const imposterOutroWithTeam =
+    ". Place the bomb cleverly, create chaos and try not to get caught.";
+  const imposterSolo =
+    "You are secretly on Boomi's side. Place the bomb cleverly, create chaos and try not to get caught.";
+
+  const waitingText = "Waiting for other players to confirm their role...";
+  const allReadyText = "Everyone is ready! The round will start...";
+
+  const typingKey = `${role}-${teammateNames || "solo"}`;
 
   return (
     <PixelFrame>
       <div className={styles.container}>
         <div className={styles.textBlock}>
-          <h2 className={styles.titel}>
-            {isCivilian ? "You are a CIVILIAN" : "You are an IMPOSTER"}
-          </h2>
+          <h2 className={styles.titel}>{titleText}</h2>
 
           {isCivilian && (
             <p className="text-body-black">
-              Stay calm, watch the others and try to figure out who is placing
-              Boomi. Work together with the other civilians and don&apos;t get
-              blown up.
+              <Typewriter
+                key={`${typingKey}-civ-body`}
+                text={civilianBody}
+                speedMs={22}
+                startDelayMs={260}
+              />
             </p>
           )}
 
@@ -49,17 +69,34 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
             <p className="text-body-black">
               {teammates.length > 0 ? (
                 <>
-                  You are secretly on Boomi&apos;s side, together with{" "}
-                  <strong>{formatNames(teammates)}</strong>. Place the bomb
-                  cleverly, create
-                  {formatNames(teammates)}. Place the bomb cleverly, create
-                  chaos and try not to get caught.
+                  <Typewriter
+                    key={`${typingKey}-imp-intro`}
+                    text={imposterIntroWithTeam}
+                    speedMs={22}
+                    startDelayMs={260}
+                  />
+                  <strong>
+                    <Typewriter
+                      key={`${typingKey}-imp-names`}
+                      text={teammateNames}
+                      speedMs={22}
+                      startDelayMs={260 + 350}
+                    />
+                  </strong>
+                  <Typewriter
+                    key={`${typingKey}-imp-outro`}
+                    text={imposterOutroWithTeam}
+                    speedMs={22}
+                    startDelayMs={260 + 650}
+                  />
                 </>
               ) : (
-                <>
-                  You are secretly on Boomi&apos;s side. Place the bomb
-                  cleverly, create chaos and try not to get caught.
-                </>
+                <Typewriter
+                  key={`${typingKey}-imp-solo`}
+                  text={imposterSolo}
+                  speedMs={22}
+                  startDelayMs={260}
+                />
               )}
             </p>
           )}
@@ -74,16 +111,10 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
         )}
 
         {hasAcknowledged && !allReady && (
-          <p className={styles.waitingText}>
-            Waiting for other players to confirm their role...
-          </p>
+          <p className={styles.waitingText}>{waitingText}</p>
         )}
 
-        {allReady && (
-          <p className={styles.allReadyText}>
-            Everyone is ready! The round will start...
-          </p>
-        )}
+        {allReady && <p className={styles.allReadyText}>{allReadyText}</p>}
       </div>
     </PixelFrame>
   );

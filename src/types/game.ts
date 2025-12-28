@@ -8,6 +8,7 @@ export type RoomPhase =
   | "round"
   | "round_results"
   | "game_over";
+
 export type Role = "imposter" | "civilian";
 
 export interface Room {
@@ -21,7 +22,7 @@ export interface Room {
   phase?: RoomPhase | null;
 
   lastKilledPlayerId?: string | null;
-  roundResultsStep?: "explosion" | "role" | null;
+  roundResultsStep?: "explosion" | "role" | "status" | null;
   winner?: "civilians" | "imposters" | null;
 
   passCardUsedThisRound?: boolean;

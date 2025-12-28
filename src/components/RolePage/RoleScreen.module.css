@@ -15,6 +15,31 @@
 .titel {
   font-size: 2rem;
   margin-bottom: 0.5rem;
+  animation: roleTitlePop 180ms steps(3, end) both;
+  transform-origin: center;
+}
+
+/* Pixel-ish pop: snabb, lite "studs" */
+@keyframes roleTitlePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .titel {
+    animation: none;
+  }
 }
 
 .buttonRow {

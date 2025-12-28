@@ -1,9 +1,9 @@
-// QuestionResultsScreen.tsx
 import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
+import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
-import { GameTimer } from "../GamePage/GameTimer";
 import styles from "./QuestionResultsScreen.module.css";
 
 interface QuestionResultsScreenProps {
@@ -33,36 +33,30 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   topImposterTarget,
   isCurrentCivilianTop,
   isCurrentImposterTop,
-  civilianQuestionText,
-  imposterQuestionText,
-  isViewerImposter,
 }) => {
   const [view, setView] = useState<"civilian" | "imposter">("civilian");
 
-  const shownQuestionText =
-    view === "civilian"
-      ? civilianQuestionText
-      : isViewerImposter
-      ? imposterQuestionText
-      : "A secret Boomi assignment was made!";
-
-  let titleText = `Round ${room.round} – results`;
-  let playerNameToShow: string | null = null;
+  let titlePrefix = `Round ${room.round} – results`;
+  let titleName: string | null = null;
 
   if (!error && hasAnyVotes) {
     if (view === "civilian") {
       if (isCurrentCivilianTop) {
-        titleText = "You got the most votes!";
+        const name = topCivilianTarget?.name ?? "Player";
+        titlePrefix = "You got the most votes";
+        titleName = name;
       } else if (topCivilianTarget) {
-        titleText = "The player with most votes:";
-        playerNameToShow = topCivilianTarget.name;
+        titlePrefix = "The player with most votes was";
+        titleName = topCivilianTarget.name;
       }
     } else {
       if (isCurrentImposterTop) {
-        titleText = "You got Boomi!";
+        const name = topImposterTarget?.name ?? "Player";
+        titlePrefix = "You got Boomi";
+        titleName = name;
       } else if (topImposterTarget) {
-        titleText = "The player that got Boomi was:";
-        playerNameToShow = topImposterTarget.name;
+        titlePrefix = "The player that got Boomi was";
+        titleName = topImposterTarget.name;
       }
     }
   }
@@ -83,56 +77,90 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   const timerKey = `${room.round}-${view}-${timerStep}`;
 
+  const titleNameKey = `${timerKey}-title-name`;
+  const errorTypingKey = `${timerKey}-error`;
+  const extraTypingKey = `${timerKey}-extra`;
+
   return (
     <main className={styles.main}>
-      <GameHeader
-        onLeave={onLeave}
-        center={
-          <GameTimer
-            key={timerKey}
-            durationSeconds={10}
-            onTimeout={handleTimerTimeout}
-          />
-        }
-      />
+      <div className={styles.headerSlide}>
+        <GameHeader
+          onLeave={onLeave}
+          center={
+            <GameTimer
+              key={timerKey}
+              durationSeconds={10}
+              onTimeout={handleTimerTimeout}
+            />
+          }
+        />
+      </div>
 
       <section className={styles.content}>
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              {!!shownQuestionText && (
-                <p
-                  className={`text-subtitle ${styles.title}`}
-                  style={{ marginBottom: 10 }}>
-                  {shownQuestionText}
-                </p>
+              <h2 className={`text-body-black ${styles.title}`}>
+                {titlePrefix}
+
+                {titleName && (
+                  <>
+                    <br />
+                    <strong>
+                      <Typewriter
+                        key={titleNameKey}
+                        text={`${titleName}!`}
+                        speedMs={30}
+                        startDelayMs={950}
+                      />
+                    </strong>
+                  </>
+                )}
+              </h2>
+
+              {error && (
+                <h3 className={styles.errorText}>
+                  <Typewriter
+                    key={errorTypingKey}
+                    text={`"${error}"`}
+                    speedMs={36}
+                    startDelayMs={150}
+                  />
+                </h3>
               )}
-
-              <h1 className={`text-body-black ${styles.title}`}>{titleText}</h1>
-
-              {playerNameToShow && (
-                <h2 className={`text-subtitle ${styles.playerName}`}>
-                  {playerNameToShow}
-                </h2>
-              )}
-
-              {error && <p className={styles.errorText}>&quot;{error}&quot;</p>}
 
               {!error && !hasAnyVotes && (
-                <h3 className={styles.extraMessage}>No votes this round.</h3>
+                <h3 className={styles.extraMessage}>
+                  <Typewriter
+                    key={extraTypingKey}
+                    text="No votes this round."
+                    speedMs={38}
+                    startDelayMs={250}
+                  />
+                </h3>
               )}
 
               {!error && hasAnyVotes && (
                 <>
                   {view === "civilian" && !topCivilianTarget && (
                     <h3 className={styles.extraMessage}>
-                      No civilian votes were cast this round.
+                      <Typewriter
+                        key={`${timerKey}-extra-civ`}
+                        text="No civilian votes were cast this round."
+                        speedMs={38}
+                        startDelayMs={250}
+                      />
                     </h3>
                   )}
 
                   {view === "imposter" && !topImposterTarget && (
                     <h3 className={styles.extraMessage}>
-                      No imposter votes were cast this round.
+                      <Typewriter
+                        key={`${timerKey}-extra-imp`}
+                        text="No imposter votes were cast this round."
+                        speedMs={38}
+                        startDelayMs={250}
+                      />
                     </h3>
                   )}
                 </>

@@ -40,3 +40,21 @@
   font-size: var(--font-size-body);
 }
 
+.headerSlide {
+  transform: translateY(-100px);
+  animation: headerSlideDown 620ms ease-out forwards;
+  will-change: transform;
+}
+
+@keyframes headerSlideDown {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headerSlide {
+    animation: none;
+    transform: none;
+  }
+}

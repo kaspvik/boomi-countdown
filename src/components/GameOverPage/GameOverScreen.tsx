@@ -1,6 +1,7 @@
 import React from "react";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
+import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
 import styles from "./GameOverScreen.module.css";
 
@@ -34,21 +35,48 @@ export const GameOverScreen: React.FC<GameOverScreenProps> = ({
     winner != null &&
     currentPlayer.role === (winner === "civilians" ? "civilian" : "imposter");
 
+  const extraText = winner
+    ? isWinnerSide
+      ? "You were on the winning side!"
+      : "You were on the losing side this time."
+    : "";
+
+  const typingKey = `${winner ?? "none"}-${currentPlayer.role}`;
+
   return (
     <main className={styles.main}>
       <section className={styles.content}>
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <h1 className={`text-title ${styles.title}`}>{title}</h1>
+              <h1 className={`text-title ${styles.title}`}>
+                <Typewriter
+                  key={`${typingKey}-title`}
+                  text={title}
+                  speedMs={45}
+                  startDelayMs={100}
+                />
+              </h1>
 
-              <h2 className={`text-body ${styles.message}`}>{message}</h2>
+              {!!message && (
+                <h2 className={`text-body ${styles.message}`}>
+                  <Typewriter
+                    key={`${typingKey}-msg`}
+                    text={message}
+                    speedMs={22}
+                    startDelayMs={350}
+                  />
+                </h2>
+              )}
 
-              {winner && (
+              {!!extraText && (
                 <p className={`text-body ${styles.extra}`}>
-                  {isWinnerSide
-                    ? "You were on the winning side!"
-                    : "You were on the losing side this time."}
+                  <Typewriter
+                    key={`${typingKey}-extra`}
+                    text={extraText}
+                    speedMs={22}
+                    startDelayMs={700}
+                  />
                 </p>
               )}
 
