@@ -38,7 +38,6 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   let titlePrefix = `Round ${room.round} – results`;
   let titleName: string | null = null;
-  let titleSuffix = "";
 
   if (!error && hasAnyVotes) {
     if (view === "civilian") {
@@ -46,22 +45,18 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         const name = topCivilianTarget?.name ?? "Player";
         titlePrefix = "You got the most votes";
         titleName = name;
-        titleSuffix = "!";
       } else if (topCivilianTarget) {
         titlePrefix = "The player with most votes was";
         titleName = topCivilianTarget.name;
-        titleSuffix = "!";
       }
     } else {
       if (isCurrentImposterTop) {
         const name = topImposterTarget?.name ?? "Player";
         titlePrefix = "You got Boomi";
         titleName = name;
-        titleSuffix = "!";
       } else if (topImposterTarget) {
         titlePrefix = "The player that got Boomi was";
         titleName = topImposterTarget.name;
-        titleSuffix = "!";
       }
     }
   }
@@ -82,10 +77,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
   const timerKey = `${room.round}-${view}-${timerStep}`;
 
-  const titlePrefixKey = `${timerKey}-title-prefix`;
   const titleNameKey = `${timerKey}-title-name`;
-  const titleSuffixKey = `${timerKey}-title-suffix`;
-
   const errorTypingKey = `${timerKey}-error`;
   const extraTypingKey = `${timerKey}-extra`;
 
@@ -107,12 +99,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
           <PixelFrame>
             <div className={styles.frameBody}>
               <h2 className={`text-body-black ${styles.title}`}>
-                <Typewriter
-                  key={titlePrefixKey}
-                  text={titlePrefix}
-                  speedMs={28}
-                  startDelayMs={50}
-                />
+                {titlePrefix}
 
                 {titleName && (
                   <>
@@ -120,22 +107,12 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                     <strong>
                       <Typewriter
                         key={titleNameKey}
-                        text={titleName}
-                        speedMs={25}
+                        text={`${titleName}!`}
+                        speedMs={30}
                         startDelayMs={950}
                       />
                     </strong>
                   </>
-                )}
-
-                {titleName && titleSuffix && (
-                  <Typewriter
-                    key={titleSuffixKey}
-                    text={titleSuffix}
-                    speedMs={90}
-                    startDelayMs={650}
-                    cursor={false}
-                  />
                 )}
               </h2>
 
