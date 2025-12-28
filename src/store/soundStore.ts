@@ -71,13 +71,14 @@ export const useSoundStore = create<SoundState>((set, get) => ({
   playBgm: (key) => {
     const { bgmMuted, bgmVolume } = get();
     set({ currentBgm: key });
-    BGM.play(key);
-    BGM.setMuted(bgmMuted);
-    BGM.setVolume(bgmVolume);
+
+    if (bgmMuted) return;
+
+    BGM.playWithFade(key, bgmVolume, 600);
   },
 
   stopBgm: () => {
     set({ currentBgm: null });
-    BGM.stop();
+    BGM.stopWithFade(500);
   },
 }));

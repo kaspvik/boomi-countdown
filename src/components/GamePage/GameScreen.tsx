@@ -6,6 +6,7 @@ import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
 import { useGameStore } from "../../store/gameStore";
+import { useSoundStore } from "../../store/soundStore";
 import type { Player } from "../../types/game";
 import { BoomiCanvas } from "../Boomi/BoomiCanvas";
 import styles from "../GamePage/GameScreen.module.css";
@@ -88,6 +89,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const fxRedPulseOn = useGameStore((s) => s.fxRedPulseOn);
   const fxRedPulseOff = useGameStore((s) => s.fxRedPulseOff);
 
+  const playBgm = useSoundStore((s) => s.playBgm);
+  const stopBgm = useSoundStore((s) => s.stopBgm);
+
   const boomiOnTable = isAlive && isCurrentHolder;
 
   useEffect(() => {
@@ -109,6 +113,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
     fxBoomiFocus(boomiAnim);
   }, [boomiOnTable, boomiAnim, fxBoomiFocus, fxReset]);
+
+  useEffect(() => {
+    if (boomiOnTable) {
+      playBgm("boomi");
+    } else {
+      stopBgm();
+    }
+  }, [boomiOnTable, playBgm, stopBgm]);
 
   useBoomiHelloSfx({
     boomiOnTable,
