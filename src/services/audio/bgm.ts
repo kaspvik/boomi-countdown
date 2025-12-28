@@ -1,25 +1,29 @@
 import { Howl } from "howler";
 
-export type BgmKey = "lobby";
-
-const tracks: Record<BgmKey, Howl> = {
-  lobby: new Howl({
+const tracks = {
+  boomi: new Howl({
     src: ["/audio/BoomiCountdown.mp3"],
     loop: true,
     volume: 0.35,
     preload: true,
   }),
-};
+} as const;
+
+export type BgmKey = keyof typeof tracks;
 
 let currentKey: BgmKey | null = null;
 
+// används för att undvika att en gammal fade/timeout stoppar "ny" musik
+let stopToken = 0;
+
 export const BGM = {
   play(key: BgmKey) {
-    if (currentKey === key && tracks[key].playing()) return;
+    const prevKey = currentKey;
 
-    // stoppa ev. tidigare track
-    if (currentKey) {
-      tracks[currentKey].stop();
+    if (prevKey === key && tracks[key].playing()) return;
+
+    if (prevKey) {
+      tracks[prevKey].stop();
     }
 
     currentKey = key;
@@ -27,24 +31,75 @@ export const BGM = {
   },
 
   stop() {
-    if (!currentKey) return;
-    tracks[currentKey].stop();
+    const key = currentKey;
+    if (!key) return;
+
+    tracks[key].stop();
     currentKey = null;
   },
 
+  playWithFade(key: BgmKey, targetVolume: number, ms = 600) {
+    stopToken += 1;
+
+    const prevKey = currentKey;
+    if (prevKey) {
+      tracks[prevKey].stop();
+    }
+
+    currentKey = key;
+
+    const t = tracks[key];
+
+    // säkerställ tyst start
+    t.volume(0);
+
+    // om den redan spelar: bara fadea upp
+    if (!t.playing()) {
+      t.play();
+    }
+
+    t.fade(0, targetVolume, ms);
+  },
+
+  stopWithFade(ms = 500) {
+    const key = currentKey;
+    if (!key) return;
+
+    stopToken += 1;
+    const myToken = stopToken;
+
+    const t = tracks[key];
+
+    const from = t.volume();
+    t.fade(from, 0, ms);
+
+    window.setTimeout(() => {
+      if (stopToken !== myToken) return;
+
+      t.stop();
+      currentKey = null;
+    }, ms);
+  },
+
   setMuted(muted: boolean) {
-    if (!currentKey) return;
-    tracks[currentKey].mute(muted);
+    const key = currentKey;
+    if (!key) return;
+
+    tracks[key].mute(muted);
   },
 
   setVolume(volume: number) {
-    if (!currentKey) return;
-    tracks[currentKey].volume(volume);
+    const key = currentKey;
+    if (!key) return;
+
+    tracks[key].volume(volume);
   },
 
   fadeTo(volume: number, ms = 350) {
-    if (!currentKey) return;
-    const t = tracks[currentKey];
+    const key = currentKey;
+    if (!key) return;
+
+    const t = tracks[key];
     t.fade(t.volume(), volume, ms);
   },
 };
