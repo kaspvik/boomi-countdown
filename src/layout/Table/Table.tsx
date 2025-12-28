@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Table.module.css";
-import tableImg from "/public/table.png";
+import tableImg from "/table.png";
 
 interface TableProps {
   className?: string;
