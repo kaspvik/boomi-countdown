@@ -1,4 +1,3 @@
-// services/rooms/leaveRoom.ts
 import {
   collection,
   doc,
@@ -9,9 +8,19 @@ import {
 import { db } from "../../firebase";
 import { ensureSignedIn } from "../auth/authService";
 
-type PlayerDoc = {
+type RemainingPlayerDoc = {
   authUid: string | null;
   alive?: boolean;
+};
+
+type LeavingPlayerDoc = {
+  authUid: string | null;
+  isHost: boolean;
+};
+
+type RoomDoc = {
+  currentBombHolder?: string | null;
+  hostAuthUid?: string | null;
 };
 
 export async function leaveRoom(roomId: string, playerId: string) {
@@ -25,33 +34,46 @@ export async function leaveRoom(roomId: string, playerId: string) {
     const roomSnap = await tx.get(roomRef);
     if (!roomSnap.exists()) return;
 
-    const room = roomSnap.data() as {
-      currentBombHolder?: string | null;
-    };
+    const room = roomSnap.data() as RoomDoc;
 
     const playerSnap = await tx.get(playerRef);
     if (!playerSnap.exists()) return;
 
-    const player = playerSnap.data() as { authUid: string | null };
-    if (!player.authUid || player.authUid !== user.uid) {
+    const leavingPlayer = playerSnap.data() as LeavingPlayerDoc;
+
+    if (!leavingPlayer.authUid || leavingPlayer.authUid !== user.uid) {
       throw new Error("Not allowed to delete this player.");
     }
 
     const playersSnap = await getDocs(query(playersCol));
     const remainingPlayers = playersSnap.docs
       .filter((d) => d.id !== playerId)
-      .map((d) => ({ id: d.id, ...(d.data() as PlayerDoc) }));
+      .map((d) => ({ id: d.id, ...(d.data() as RemainingPlayerDoc) }));
 
-    tx.delete(playerRef);
+    if (remainingPlayers.length === 0) {
+      tx.delete(playerRef);
+      tx.delete(roomRef);
+      return;
+    }
+
+    const nextHost =
+      remainingPlayers.find((p) => p.alive !== false) ??
+      remainingPlayers[0] ??
+      null;
+
+    if (leavingPlayer.isHost && nextHost) {
+      const nextHostRef = doc(db, "rooms", roomId, "players", nextHost.id);
+
+      tx.update(nextHostRef, { isHost: true });
+      tx.update(roomRef, { hostAuthUid: nextHost.authUid ?? null });
+    }
 
     const leavingWasHolder = room.currentBombHolder === playerId;
     if (leavingWasHolder) {
-      const next = remainingPlayers[0]?.id ?? null;
-      tx.update(roomRef, { currentBombHolder: next });
+      const nextHolderId = nextHost?.id ?? remainingPlayers[0]?.id ?? null;
+      tx.update(roomRef, { currentBombHolder: nextHolderId });
     }
 
-    if (remainingPlayers.length === 0) {
-      tx.delete(roomRef);
-    }
+    tx.delete(playerRef);
   });
 }
