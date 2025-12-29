@@ -44,6 +44,14 @@
 }
 
 @media (max-width: 600px) {
-  .container { gap: 0.75rem; }
-  .textBlock { margin-top: 1.25rem; }
+  .container {
+    gap: 0.75rem;
+    padding: 0.15rem; /* lite mindre padding */
+  }
+
+  .textBlock {
+    margin-top: 1.25rem;
+    transform: scale(0.92);
+    transform-origin: top center;
+  }
 }
