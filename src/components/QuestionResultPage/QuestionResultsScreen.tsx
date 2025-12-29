@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
-import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
@@ -8,7 +7,6 @@ import styles from "./QuestionResultsScreen.module.css";
 
 interface QuestionResultsScreenProps {
   room: Room;
-  onLeave: () => void;
   onContinue: () => void;
   hasAnyVotes: boolean;
   error: string | null;
@@ -25,7 +23,6 @@ interface QuestionResultsScreenProps {
 
 export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   room,
-  onLeave,
   onContinue,
   hasAnyVotes,
   error,
@@ -85,14 +82,12 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
     <main className={styles.main}>
       <div className={styles.headerSlide}>
         <GameHeader
-          onLeave={onLeave}
-          center={
-            <GameTimer
-              key={timerKey}
-              durationSeconds={10}
-              onTimeout={handleTimerTimeout}
-            />
-          }
+          mode="overlay"
+          timer={{
+            key: timerKey,
+            durationSeconds: 10,
+            onTimeout: handleTimerTimeout,
+          }}
         />
       </div>
 
