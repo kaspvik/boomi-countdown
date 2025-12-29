@@ -21,6 +21,7 @@ export async function createRoom(code: string): Promise<Room> {
     winner: null,
     passCardUsedThisRound: false,
     roundTimePenaltySeconds: 0,
+    timerStartedAt: null,
   });
 
   return {
@@ -37,5 +38,6 @@ export async function createRoom(code: string): Promise<Room> {
     winner: null,
     passCardUsedThisRound: false,
     roundTimePenaltySeconds: 0,
+    timerStartedAt: null,
   };
 }
