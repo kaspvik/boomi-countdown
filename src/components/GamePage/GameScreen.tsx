@@ -218,13 +218,19 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   return (
     <main className={styles.main}>
       <GameHeader
+        className={styles.uiAboveFx}
         onLeave={onLeave}
-        timer={{
-          key: timerKey,
-          durationSeconds,
-          onTimeout,
-          onTick: handleTick,
-        }}
+        center={
+          <GameTimer
+            key={timerKey}
+            mode="server"
+            durationSeconds={durationSeconds}
+            startedAt={timerStartedAt}
+            penaltySeconds={timerPenaltySeconds}
+            onTimeout={onTimeout}
+            onTick={handleTick}
+          />
+        }
       />
 
       <section className={`${styles.content} ${styles.uiAboveFx}`}>

@@ -14,6 +14,7 @@ interface GameHeaderProps {
     onTick?: (secondsLeft: number) => void;
   };
   right?: React.ReactNode;
+  center?: React.ReactNode;
   className?: string;
   leaveLabel?: string;
   leaveDisabled?: boolean;
@@ -24,9 +25,11 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   onLeave,
   timer,
   right,
+  center,
   mode = "flow",
   leaveLabel = "Leave game",
   leaveDisabled = false,
+  className,
 }) => {
   const showLeave = !!onLeave;
 
@@ -34,7 +37,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
     <header
       className={`${styles.wrapper} ${
         mode === "overlay" ? styles.overlay : ""
-      }`}>
+      } ${className ?? ""}`}>
       <div className={styles.bar}>
         <div className={styles.left}>
           {showLeave ? (
@@ -49,16 +52,17 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         </div>
 
         <div className={styles.center}>
-          {timer ? (
-            <GameTimer
-              key={timer.key}
-              durationSeconds={timer.durationSeconds}
-              onTimeout={timer.onTimeout}
-              onTick={timer.onTick}
-            />
-          ) : (
-            <span aria-hidden="true" />
-          )}
+          {center ??
+            (timer ? (
+              <GameTimer
+                key={timer.key}
+                durationSeconds={timer.durationSeconds}
+                onTimeout={timer.onTimeout}
+                onTick={timer.onTick}
+              />
+            ) : (
+              <span aria-hidden="true" />
+            ))}
         </div>
 
         <div className={styles.right}>

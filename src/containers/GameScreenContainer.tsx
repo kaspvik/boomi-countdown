@@ -11,7 +11,6 @@ import { db } from "../firebase";
 import { useRoundUiState } from "../hooks";
 import { useTimeoutKillPlayer } from "../hooks/useTimeoutKillPlayer";
 import { killPlayer } from "../services/gameplay/killPlayer";
-import { startRoomTimer } from "../services/rooms/startRoomTimer";
 import type { Player, Room } from "../types/game";
 import { CardPanelContainer } from "./CardPanelContainer";
 
@@ -153,16 +152,6 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     : ticking
     ? `tick-${timerKey}`
     : `idle-${timerKey}`;
-
-  useEffect(() => {
-    if (room.phase !== "round") return;
-    if (room.timerStartedAt) return;
-    if (!currentPlayer?.isHost) return;
-
-    startRoomTimer(roomId).catch((e) =>
-      console.error("Failed to start room timer", e)
-    );
-  }, [room.phase, room.timerStartedAt, currentPlayer?.isHost, roomId]);
 
   return (
     <GameScreen

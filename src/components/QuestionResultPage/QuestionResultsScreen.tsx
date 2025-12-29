@@ -83,12 +83,15 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
     <main className={styles.main}>
       <div className={styles.headerSlide}>
         <GameHeader
-          mode="overlay"
-          timer={{
-            key: timerKey,
-            durationSeconds: 10,
-            onTimeout: handleTimerTimeout,
-          }}
+          onLeave={() => {}}
+          center={
+            <GameTimer
+              key={timerKey}
+              mode="local"
+              durationSeconds={10}
+              onTimeout={handleTimerTimeout}
+            />
+          }
         />
       </div>
 
