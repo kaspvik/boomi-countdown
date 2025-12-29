@@ -1,14 +1,9 @@
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { passBomb } from "../gameplay/passBomb";
 
 export async function playPassBoomiCard(
   roomId: string,
+  fromPlayerId: string,
   toPlayerId: string
 ): Promise<void> {
-  const roomRef = doc(db, "rooms", roomId);
-
-  await updateDoc(roomRef, {
-    currentBombHolder: toPlayerId,
-    passCardUsedThisRound: true,
-  });
+  await passBomb(roomId, fromPlayerId, toPlayerId);
 }
