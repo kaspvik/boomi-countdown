@@ -1,5 +1,7 @@
+import type { Timestamp } from "firebase/firestore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useBoomiHelloSfx } from "../../hooks/useBoomiHelloSfx";
+import { GameTimer } from "../../layout";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
@@ -43,6 +45,9 @@ interface GameScreenProps {
   onCancelPassPanel: () => void;
   canOpenCardsButton: boolean;
 
+  timerStartedAt: Timestamp | null;
+  timerPenaltySeconds: number;
+
   cardPanel: (helpers: {
     requestBoomiExit: (afterExit: () => void) => void;
   }) => React.ReactNode;
@@ -73,6 +78,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onCancelPassPanel,
   canOpenCardsButton,
   cardPanel,
+  timerStartedAt,
+  timerPenaltySeconds,
 }) => {
   const [boomiExitKey, setBoomiExitKey] = useState<string | undefined>(
     undefined
@@ -213,12 +220,17 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       <GameHeader
         className={styles.uiAboveFx}
         onLeave={onLeave}
-        timer={{
-          key: timerKey,
-          durationSeconds,
-          onTimeout,
-          onTick: handleTick,
-        }}
+        center={
+          <GameTimer
+            key={timerKey}
+            mode="server"
+            durationSeconds={durationSeconds}
+            startedAt={timerStartedAt}
+            penaltySeconds={timerPenaltySeconds}
+            onTimeout={onTimeout}
+            onTick={handleTick}
+          />
+        }
       />
 
       <section className={`${styles.content} ${styles.uiAboveFx}`}>

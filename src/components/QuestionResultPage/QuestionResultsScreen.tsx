@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { GameTimer } from "../../layout";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Typewriter } from "../../layout/Typewriter/Typewriter";
@@ -82,12 +83,15 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
     <main className={styles.main}>
       <div className={styles.headerSlide}>
         <GameHeader
-          mode="overlay"
-          timer={{
-            key: timerKey,
-            durationSeconds: 10,
-            onTimeout: handleTimerTimeout,
-          }}
+          onLeave={onLeave}
+          center={
+            <GameTimer
+              key={timerKey}
+              mode="local"
+              durationSeconds={10}
+              onTimeout={handleTimerTimeout}
+            />
+          }
         />
       </div>
 
