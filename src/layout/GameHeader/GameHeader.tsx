@@ -27,7 +27,6 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   mode = "flow",
   leaveLabel = "Leave game",
   leaveDisabled = false,
-  className,
 }) => {
   const showLeave = !!onLeave;
 
@@ -35,7 +34,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
     <header
       className={`${styles.wrapper} ${
         mode === "overlay" ? styles.overlay : ""
-      } ${className ?? ""}`}>
+      }`}>
       <div className={styles.bar}>
         <div className={styles.left}>
           {showLeave ? (
