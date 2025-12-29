@@ -95,7 +95,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <h2 className={`text-body-black ${styles.title}`}>
+              <h2 className={`text-game ${styles.title}`}>
                 {titlePrefix}
 
                 {titleName && (
