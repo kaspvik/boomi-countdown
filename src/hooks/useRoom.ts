@@ -15,9 +15,7 @@ export function useRoom(roomId: string | null): UseRoomResult {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!roomId) {
-      return;
-    }
+    if (!roomId) return;
 
     const roomRef = doc(db, "rooms", roomId);
 
@@ -44,7 +42,16 @@ export function useRoom(roomId: string | null): UseRoomResult {
           lastKilledPlayerId: data.lastKilledPlayerId ?? null,
           roundResultsStep: data.roundResultsStep ?? null,
           winner: data.winner ?? null,
-        });
+
+          // ✅ NYA fält som behövs för timers
+          timerStartedAt: data.timerStartedAt ?? null,
+          roundTimePenaltySeconds: data.roundTimePenaltySeconds ?? 0,
+
+          // ✅ andra fält du redan har i createRoom (bra att ha här också)
+          passCardUsedThisRound: data.passCardUsedThisRound ?? false,
+          hostAuthUid: data.hostAuthUid ?? null,
+        } as Room);
+
         setError(null);
         setLoading(false);
       },
@@ -59,11 +66,7 @@ export function useRoom(roomId: string | null): UseRoomResult {
   }, [roomId]);
 
   if (!roomId) {
-    return {
-      room: null,
-      loading: false,
-      error: null,
-    };
+    return { room: null, loading: false, error: null };
   }
 
   return { room, loading, error };
