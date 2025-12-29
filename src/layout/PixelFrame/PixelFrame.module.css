@@ -34,3 +34,9 @@
     animation: none;
   }
 }
+
+@media (max-width: 600px) {
+  .pixelFrame {
+    max-width: 400px;
+  }
+}

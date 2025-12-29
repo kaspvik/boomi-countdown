@@ -110,7 +110,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
             <li key={p.id}>
               <button
                 type="button"
-                className={`${styles.playerItem} ${
+                className={`${styles.playerItem} text-body-black ${
                   isSelected ? styles.playerItemSelected : ""
                 }`}
                 onClick={() => handleSelectPlayer(p.id)}
