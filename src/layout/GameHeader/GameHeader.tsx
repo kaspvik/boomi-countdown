@@ -14,6 +14,7 @@ interface GameHeaderProps {
     onTick?: (secondsLeft: number) => void;
   };
   right?: React.ReactNode;
+  center?: React.ReactNode;
   className?: string;
   leaveLabel?: string;
   leaveDisabled?: boolean;
@@ -22,6 +23,7 @@ interface GameHeaderProps {
 
 export const GameHeader: React.FC<GameHeaderProps> = ({
   onLeave,
+  center,
   timer,
   right,
   mode = "flow",
@@ -50,7 +52,9 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         </div>
 
         <div className={styles.center}>
-          {timer ? (
+          {center ? (
+            center
+          ) : timer ? (
             <GameTimer
               key={timer.key}
               durationSeconds={timer.durationSeconds}
