@@ -43,12 +43,10 @@ export function useRoom(roomId: string | null): UseRoomResult {
           roundResultsStep: data.roundResultsStep ?? null,
           winner: data.winner ?? null,
 
-          // ✅ NYA fält som behövs för timers
           timerStartedAt: data.timerStartedAt ?? null,
           roundTimePenaltySeconds: data.roundTimePenaltySeconds ?? 0,
 
-          // ✅ andra fält du redan har i createRoom (bra att ha här också)
-          passCardUsedThisRound: data.passCardUsedThisRound ?? false,
+          passCardUsedThisRound: undefined, // ❌ TA BORT HELT (inte ens ha kvar)
           hostAuthUid: data.hostAuthUid ?? null,
         } as Room);
 

@@ -2,8 +2,6 @@ import { doc, runTransaction } from "firebase/firestore";
 import { db } from "../../firebase";
 import type { Player, Room } from "../../types/game";
 
-type PassKind = "normal" | "card";
-
 type RoomTx = Pick<Room, "status" | "round" | "currentBombHolder"> & {
   passCardUsedThisRound?: boolean;
 };
@@ -13,8 +11,7 @@ type PlayerTx = Pick<Player, "alive" | "blockActiveRound" | "passUsedRound">;
 export async function passBomb(
   roomId: string,
   fromPlayerId: string,
-  toPlayerId: string,
-  kind: PassKind = "normal"
+  toPlayerId: string
 ): Promise<void> {
   const roomRef = doc(db, "rooms", roomId);
   const fromRef = doc(db, "rooms", roomId, "players", fromPlayerId);
@@ -52,7 +49,6 @@ export async function passBomb(
 
     tx.update(roomRef, {
       currentBombHolder: toPlayerId,
-      ...(kind === "card" ? { passCardUsedThisRound: true } : {}),
     });
 
     tx.update(fromRef, {
