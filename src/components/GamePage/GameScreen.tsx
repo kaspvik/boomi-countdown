@@ -217,6 +217,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   return (
     <main className={styles.main}>
+      <h1 className={styles.srOnly}>Boomi Countdown – Game screen</h1>
       <GameHeader
         className={styles.uiAboveFx}
         onLeave={onLeave}
@@ -238,10 +239,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           {showInfoBox && bombHolderName && !hideInfoBoxForAlive && (
             <PixelFrame>
               <div className={styles.header}>
-                <h1 className="text-subtitle">
+                <h2 className="text-subtitle">
                   Current Boomi holder: <br />
                   <span className="text-game">{bombHolderName}</span>
-                </h1>
+                </h2>
 
                 {!isAlive && (
                   <p className="text-body-black" style={{ marginTop: 8 }}>
