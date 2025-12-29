@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useBoomiHelloSfx } from "../../hooks/useBoomiHelloSfx";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
-import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
@@ -212,16 +211,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   return (
     <main className={styles.main}>
       <GameHeader
-        className={styles.uiAboveFx}
         onLeave={onLeave}
-        center={
-          <GameTimer
-            key={timerKey}
-            durationSeconds={durationSeconds}
-            onTimeout={onTimeout}
-            onTick={handleTick}
-          />
-        }
+        timer={{
+          key: timerKey,
+          durationSeconds,
+          onTimeout,
+          onTick: handleTick,
+        }}
       />
 
       <section className={`${styles.content} ${styles.uiAboveFx}`}>
