@@ -49,7 +49,7 @@ export const GameOverScreen: React.FC<GameOverScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <h1 className={`text-title ${styles.title}`}>
+              <h1 className={`text-game ${styles.title}`}>
                 <Typewriter
                   key={`${typingKey}-title`}
                   text={title}
@@ -59,7 +59,7 @@ export const GameOverScreen: React.FC<GameOverScreenProps> = ({
               </h1>
 
               {!!message && (
-                <h2 className={`text-body ${styles.message}`}>
+                <h2 className={`text-body-black ${styles.message}`}>
                   <Typewriter
                     key={`${typingKey}-msg`}
                     text={message}
@@ -70,7 +70,7 @@ export const GameOverScreen: React.FC<GameOverScreenProps> = ({
               )}
 
               {!!extraText && (
-                <p className={`text-body ${styles.extra}`}>
+                <p className={`text-body-black ${styles.extra}`}>
                   <Typewriter
                     key={`${typingKey}-extra`}
                     text={extraText}
