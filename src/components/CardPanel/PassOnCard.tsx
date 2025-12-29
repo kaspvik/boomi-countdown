@@ -24,7 +24,7 @@ export const PassOnCard: React.FC<PassOnCardProps> = ({
         </div>
       </div>
 
-      <h2 className={`text-title ${styles.cardHint}`}>
+      <h2 className={`text-body ${styles.cardHint}`}>
         Tap to choose who to pass Boomi to.
       </h2>
     </GameCard>

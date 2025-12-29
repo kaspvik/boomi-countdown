@@ -21,7 +21,7 @@ export const BlockCard: React.FC<BlockCardProps> = ({ disabled, onClick }) => {
         </div>
       </div>
 
-      <h2 className="text-title">
+      <h2 className={`text-body ${styles.cardHint}`}>
         Other players can’t pass Boomi to you this round.
       </h2>
     </GameCard>

@@ -29,3 +29,8 @@
   align-items: center;
   justify-content: center;
 }
+
+.cardHint {
+  margin-bottom: 1rem;
+  text-align: center;
+}
