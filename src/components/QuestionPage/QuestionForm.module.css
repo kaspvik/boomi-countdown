@@ -35,9 +35,6 @@
 
   background: #ffffff;
   color: #000000;
-  font-family: var(--font-main);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-regular);
   text-align: center;
 
   box-shadow: 0 2px 0 #c4c4c4;

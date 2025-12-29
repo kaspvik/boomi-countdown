@@ -8,7 +8,8 @@
   width: 100%;
   max-width: 480px;
   margin-bottom: 1rem;
-  margin-top: 8rem;
+  margin-top: clamp(2rem, 10vh, 8rem);
+  padding: 0 1rem;
 }
 
 .headerLabel {
@@ -16,25 +17,16 @@
 }
 
 @keyframes playerFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .playersFadeIn li {
   animation: playerFadeIn 260ms ease-out both;
 }
 
-
-@media (max-width: 600px) {
-  .frameSection {
-    max-width: 100%;
-    padding: 0 3rem;
-    margin-top: 10rem;
+@media (prefers-reduced-motion: reduce) {
+  .playersFadeIn li {
+    animation: none;
   }
 }

@@ -1,54 +1,53 @@
 .main {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
 
-.content {
-  flex: 1;                    
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.frameBody {
-  text-align: center;
-  background-color: white;
-  padding: 2rem;
-  border: 2px solid black;
-}
-
-.title {
-  margin: 0 0 0.25rem;
-}
-
-.playerName {
-  margin: 0 0 0.75rem;
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-bold);
-}
-
-.extraMessage {
-  margin-top: 0.75rem;
-  font-size: var(--font-size-body);
-}
-
-.errorText {
-  margin-top: 0.75rem;
-  color: red;
-  font-size: var(--font-size-body);
+  --header-space: 5rem;
 }
 
 .headerSlide {
-  transform: translateY(-100px);
-  animation: headerSlideDown 620ms ease-out forwards;
-  will-change: transform;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
 }
 
-@keyframes headerSlideDown {
-  to {
-    transform: translateY(0);
+.content {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+
+  padding: calc(var(--header-space) + env(safe-area-inset-top)) 1rem 1rem;
+}
+
+.contentInner {
+  width: 100%;
+  max-width: 420px;
+}
+
+.frameBody {
+  box-sizing: border-box;
+  text-align: center;
+  background-color: white;
+  padding: clamp(0.9rem, 3vw, 1.6rem);
+  border: none;
+}
+
+@media (max-height: 700px) {
+  .main {
+    --header-space: 4.25rem;
+  }
+
+  .content {
+    padding: calc(var(--header-space) + env(safe-area-inset-top)) 0.75rem 0.75rem;
+  }
+
+  .contentInner {
+    transform: scale(0.92);
+    transform-origin: center;
   }
 }
 

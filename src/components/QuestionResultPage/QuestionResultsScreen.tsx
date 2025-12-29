@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
-import { GameTimer } from "../../layout/GameTimer/GameTimer";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
@@ -8,7 +7,6 @@ import styles from "./QuestionResultsScreen.module.css";
 
 interface QuestionResultsScreenProps {
   room: Room;
-  onLeave: () => void;
   onContinue: () => void;
   hasAnyVotes: boolean;
   error: string | null;
@@ -25,7 +23,6 @@ interface QuestionResultsScreenProps {
 
 export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   room,
-  onLeave,
   onContinue,
   hasAnyVotes,
   error,
@@ -101,7 +98,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <h2 className={`text-body-black ${styles.title}`}>
+              <h2 className={`text-game ${styles.title}`}>
                 {titlePrefix}
 
                 {titleName && (

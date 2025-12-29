@@ -40,7 +40,7 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
   );
 
   const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
-  const durationSeconds = 60;
+  const durationSeconds = 10000;
 
   const [secondsLeft, setSecondsLeft] = useState<number>(durationSeconds);
 
