@@ -14,7 +14,7 @@
   /* TYPO: storlekar (kan tweakas) */
   --font-size-display: 3rem;  /* t.ex. stora rubriken "Boomi Countdown" */
   --font-size-game: 2rem; 
-  --font-size-button: 2rem; 
+  --font-size-button: 1.5rem; 
   --font-size-title: 1.5rem;    /* sektionstitlar */
   --font-size-subtitle: 1.5rem;
   --font-size-body: 1.2rem;     /* brödtext */
@@ -81,7 +81,7 @@ h1, h2, h3, h4, h5, h6, p {
 /* Knapptexter */
 .text-button {
   font-family: var(--font-main);
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-button);
   font-weight: var(--font-weight-bold);
 }
 
@@ -114,7 +114,7 @@ body {
   :root {
     --font-size-display: 3.4rem;
     --font-size-game: 2.3rem;
-    --font-size-button: 2.2rem;
+    --font-size-button: 1.5rem;
     --font-size-title: 1.8rem;
     --font-size-subtitle: 1.7rem;
     --font-size-body: 1.4rem;
