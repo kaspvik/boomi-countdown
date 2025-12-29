@@ -211,6 +211,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   return (
     <main className={styles.main}>
       <GameHeader
+        className={styles.uiAboveFx}
         onLeave={onLeave}
         timer={{
           key: timerKey,
