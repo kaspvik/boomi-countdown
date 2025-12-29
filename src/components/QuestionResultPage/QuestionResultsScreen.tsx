@@ -99,7 +99,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
         <div className={styles.contentInner}>
           <PixelFrame>
             <div className={styles.frameBody}>
-              <h2 className={`text-game ${styles.title}`}>
+              <h1 className={`text-game ${styles.title}`}>
                 {titlePrefix}
 
                 {titleName && (
@@ -115,17 +115,17 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
                     </strong>
                   </>
                 )}
-              </h2>
+              </h1>
 
               {error && (
-                <h3 className={styles.errorText}>
+                <h2 className={styles.errorText}>
                   <Typewriter
                     key={errorTypingKey}
                     text={`"${error}"`}
                     speedMs={36}
                     startDelayMs={150}
                   />
-                </h3>
+                </h2>
               )}
 
               {!error && !hasAnyVotes && (
