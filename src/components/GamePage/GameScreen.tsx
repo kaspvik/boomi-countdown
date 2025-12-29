@@ -1,3 +1,4 @@
+import type { Timestamp } from "firebase/firestore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useBoomiHelloSfx } from "../../hooks/useBoomiHelloSfx";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
@@ -44,6 +45,9 @@ interface GameScreenProps {
   onCancelPassPanel: () => void;
   canOpenCardsButton: boolean;
 
+  timerStartedAt: Timestamp | null;
+  timerPenaltySeconds: number;
+
   cardPanel: (helpers: {
     requestBoomiExit: (afterExit: () => void) => void;
   }) => React.ReactNode;
@@ -74,6 +78,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onCancelPassPanel,
   canOpenCardsButton,
   cardPanel,
+  timerStartedAt,
+  timerPenaltySeconds,
 }) => {
   const [boomiExitKey, setBoomiExitKey] = useState<string | undefined>(
     undefined
@@ -217,7 +223,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         center={
           <GameTimer
             key={timerKey}
+            mode="server"
             durationSeconds={durationSeconds}
+            startedAt={timerStartedAt}
+            penaltySeconds={timerPenaltySeconds}
             onTimeout={onTimeout}
             onTick={handleTick}
           />

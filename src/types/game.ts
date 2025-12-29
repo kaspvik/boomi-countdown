@@ -27,6 +27,7 @@ export interface Room {
 
   passCardUsedThisRound?: boolean;
   roundTimePenaltySeconds?: number;
+  timerStartedAt: Timestamp | null;
 
   hostAuthUid?: string | null;
 }
