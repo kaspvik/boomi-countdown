@@ -49,7 +49,7 @@ export const StartScreenContainer: React.FC = () => {
         const room = await createRoom(code);
         const player = await joinRoom(room.id, playerName, true);
 
-        enterLobby(room.id, player.id);
+        enterLobby(room.id, player.id, playerName);
         setStatus(
           `Room created with code ${room.code}. You joined as ${playerName}.`
         );
@@ -81,7 +81,7 @@ export const StartScreenContainer: React.FC = () => {
         }
 
         const player = await joinRoom(room.id, playerName, false);
-        enterLobby(room.id, player.id);
+        enterLobby(room.id, player.id, playerName);
 
         setStatus(`You joined room ${room.code} as ${playerName}.`);
       } catch (error) {
