@@ -1,6 +1,7 @@
 import type { Timestamp } from "firebase/firestore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useBoomiHelloSfx } from "../../hooks/useBoomiHelloSfx";
+import { GameTimer } from "../../layout";
 import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
