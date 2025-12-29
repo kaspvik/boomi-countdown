@@ -8,6 +8,7 @@ import { useGameStore } from "./store/gameStore";
 function App() {
   const activeRoomId = useGameStore((s) => s.activeRoomId);
   const leaveLobby = useGameStore((s) => s.leaveLobby);
+  const hasHydrated = useGameStore((s) => s.hasHydrated);
 
   const [authReady, setAuthReady] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -27,8 +28,7 @@ function App() {
   if (authError) {
     return <p className="text-subtitle">{authError}</p>;
   }
-
-  if (!authReady) {
+  if (!authReady || !hasHydrated) {
     return <p className="text-subtitle">Connecting to game server...</p>;
   }
 
