@@ -3,6 +3,7 @@ export * from "./CardPanel/CardPanel";
 export * from "./CardPanel/PassOnCard";
 export * from "./GameOverPage/GameOverScreen";
 export * from "./GamePage/GameScreen";
+export * from "./HowToPlay/HowToPlayScreen";
 export * from "./Lobbypage/LobbyScreen";
 export * from "./QuestionPage/QuestionScreen";
 export * from "./QuestionResultPage/QuestionResultsScreen";

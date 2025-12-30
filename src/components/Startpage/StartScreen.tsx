@@ -1,4 +1,5 @@
 import React from "react";
+import { PixelButton } from "../../layout";
 import { GameLogo } from "../../layout/GameLogo/GameLogo";
 import { StartActions } from "./StartActions";
 import { StartNameField } from "./StartNameField";
@@ -16,6 +17,7 @@ interface StartScreenProps {
   onClickCreate: () => void;
   onConfirmName: () => void;
   onCancelName: () => void;
+  onHowToPlay: () => void;
 }
 
 export const StartScreen: React.FC<StartScreenProps> = ({
@@ -28,6 +30,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
   onClickCreate,
   onConfirmName,
   onCancelName,
+  onHowToPlay,
 }) => {
   const isAskingForName =
     pendingAction === "join" || pendingAction === "create";
@@ -58,6 +61,9 @@ export const StartScreen: React.FC<StartScreenProps> = ({
           />
         )}
       </section>
+      <PixelButton className="text-button" size="sm" onClick={onHowToPlay}>
+        How to Play
+      </PixelButton>
     </main>
   );
 };
