@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
-import { activateBlockCard, passBomb } from "../services";
-import type { Player, Room } from "../types/game";
+import { activateBlockCard, passBomb } from "../../services";
+import type { Player, Room } from "../../types/game";
 
 export function useCardPanelState(params: {
   room: Room;

@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import type { Room } from "../types/game";
+import { db } from "../../firebase";
+import type { Room } from "../../types/game";
 
 interface UseRoomResult {
   room: Room | null;

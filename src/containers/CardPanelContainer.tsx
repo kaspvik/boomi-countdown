@@ -1,6 +1,7 @@
 import React from "react";
 import { CardPanel } from "../components/CardPanel/CardPanel";
-import { useCardPanelState } from "../hooks/useCardPanelState";
+
+import { useCardPanelState } from "../hooks";
 import type { Player, Room } from "../types/game";
 
 interface CardPanelContainerProps {

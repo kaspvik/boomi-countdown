@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
-import { resolveGuess } from "../services";
-import type { Player } from "../types/game";
+import { resolveGuess } from "../../services";
+import type { Player } from "../../types/game";
 
 interface UseGuessStateParams {
   roomId: string;

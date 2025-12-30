@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { killPlayer } from "../services";
+import { killPlayer } from "../../services";
 
 export function useTimeoutKillPlayer(params: {
   roomId: string;

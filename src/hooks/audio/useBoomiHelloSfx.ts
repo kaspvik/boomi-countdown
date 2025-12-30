@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useSoundStore } from "../store/soundStore";
+import { useSoundStore } from "../../store/soundStore";
 
 type Options = {
   boomiOnTable: boolean;
