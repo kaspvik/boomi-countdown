@@ -8,6 +8,7 @@
   font: inherit;
   color: inherit;
   text-align: inherit;
+  text-transform: uppercase;
 }
 
 .playerButton:disabled {
