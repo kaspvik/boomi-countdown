@@ -1,7 +1,5 @@
 import React from "react";
-import { PixelButton } from "../../layout/PixelButton/PixelButton";
-import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
-import { PixelInputField } from "../../layout/PixelInputField/PixelInputField";
+import { PixelButton, PixelFrame, PixelInputField } from "../../layout";
 
 interface StartActionsProps {
   roomCode: string;
