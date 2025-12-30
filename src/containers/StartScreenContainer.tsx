@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { HowToPlayScreen } from "../components";
 import {
   StartScreen,
   type PendingAction,
@@ -9,7 +10,11 @@ import { generateRoomCode } from "../services/rooms/generateRoomCode";
 import { joinRoom } from "../services/rooms/joinRoom";
 import { useGameStore } from "../store/gameStore";
 
+type StartView = "start" | "howToPlay";
+
 export const StartScreenContainer: React.FC = () => {
+  const [view, setView] = useState<StartView>("start"); // ✅ NY
+
   const [roomCodeInput, setRoomCodeInput] = useState("");
   const [playerNameInput, setPlayerNameInput] = useState("");
   const [pendingAction, setPendingAction] = useState<PendingAction>("idle");
@@ -121,6 +126,10 @@ export const StartScreenContainer: React.FC = () => {
     resetNameFlow,
   ]);
 
+  if (view === "howToPlay") {
+    return <HowToPlayScreen onBack={() => setView("start")} />;
+  }
+
   return (
     <>
       <StartScreen
@@ -133,7 +142,9 @@ export const StartScreenContainer: React.FC = () => {
         onClickCreate={handleClickCreate}
         onConfirmName={handleConfirmName}
         onCancelName={handleCancelName}
+        onHowToPlay={() => setView("howToPlay")}
       />
+
       {status && (
         <p style={{ padding: "0 2rem", fontFamily: "handjet" }}>{status}</p>
       )}
