@@ -17,7 +17,6 @@ interface RoundResultsScreenProps {
   isHost: boolean;
   primaryButtonLabel: string;
   onPrimaryClick: () => void;
-  onLeave: () => void;
 
   statusTitleText?: string;
   statusMessageText?: string;

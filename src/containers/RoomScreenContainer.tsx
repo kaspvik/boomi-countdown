@@ -84,7 +84,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     setIsLeaving(true);
     try {
       if (currentPlayer) {
-        await leaveRoom(roomId, currentPlayer.id); // ✅ hard delete player-doc
+        await leaveRoom(roomId, currentPlayer.id);
       }
     } catch (err) {
       console.error("Failed to leave room:", err);
@@ -205,7 +205,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         players={players}
         currentPlayer={currentPlayer}
         isHost={derived.isCurrentPlayerHost}
-        onLeave={handleLeaveGame}
         onNext={actions.handleHostStartNextRound}
       />
     );

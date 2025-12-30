@@ -10,7 +10,6 @@ interface RoundResultsContainerProps {
   players: Player[];
   currentPlayer: Player;
   isHost: boolean;
-  onLeave: () => void;
   onNext: () => void;
 }
 
@@ -19,7 +18,6 @@ export const RoundResultsContainer: React.FC<RoundResultsContainerProps> = ({
   players,
   currentPlayer,
   isHost,
-  onLeave,
   onNext,
 }) => {
   const vm = useRoundResultsViewModel({ room, players, currentPlayer });
@@ -68,7 +66,6 @@ export const RoundResultsContainer: React.FC<RoundResultsContainerProps> = ({
       isHost={isHost}
       primaryButtonLabel={vm.primaryButtonLabel}
       onPrimaryClick={handlePrimaryClick}
-      onLeave={onLeave}
     />
   );
 };
