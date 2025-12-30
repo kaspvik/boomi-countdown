@@ -2,7 +2,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import React, { useCallback } from "react";
 import { RoundResultsScreen } from "../components/RoundResultsPage/RoundResultsScreen";
 import { db } from "../firebase";
-import { useRoundResultsViewModel } from "../hooks/useRoundResultsViewModel";
+import { useRoundResultsViewModel } from "../hooks/round/useRoundResultsViewModel";
 import type { Player, Room } from "../types/game";
 
 interface RoundResultsContainerProps {

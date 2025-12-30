@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Player, Room } from "../types/game";
+import type { Player, Room } from "../../types/game";
 
 export function useRoundResultsViewModel(params: {
   room: Room;
