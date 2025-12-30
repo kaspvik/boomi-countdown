@@ -1,6 +1,6 @@
 .main {
   display: flex;
-  min-height: 100vh;
+  min-height: 100dvh;
   align-items: center;
   justify-content: center;
 }
@@ -42,4 +42,10 @@
   margin-top: 1.5rem;
   display: flex;
   justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .contentInner {
+    padding: 0 1rem;
+  }
 }
