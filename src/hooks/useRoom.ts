@@ -46,7 +46,7 @@ export function useRoom(roomId: string | null): UseRoomResult {
           timerStartedAt: data.timerStartedAt ?? null,
           roundTimePenaltySeconds: data.roundTimePenaltySeconds ?? 0,
 
-          passCardUsedThisRound: undefined, // ❌ TA BORT HELT (inte ens ha kvar)
+          passCardUsedThisRound: undefined,
           hostAuthUid: data.hostAuthUid ?? null,
         } as Room);
 

@@ -39,8 +39,8 @@ export async function startGame(
     ...d.data(),
   }));
 
-  if (players.length < 2) {
-    throw new Error("Need at least 2 players to start the game.");
+  if (players.length < 4) {
+    throw new Error("Need at least 4 players to start the game.");
   }
 
   const imposterCount = Math.min(
