@@ -19,6 +19,21 @@ export const HowToPlayScreen: React.FC<HowToPlayScreenProps> = ({ onBack }) => {
               <div className={styles.scrollArea}>
                 <section className={styles.section}>
                   <h2 className={`text-body-black ${styles.h2}`}>
+                    <b>About Boomi Countdown:</b>
+                  </h2>
+                  <h3 className={`text-body-black ${styles.p}`}>
+                    In <b>Boomi Countdown</b>, your job is to work together (and
+                    against each other) to expose the <b>imposters</b> before
+                    it’s too late. Boomi might look cute… but when the timer
+                    hits zero, whoever is holding Boomi goes
+                    <b> BOOM</b> and is eliminated. It’s a fast, chaotic{" "}
+                    <b>social deduction</b> game where you talk, accuse, bluff,
+                    and try to survive.
+                  </h3>
+                </section>
+
+                <section className={styles.section}>
+                  <h2 className={`text-body-black ${styles.h2}`}>
                     <b>Requirements:</b>
                   </h2>
                   <h3 className={`text-body-black ${styles.p}`}>
