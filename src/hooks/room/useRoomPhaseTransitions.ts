@@ -1,7 +1,7 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect } from "react";
-import { db } from "../firebase";
-import type { Room } from "../types/game";
+import { db } from "../../firebase";
+import type { Room } from "../../types/game";
 
 export function useRoomPhaseTransitions(
   room: Room | null,

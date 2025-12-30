@@ -1,7 +1,7 @@
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import type { Player } from "../types/game";
+import { db } from "../../firebase";
+import type { Player } from "../../types/game";
 
 interface UsePlayersResult {
   players: Player[];

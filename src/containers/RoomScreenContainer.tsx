@@ -4,13 +4,16 @@ import { LobbyScreen } from "../components/Lobbypage/LobbyScreen";
 import lobbyStyles from "../components/Lobbypage/LobbyScreen.module.css";
 import { QuestionScreen } from "../components/QuestionPage/QuestionScreen";
 import { RoleScreen } from "../components/RolePage/RoleScreen";
-import { useHostPhaseController } from "../hooks/useHostPhaseController";
-import { usePlayers } from "../hooks/usePlayers";
-import { useRoom } from "../hooks/useRoom";
-import { useRoomActions } from "../hooks/useRoomActions";
-import { useRoomDerivedState } from "../hooks/useRoomDerivedState";
-import { useRoomPhaseTransitions } from "../hooks/useRoomPhaseTransitions";
-import { useRoundVotes } from "../hooks/useRoundVotes";
+
+import {
+  useHostPhaseController,
+  usePlayers,
+  useRoom,
+  useRoomActions,
+  useRoomDerivedState,
+  useRoomPhaseTransitions,
+  useRoundVotes,
+} from "../hooks";
 import { GameLogo } from "../layout/GameLogo/GameLogo";
 import { leaveRoom } from "../services/rooms/leaveRoom";
 import { useGameStore } from "../store/gameStore";
@@ -84,7 +87,7 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     setIsLeaving(true);
     try {
       if (currentPlayer) {
-        await leaveRoom(roomId, currentPlayer.id); // ✅ hard delete player-doc
+        await leaveRoom(roomId, currentPlayer.id);
       }
     } catch (err) {
       console.error("Failed to leave room:", err);
@@ -205,7 +208,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
         players={players}
         currentPlayer={currentPlayer}
         isHost={derived.isCurrentPlayerHost}
-        onLeave={handleLeaveGame}
         onNext={actions.handleHostStartNextRound}
       />
     );

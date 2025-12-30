@@ -1,10 +1,12 @@
 import { doc, increment, updateDoc } from "firebase/firestore";
 import { useCallback } from "react";
-import { db } from "../firebase";
-import { getWinningTeam } from "../services/gameplay/winConditions";
-import { startGame } from "../services/rooms/startGame";
-import { getTopVotedPlayerForRole } from "../services/voting/voteHelpers";
-import type { Player, Room } from "../types/game";
+import { db } from "../../firebase";
+import {
+  getTopVotedPlayerForRole,
+  getWinningTeam,
+  startGame,
+} from "../../services";
+import type { Player, Room } from "../../types/game";
 
 type Vote = Parameters<typeof getTopVotedPlayerForRole>[0][number];
 

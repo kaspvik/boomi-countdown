@@ -8,8 +8,7 @@ import React, {
 } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
 import { db } from "../firebase";
-import { useRoundUiState } from "../hooks";
-import { useTimeoutKillPlayer } from "../hooks/useTimeoutKillPlayer";
+import { useRoundUiState, useTimeoutKillPlayer } from "../hooks";
 import { killPlayer } from "../services/gameplay/killPlayer";
 import { startRoomTimer } from "../services/rooms/startRoomTimer";
 import type { Player, Room } from "../types/game";

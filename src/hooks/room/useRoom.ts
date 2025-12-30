@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import type { Room } from "../types/game";
+import { db } from "../../firebase";
+import type { Room } from "../../types/game";
 
 interface UseRoomResult {
   room: Room | null;
@@ -46,7 +46,7 @@ export function useRoom(roomId: string | null): UseRoomResult {
           timerStartedAt: data.timerStartedAt ?? null,
           roundTimePenaltySeconds: data.roundTimePenaltySeconds ?? 0,
 
-          passCardUsedThisRound: undefined, // ❌ TA BORT HELT (inte ens ha kvar)
+          passCardUsedThisRound: undefined,
           hostAuthUid: data.hostAuthUid ?? null,
         } as Room);
 

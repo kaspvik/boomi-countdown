@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Player, Room } from "../types/game";
+import type { Player, Room } from "../../types/game";
 
 export function useRoundResultsViewModel(params: {
   room: Room;
@@ -14,13 +14,14 @@ export function useRoundResultsViewModel(params: {
     const isCurrentDead = !!deadPlayer && deadPlayer.id === currentPlayer.id;
 
     const stepValue = room.roundResultsStep ?? "explosion";
-
     const step: 0 | 1 | 2 =
       stepValue === "role" ? 1 : stepValue === "status" ? 2 : 0;
 
     const alivePlayers = players.filter((p) => p.alive);
     const aliveImposters = alivePlayers.filter((p) => p.role === "imposter");
     const impostersLeft = aliveImposters.length;
+
+    const isGameOver = room.winner != null;
 
     let titleText = "Round result";
     let messageText = "";
@@ -62,18 +63,21 @@ export function useRoundResultsViewModel(params: {
       }
     }
 
-    const statusTitleText =
-      impostersLeft > 0
-        ? "Imposters are still in the game!"
-        : "All imposters eliminated!";
-    const statusMessageText =
-      impostersLeft > 0
-        ? `There ${
-            impostersLeft === 1 ? "is" : "are"
-          } still ${impostersLeft} imposter${
-            impostersLeft === 1 ? "" : "s"
-          } among the living.`
-        : "Civilians win the game!";
+    const statusTitleText = isGameOver
+      ? "The game has ended!"
+      : impostersLeft > 0
+      ? "Imposters are still in the game!"
+      : "No imposters remain!";
+
+    const statusMessageText = isGameOver
+      ? "Proceed to the Game Over screen to see who won."
+      : impostersLeft > 0
+      ? `There ${
+          impostersLeft === 1 ? "is" : "are"
+        } still ${impostersLeft} imposter${
+          impostersLeft === 1 ? "" : "s"
+        } among the living.`
+      : "The last imposter is gone.";
 
     const primaryButtonLabel = !hasRoleReveal
       ? "Continue"
@@ -81,7 +85,9 @@ export function useRoundResultsViewModel(params: {
       ? "Reveal role"
       : step === 1
       ? "Continue"
-      : "Next round";
+      : isGameOver
+      ? "See winner"
+      : "Continue";
 
     return {
       deadPlayer,
@@ -96,6 +102,14 @@ export function useRoundResultsViewModel(params: {
       statusMessageText,
       impostersLeft,
       primaryButtonLabel,
+
+      isGameOver,
     };
-  }, [room.lastKilledPlayerId, room.roundResultsStep, players, currentPlayer]);
+  }, [
+    room.lastKilledPlayerId,
+    room.roundResultsStep,
+    room.winner,
+    players,
+    currentPlayer,
+  ]);
 }

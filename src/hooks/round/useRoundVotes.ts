@@ -1,7 +1,7 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
-import { db } from "../firebase";
-import type { RoundVote } from "../types/game";
+import { db } from "../../firebase";
+import type { RoundVote } from "../../types/game";
 
 interface UseRoundVotesResult {
   votes: RoundVote[];

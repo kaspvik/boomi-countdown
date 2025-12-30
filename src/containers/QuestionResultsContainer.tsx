@@ -1,6 +1,6 @@
 import React from "react";
 import { QuestionResultsScreen } from "../components/QuestionResultPage/QuestionResultsScreen";
-import { useRoundVotes } from "../hooks/useRoundVotes";
+import { useRoundVotes } from "../hooks";
 import {
   getCivilianQuestionForRound,
   IMPOSTER_QUESTION,
