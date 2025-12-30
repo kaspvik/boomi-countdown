@@ -1,4 +1,3 @@
-// QuestionResultsContainer.tsx
 import React from "react";
 import { QuestionResultsScreen } from "../components/QuestionResultPage/QuestionResultsScreen";
 import { useRoundVotes } from "../hooks/useRoundVotes";
@@ -21,7 +20,7 @@ interface QuestionResultsContainerProps {
 
 export const QuestionResultsContainer: React.FC<
   QuestionResultsContainerProps
-> = ({ room, roomId, players, currentPlayer, onLeave, onContinue }) => {
+> = ({ room, roomId, players, currentPlayer, onContinue }) => {
   const { votes, error } = useRoundVotes(roomId, room.round);
 
   const hasAnyVotes = votes.length > 0;
@@ -49,7 +48,6 @@ export const QuestionResultsContainer: React.FC<
   return (
     <QuestionResultsScreen
       room={room}
-      onLeave={onLeave}
       onContinue={onContinue}
       hasAnyVotes={hasAnyVotes}
       error={error}

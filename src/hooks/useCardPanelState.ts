@@ -62,7 +62,7 @@ export function useCardPanelState(params: {
     if (!canUsePassCard) return;
 
     try {
-      await passBomb(roomId, currentPlayer.id, selectedPassTargetId, "card");
+      await passBomb(roomId, currentPlayer.id, selectedPassTargetId);
     } catch (err) {
       console.error("Failed to pass bomb", err);
     } finally {

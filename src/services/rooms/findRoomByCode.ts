@@ -22,5 +22,6 @@ export async function findRoomByCode(code: string): Promise<Room | null> {
     round: data.round,
     currentBombHolder: data.currentBombHolder,
     createdAt: data.createdAt ?? null,
+    timerStartedAt: data.timerStartedAt ?? null,
   };
 }
