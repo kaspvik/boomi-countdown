@@ -115,3 +115,9 @@
   white-space: nowrap;
   border: 0;
 }
+
+@media (max-width: 600px) {
+  .header {
+    padding: 2rem;
+  }
+}
