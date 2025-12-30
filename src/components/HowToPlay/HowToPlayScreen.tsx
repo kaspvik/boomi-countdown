@@ -21,9 +21,9 @@ export const HowToPlayScreen: React.FC<HowToPlayScreenProps> = ({ onBack }) => {
                   <h2 className={`text-body-black ${styles.h2}`}>
                     <b>Requirements:</b>
                   </h2>
-                  <p className={`text-body-black ${styles.p}`}>
+                  <h3 className={`text-body-black ${styles.p}`}>
                     You can play with <b>4–12 players</b>.
-                  </p>
+                  </h3>
                 </section>
 
                 <section className={styles.section}>
@@ -41,9 +41,9 @@ export const HowToPlayScreen: React.FC<HowToPlayScreenProps> = ({ onBack }) => {
                   <h2 className={`text-body-black ${styles.h2}`}>
                     <b>Roles:</b>
                   </h2>
-                  <p className={`text-body-black ${styles.p}`}>
+                  <h3 className={`text-body-black ${styles.p}`}>
                     The number of imposters depends on player count:
-                  </p>
+                  </h3>
                   <ul className={styles.ul}>
                     <li className={`text-body-black ${styles.li}`}>
                       <b>4-6 players</b> → <b>1</b> imposter
@@ -152,9 +152,9 @@ export const HowToPlayScreen: React.FC<HowToPlayScreenProps> = ({ onBack }) => {
                   <h2 className={`text-body-black ${styles.h2}`}>
                     <b>Guess Panel:</b>
                   </h2>
-                  <p className={`text-body-black ${styles.p}`}>
+                  <h3 className={`text-body-black ${styles.p}`}>
                     The <b>Guess Panel</b> is the final guessing moment.
-                  </p>
+                  </h3>
                   <ul className={styles.ul}>
                     <li className={`text-body-black ${styles.li}`}>
                       Guess wrong → <b>you</b> are eliminated.
