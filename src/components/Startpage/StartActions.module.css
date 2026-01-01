@@ -12,3 +12,10 @@
   justify-content: center;
   margin-top: 2rem;
 }
+
+.error {
+  margin: 0.6rem 0 0;
+  font-size: 1rem;
+  color: white;
+  line-height: 1.2;
+}

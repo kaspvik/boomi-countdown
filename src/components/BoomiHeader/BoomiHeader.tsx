@@ -3,7 +3,7 @@ import React from "react";
 import { GameHeader, GameLogo, GameTimer } from "../../layout";
 import { SoundToggleButton } from "../../layout/SoundToggleButton/SoundToggleButton";
 
-type HeaderVariant = "start" | "game";
+type HeaderVariant = "start" | "lobby" | "game";
 
 type TimerProps = {
   key?: string;
@@ -36,18 +36,32 @@ export const BoomiHeader: React.FC<BoomiHeaderProps> = ({
   right,
   className,
   mode,
-  leaveLabel,
+  leaveLabel = "Leave game",
   leaveDisabled,
 }) => {
-  const rightNode = right ?? <SoundToggleButton />;
+  const soundButton = right ?? <SoundToggleButton />;
 
   if (variant === "start") {
     return (
       <GameHeader
         className={className}
         mode={mode}
-        right={rightNode}
+        right={soundButton}
         center={<GameLogo />}
+      />
+    );
+  }
+
+  if (variant === "lobby") {
+    return (
+      <GameHeader
+        className={className}
+        mode={mode}
+        onLeave={onLeave}
+        leaveLabel={leaveLabel}
+        leaveDisabled={leaveDisabled}
+        center={<GameLogo />}
+        right={soundButton}
       />
     );
   }
@@ -57,7 +71,7 @@ export const BoomiHeader: React.FC<BoomiHeaderProps> = ({
       <GameHeader
         className={className}
         mode={mode}
-        right={rightNode}
+        right={soundButton}
         onLeave={onLeave}
         leaveLabel={leaveLabel}
         leaveDisabled={leaveDisabled}
@@ -82,11 +96,10 @@ export const BoomiHeader: React.FC<BoomiHeaderProps> = ({
     <GameHeader
       className={className}
       mode={mode}
-      right={rightNode}
+      right={soundButton}
       onLeave={onLeave}
       leaveLabel={leaveLabel}
       leaveDisabled={leaveDisabled}
-      timer={timer}
     />
   );
 };
