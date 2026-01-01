@@ -1,6 +1,7 @@
 import type { Timestamp } from "firebase/firestore";
 import React from "react";
 import { GameHeader, GameLogo, GameTimer } from "../../layout";
+import { SoundToggleButton } from "../../layout/SoundToggleButton/SoundToggleButton";
 
 type HeaderVariant = "start" | "game";
 
@@ -38,12 +39,14 @@ export const BoomiHeader: React.FC<BoomiHeaderProps> = ({
   leaveLabel,
   leaveDisabled,
 }) => {
+  const rightNode = right ?? <SoundToggleButton />;
+
   if (variant === "start") {
     return (
       <GameHeader
         className={className}
         mode={mode}
-        right={right}
+        right={rightNode}
         center={<GameLogo />}
       />
     );
@@ -54,7 +57,7 @@ export const BoomiHeader: React.FC<BoomiHeaderProps> = ({
       <GameHeader
         className={className}
         mode={mode}
-        right={right}
+        right={rightNode}
         onLeave={onLeave}
         leaveLabel={leaveLabel}
         leaveDisabled={leaveDisabled}
@@ -79,7 +82,7 @@ export const BoomiHeader: React.FC<BoomiHeaderProps> = ({
     <GameHeader
       className={className}
       mode={mode}
-      right={right}
+      right={rightNode}
       onLeave={onLeave}
       leaveLabel={leaveLabel}
       leaveDisabled={leaveDisabled}
