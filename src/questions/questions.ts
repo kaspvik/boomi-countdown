@@ -1,5 +1,5 @@
 export const CIVILIAN_QUESTIONS: string[] = [
-  "Who do you suspect the most this round?",
+  "Roles are assigned — who do you think is the imposter?",
   "Who’s playing too safe right now?",
   "Who looks the most nervous?",
   "Who is trying a bit too hard to seem innocent?",
@@ -16,7 +16,7 @@ export const CIVILIAN_QUESTIONS: string[] = [
 
 export function getCivilianQuestionForRound(round: number): string {
   if (CIVILIAN_QUESTIONS.length === 0) {
-    return "Who do you suspect the most this round?";
+    return "Roles are assigned — who do you think is the imposter?";
   }
   return CIVILIAN_QUESTIONS[
     (round - 1 + CIVILIAN_QUESTIONS.length) % CIVILIAN_QUESTIONS.length
