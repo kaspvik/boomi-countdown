@@ -1,8 +1,6 @@
 import type { Timestamp } from "firebase/firestore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useBoomiHelloSfx } from "../../hooks";
-import { GameTimer } from "../../layout";
-import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Table } from "../../layout/Table/Table";
@@ -10,6 +8,7 @@ import { useGameStore } from "../../store/gameStore";
 import { useSoundStore } from "../../store/soundStore";
 import type { Player } from "../../types/game";
 import { BoomiCanvas } from "../Boomi/BoomiCanvas";
+import { BoomiHeader } from "../BoomiHeader/BoomiHeader";
 import styles from "../GamePage/GameScreen.module.css";
 import { GuessPanel } from "./GuessPanel";
 
@@ -218,20 +217,19 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   return (
     <main className={styles.main}>
       <h1 className={styles.srOnly}>Boomi Countdown – Game screen</h1>
-      <GameHeader
+      <BoomiHeader
+        variant="game"
         className={styles.uiAboveFx}
         onLeave={onLeave}
-        center={
-          <GameTimer
-            key={timerKey}
-            mode="server"
-            durationSeconds={durationSeconds}
-            startedAt={timerStartedAt}
-            penaltySeconds={timerPenaltySeconds}
-            onTimeout={onTimeout}
-            onTick={handleTick}
-          />
-        }
+        timer={{
+          key: timerKey,
+          durationSeconds,
+          onTimeout,
+          onTick: handleTick,
+          mode: "server",
+          startedAt: timerStartedAt,
+          penaltySeconds: timerPenaltySeconds,
+        }}
       />
 
       <section className={`${styles.content} ${styles.uiAboveFx}`}>

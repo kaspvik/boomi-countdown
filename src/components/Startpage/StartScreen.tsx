@@ -1,6 +1,6 @@
 import React from "react";
 import { PixelButton } from "../../layout";
-import { GameLogo } from "../../layout/GameLogo/GameLogo";
+import { BoomiHeader } from "../BoomiHeader/BoomiHeader";
 import { StartActions } from "./StartActions";
 import { StartNameField } from "./StartNameField";
 import styles from "./StartScreen.module.css";
@@ -38,7 +38,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
   return (
     <main className={styles.main}>
       <div className={styles.logo}>
-        <GameLogo />
+        <BoomiHeader variant="start" />
       </div>
       <section className={styles.actionsSection}>
         {!isAskingForName && (
