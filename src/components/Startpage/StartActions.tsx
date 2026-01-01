@@ -1,5 +1,6 @@
 import React from "react";
 import { PixelButton, PixelFrame, PixelInputField } from "../../layout";
+import styles from "./StartActions.module.css";
 
 interface StartActionsProps {
   roomCode: string;
@@ -16,7 +17,7 @@ export const StartActions: React.FC<StartActionsProps> = ({
 }) => {
   return (
     <PixelFrame>
-      <div style={{ marginBottom: "1.5rem" }}>
+      <div className={styles.inputBlock}>
         <PixelInputField
           label="Join a room:"
           placeholder="Enter room code"
@@ -25,17 +26,13 @@ export const StartActions: React.FC<StartActionsProps> = ({
         />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className={styles.centerRow}>
         <PixelButton onClick={onClickJoin} className="text-button">
           Enter
         </PixelButton>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "2rem",
-        }}>
+
+      <div className={styles.centerRowCreate}>
         <PixelButton onClick={onClickCreate} className="text-button">
           Create a room!
         </PixelButton>
