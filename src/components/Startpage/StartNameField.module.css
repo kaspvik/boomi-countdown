@@ -2,15 +2,8 @@
   margin-bottom: 0.75rem;
 }
 
-.nameLabel {
-  display: block;
-  margin-top: 0.5rem;
-}
-
-.buttonsRow {
-  display: flex;
-  margin-top: 0.75rem;
-  justify-content: flex-start;
+.roomCode {
+  white-space: nowrap;
 }
 
 .nameHint {
@@ -18,10 +11,26 @@
   opacity: 0.85;
 }
 
-@media (max-width: 300px) {
+.buttonsRow {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.button {
+  flex: 1 1 140px; 
+  min-width: 120px;
+}
+
+@media (max-width: 360px) {
   .buttonsRow {
     flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .button {
+    width: 100%;
   }
 }
