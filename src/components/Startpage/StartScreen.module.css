@@ -9,7 +9,3 @@
   gap: clamp(2rem, 6vh, 6rem);
 
 }
-
-.logo {
-  margin-top: clamp(0.25rem, 2vh, 1rem);
-}

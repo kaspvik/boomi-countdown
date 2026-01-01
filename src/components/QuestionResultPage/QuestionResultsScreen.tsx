@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { GameTimer } from "../../layout";
-import { GameHeader } from "../../layout/GameHeader/GameHeader";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import { Typewriter } from "../../layout/Typewriter/Typewriter";
 import type { Player, Room } from "../../types/game";
+import { BoomiHeader } from "../BoomiHeader/BoomiHeader";
 import styles from "./QuestionResultsScreen.module.css";
 
 interface QuestionResultsScreenProps {
@@ -82,16 +81,15 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
   return (
     <main className={styles.main}>
       <div className={styles.headerSlide}>
-        <GameHeader
+        <BoomiHeader
+          variant="game"
           mode="overlay"
-          center={
-            <GameTimer
-              key={timerKey}
-              mode="local"
-              durationSeconds={10}
-              onTimeout={handleTimerTimeout}
-            />
-          }
+          timer={{
+            key: timerKey,
+            mode: "local",
+            durationSeconds: 10,
+            onTimeout: handleTimerTimeout,
+          }}
         />
       </div>
 
