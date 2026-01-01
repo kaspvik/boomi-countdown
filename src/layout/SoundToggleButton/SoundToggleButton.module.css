@@ -1,0 +1,16 @@
+.button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 48px;   /* välj dina mått */
+  height: 36px;
+  display: block;
+  image-rendering: pixelated; /* nice om det är pixel-art */
+}
