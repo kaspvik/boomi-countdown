@@ -13,6 +13,11 @@
   justify-content: flex-start;
 }
 
+.nameHint {
+  margin-top: 0.6rem;
+  opacity: 0.85;
+}
+
 @media (max-width: 300px) {
   .buttonsRow {
     flex-direction: column;

@@ -44,12 +44,17 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
         placeholder="Name"
       />
 
+      <p className={`text-body ${styles.nameHint}`}>
+        For the best experience, use your first name <br /> (so friends
+        recognize you)
+      </p>
+
       <div className={styles.buttonsRow}>
-        <PixelButton onClick={onConfirmName} className="text-button">
-          Continue
-        </PixelButton>
         <PixelButton onClick={onCancelName} className="text-button">
           Go Back
+        </PixelButton>
+        <PixelButton onClick={onConfirmName} className="text-button">
+          Continue
         </PixelButton>
       </div>
     </PixelFrame>
