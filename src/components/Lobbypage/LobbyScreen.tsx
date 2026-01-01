@@ -1,9 +1,9 @@
 import React from "react";
-import { GameLogo } from "../../layout/GameLogo/GameLogo";
 import { PixelButton } from "../../layout/PixelButton/PixelButton";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import panelStyles from "../../layout/PlayerPanel/PlayerPanel.module.css";
 import type { Player, Room } from "../../types/game";
+import { BoomiHeader } from "../BoomiHeader/BoomiHeader";
 import styles from "./LobbyScreen.module.css";
 
 interface LobbyScreenProps {
@@ -21,14 +21,14 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
   players,
   playersLoading,
   playersError,
-  onLeave,
   onStartGame,
   canStartGame,
+  onLeave: handleLeave,
 }) => {
   return (
     <main className={styles.main}>
       <section className={styles.frameSection}>
-        <GameLogo />
+        <BoomiHeader variant="lobby" />
 
         <PixelFrame>
           <h2 className="text-title">GAME PIN:</h2>
@@ -64,10 +64,9 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
       </section>
 
       <div className={panelStyles.buttonRow}>
-        <PixelButton onClick={onLeave} className="text-button">
-          Back to start
+        <PixelButton onClick={handleLeave} className="text-button" size="md">
+          Leave Lobby
         </PixelButton>
-
         {canStartGame && (
           <PixelButton onClick={onStartGame} className="text-button">
             Start Game
