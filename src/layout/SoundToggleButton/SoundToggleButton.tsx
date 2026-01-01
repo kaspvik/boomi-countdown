@@ -20,6 +20,8 @@ export const SoundToggleButton: React.FC = () => {
     setSfxMuted(next);
   }, [isMuted, playSfx, setBgmMuted, setSfxMuted]);
 
+  const src = isMuted ? "/soundbutton-off.png" : "/soundbutton-on.png";
+
   return (
     <button
       type="button"
@@ -28,9 +30,13 @@ export const SoundToggleButton: React.FC = () => {
       aria-pressed={isMuted}
       aria-label={isMuted ? "Turn sound on" : "Turn sound off"}
       title={isMuted ? "Sound OFF" : "Sound ON"}>
-      <span className={styles.icon} aria-hidden="true">
-        {isMuted ? "OFF" : "ON"}
-      </span>
+      <img
+        className={styles.icon}
+        src={src}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+      />
     </button>
   );
 };
