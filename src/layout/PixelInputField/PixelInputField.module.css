@@ -26,12 +26,10 @@
   outline: none;
 }
 
-/* HOVER */
 .input:hover {
   border-color: #4B4B4B;
 }
 
-/* FOCUS */
 .input:focus {
   border-color: #0400ff;
 } 
