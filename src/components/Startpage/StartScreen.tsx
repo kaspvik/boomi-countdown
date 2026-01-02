@@ -1,5 +1,6 @@
 import React from "react";
 import { PixelButton } from "../../layout";
+import { BoomiCardAnim } from "../Boomi/BoomiCardAnimation/BoomiCardAnim";
 import { BoomiHeader } from "../BoomiHeader/BoomiHeader";
 import { StartActions } from "./StartActions";
 import { StartNameField } from "./StartNameField";
@@ -20,26 +21,33 @@ interface StartScreenProps {
   onHowToPlay: () => void;
 }
 
-export const StartScreen: React.FC<StartScreenProps> = ({
-  roomCode,
-  playerName,
-  pendingAction,
-  onRoomCodeChange,
-  onPlayerNameChange,
-  onClickJoin,
-  onClickCreate,
-  onConfirmName,
-  onCancelName,
-  onHowToPlay,
-}) => {
+export const StartScreen: React.FC<StartScreenProps> = (props) => {
+  const {
+    roomCode,
+    playerName,
+    pendingAction,
+    onRoomCodeChange,
+    onPlayerNameChange,
+    onClickJoin,
+    onClickCreate,
+    onConfirmName,
+    onCancelName,
+    onHowToPlay,
+  } = props;
+
   const isAskingForName =
     pendingAction === "join" || pendingAction === "create";
 
   return (
     <main className={styles.main}>
+      <div className={styles.runner} aria-hidden="true">
+        <BoomiCardAnim anim="pass" scale={5} />
+      </div>
+
       <div className={styles.logo}>
         <BoomiHeader variant="start" />
       </div>
+
       <section className={styles.actionsSection}>
         {!isAskingForName && (
           <StartActions
@@ -61,6 +69,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
           />
         )}
       </section>
+
       <PixelButton className="text-button" size="sm" onClick={onHowToPlay}>
         How to Play
       </PixelButton>
