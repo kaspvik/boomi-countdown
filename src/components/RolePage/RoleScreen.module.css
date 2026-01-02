@@ -65,7 +65,7 @@
 @media (max-width: 600px) {
   .container {
     gap: 0.75rem;
-    padding: 0.15rem; /* lite mindre padding */
+    padding: 0.15rem;
   }
 
   .textBlock {
@@ -73,4 +73,10 @@
     transform: scale(0.92);
     transform-origin: top center;
   }
+
+  .frameWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+}
 }

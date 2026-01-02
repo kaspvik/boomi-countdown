@@ -12,14 +12,14 @@
   display: grid;
   justify-items: center;
   align-content: start;
-  padding-top: 5rem;
+  margin-top: 1rem;
 }
 
 .contentInner {
   width: min(450px, 100%);
 }
 
-@media (max-height: 700px) {
+@media (max-height: 600px) {
   .main {
     padding: 0.5rem 0.75rem;
   }

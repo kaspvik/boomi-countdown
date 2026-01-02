@@ -97,50 +97,56 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   return (
     <div className={styles.wrapper}>
       <div className={styles.questionBox}>
-        <h1 className="text-subtitle">{questionText}</h1>
+        <h1 className={`text-subtitle ${styles.questionTitle}`}>
+          {questionText}
+        </h1>
       </div>
 
-      <h2 className="text-body">Tap the player you want to vote for:</h2>
+      <div className={styles.playersScroller}>
+        <ul className={styles.playersList}>
+          {possibleTargets.map((p) => {
+            const isSelected = p.id === selectedTargetId;
 
-      <ul className={styles.playersList}>
-        {possibleTargets.map((p) => {
-          const isSelected = p.id === selectedTargetId;
-
-          return (
-            <li key={p.id}>
-              <button
-                type="button"
-                className={`${styles.playerItem} text-body-black ${
-                  isSelected ? styles.playerItemSelected : ""
-                }`}
-                onClick={() => handleSelectPlayer(p.id)}
-                disabled={!canVote || hasVoted || isSubmitting}>
-                <span className={styles.playerName}>
-                  {p.name}
-                  {p.isHost ? " (host)" : ""}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      <div className={styles.buttonRow}>
-        <PixelButton
-          onClick={handleSubmit}
-          className="text-button"
-          disabled={!canVote || !selectedTargetId || hasVoted || isSubmitting}>
-          {hasVoted ? "Vote submitted" : "Submit vote"}
-        </PixelButton>
+            return (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  className={`${styles.playerItem} text-body-black ${
+                    isSelected ? styles.playerItemSelected : ""
+                  }`}
+                  onClick={() => handleSelectPlayer(p.id)}
+                  disabled={!canVote || hasVoted || isSubmitting}>
+                  <span className={styles.playerName}>
+                    {p.name}
+                    {p.isHost ? " (host)" : ""}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
-      {hasVoted && (
-        <div className={styles.voteConfirmation}>
-          <h3 className="text-body">
-            Your vote has been saved. <br /> Wait for the round to start.
-          </h3>
+      <div className={styles.bottomArea}>
+        <div className={styles.buttonRow}>
+          <PixelButton
+            onClick={handleSubmit}
+            className="text-button"
+            disabled={
+              !canVote || !selectedTargetId || hasVoted || isSubmitting
+            }>
+            {hasVoted ? "Vote submitted" : "Submit vote"}
+          </PixelButton>
         </div>
-      )}
+
+        {hasVoted && (
+          <div className={styles.voteConfirmation}>
+            <h3 className="text-body">
+              Your vote has been saved. <br /> Wait for the round to start.
+            </h3>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

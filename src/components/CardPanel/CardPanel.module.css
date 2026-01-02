@@ -34,3 +34,9 @@
   margin-bottom: 1rem;
   text-align: center;
 }
+
+@media (max-width: 380px) {
+  .cardsRow {
+    gap: 0.5rem;
+  }
+}
