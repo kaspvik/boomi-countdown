@@ -35,6 +35,7 @@
 .right {
   justify-self: end;
   min-width: 0;
+  transform: translateY(-50px); 
 }
 
 .leftPlaceholder {
