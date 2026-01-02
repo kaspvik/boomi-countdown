@@ -64,3 +64,9 @@
 .voteConfirmation {
   text-align: center;
 }
+
+@media (max-width: 480px) {
+  .questionTitle {
+    font-size: 1.4rem;
+  }
+}

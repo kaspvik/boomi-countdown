@@ -10,6 +10,7 @@
 
   padding-inline: clamp(12px, 4vw, 32px);
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 

@@ -1,3 +1,7 @@
+.frameWrap {
+  margin-top: 1rem;
+}
+
 .roomInfo {
   margin-bottom: 0.75rem;
 }
@@ -24,13 +28,31 @@
   min-width: 120px;
 }
 
-@media (max-width: 360px) {
-  .buttonsRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.wrap {
+  position: relative;
+}
 
-  .button {
-    width: 100%;
+.boomi {
+  position: absolute;
+  right: -60px;
+  top: -40px;
+
+  pointer-events: none;
+  z-index: 2;
+
+  opacity: 0.18;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boomi {
+    display: none;
   }
+}
+
+
+@media (max-width: 380px) {
+
+  .frameWrap {
+  margin-top: 1rem;
+}
 }
