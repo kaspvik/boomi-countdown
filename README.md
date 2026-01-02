@@ -169,9 +169,30 @@ npm run dev
 npm run build
 npm run preview
 
-### 5. Lint (om konfigurerat)
+### 5. För opponerare:
 
-npm run lint
+Spelet är byggt för minst 4 spelare. För att kunna testa flödet själv går det att köra med 2 webbläsare (eller ett inkognito-fönster) genom att tillfälligt sänka min-kravet i koden.
+
+#### Så testar du med 2 spelare:
+
+- Öppna projektet och gå till:
+src/services/rooms/startGame.ts
+
+- Ändra min-kravet från 4 till 2:
+
+if (players.length < 2) {
+  throw new Error("Need at least 2 players to start the game.");
+}
+
+- Starta appen.
+
+- Öppna två webbläsarfönster (t.ex. Chrome + inkognito).
+
+- Skapa ett rum i första fönstret (host) och gå med i samma rum i andra fönstret.
+
+- Starta spelet från host-fönstret.
+
+Tips: Inkognito gör att du får en separat session/användare utan att logga ut.
 
 ## Deploy (Vercel)
 
