@@ -102,6 +102,7 @@ export const QuestionResultsScreen: React.FC<QuestionResultsScreenProps> = ({
 
                 {titleName && (
                   <>
+                    {" "}
                     <strong>
                       <Typewriter
                         key={titleNameKey}
