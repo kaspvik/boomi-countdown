@@ -50,77 +50,83 @@ export const RoleScreen: React.FC<RoleScreenProps> = ({
   const typingKey = `${role}-${teammateNames || "solo"}`;
 
   return (
-    <>
-      <BoomiHeader variant="lobby" />
+    <main className={styles.main}>
+      <section className={styles.frameSection}>
+        <BoomiHeader variant="lobby" />
 
-      <PixelFrame>
-        <div className={styles.container}>
-          <div className={styles.textBlock}>
-            <h2 className={styles.titel}>{titleText}</h2>
+        <div className={styles.frameWrapper}>
+          <PixelFrame>
+            <div className={styles.container}>
+              <div className={styles.textBlock}>
+                <h2 className={styles.titel}>{titleText}</h2>
 
-            {isCivilian && (
-              <p className="text-body-black">
-                <Typewriter
-                  key={`${typingKey}-civ-body`}
-                  text={civilianBody}
-                  speedMs={22}
-                  startDelayMs={260}
-                />
-              </p>
-            )}
-
-            {!isCivilian && (
-              <p className="text-body-black">
-                {teammates.length > 0 ? (
-                  <>
+                {isCivilian && (
+                  <p className="text-body-black">
                     <Typewriter
-                      key={`${typingKey}-imp-intro`}
-                      text={imposterIntroWithTeam}
+                      key={`${typingKey}-civ-body`}
+                      text={civilianBody}
                       speedMs={22}
                       startDelayMs={260}
                     />
-                    <strong>
-                      <Typewriter
-                        key={`${typingKey}-imp-names`}
-                        text={teammateNames}
-                        speedMs={22}
-                        startDelayMs={260 + 350}
-                      />
-                    </strong>
-                    <Typewriter
-                      key={`${typingKey}-imp-outro`}
-                      text={imposterOutroWithTeam}
-                      speedMs={22}
-                      startDelayMs={260 + 650}
-                    />
-                  </>
-                ) : (
-                  <Typewriter
-                    key={`${typingKey}-imp-solo`}
-                    text={imposterSolo}
-                    speedMs={22}
-                    startDelayMs={260}
-                  />
+                  </p>
                 )}
-              </p>
-            )}
-          </div>
 
-          {!hasAcknowledged && (
-            <div className={styles.buttonRow}>
-              <PixelButton onClick={onAcknowledge} className="text-button">
-                Got it!
-              </PixelButton>
+                {!isCivilian && (
+                  <p className="text-body-black">
+                    {teammates.length > 0 ? (
+                      <>
+                        <Typewriter
+                          key={`${typingKey}-imp-intro`}
+                          text={imposterIntroWithTeam}
+                          speedMs={22}
+                          startDelayMs={260}
+                        />
+                        <strong>
+                          <Typewriter
+                            key={`${typingKey}-imp-names`}
+                            text={teammateNames}
+                            speedMs={22}
+                            startDelayMs={260 + 350}
+                          />
+                        </strong>
+                        <Typewriter
+                          key={`${typingKey}-imp-outro`}
+                          text={imposterOutroWithTeam}
+                          speedMs={22}
+                          startDelayMs={260 + 650}
+                        />
+                      </>
+                    ) : (
+                      <Typewriter
+                        key={`${typingKey}-imp-solo`}
+                        text={imposterSolo}
+                        speedMs={22}
+                        startDelayMs={260}
+                      />
+                    )}
+                  </p>
+                )}
+              </div>
+
+              {!hasAcknowledged && (
+                <div className={styles.buttonRow}>
+                  <PixelButton onClick={onAcknowledge} className="text-button">
+                    Got it!
+                  </PixelButton>
+                </div>
+              )}
+
+              {hasAcknowledged && !allReady && (
+                <p className={styles.waitingText}>{waitingText}</p>
+              )}
+
+              {allReady && (
+                <p className={styles.allReadyText}>{allReadyText}</p>
+              )}
             </div>
-          )}
-
-          {hasAcknowledged && !allReady && (
-            <p className={styles.waitingText}>{waitingText}</p>
-          )}
-
-          {allReady && <p className={styles.allReadyText}>{allReadyText}</p>}
+          </PixelFrame>
         </div>
-      </PixelFrame>
-    </>
+      </section>
+    </main>
   );
 };
