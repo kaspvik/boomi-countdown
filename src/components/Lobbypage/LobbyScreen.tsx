@@ -27,8 +27,8 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
 }) => {
   return (
     <main className={styles.main}>
+      <BoomiHeader variant="lobby" />
       <section className={styles.frameSection}>
-        <BoomiHeader variant="lobby" />
         <div className={styles.frameWrapper}>
           <PixelFrame>
             <h2 className="text-title">GAME PIN:</h2>
