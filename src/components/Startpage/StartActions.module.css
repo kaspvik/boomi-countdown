@@ -19,3 +19,22 @@
   color: white;
   line-height: 1.2;
 }
+
+.frameWrap {
+  position: relative;
+  display: inline-block;
+}
+
+.boomiBadge {
+  position: absolute;
+  top: -50px;
+  right: 18px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boomiBadge {
+    display: none;
+  }
+}
