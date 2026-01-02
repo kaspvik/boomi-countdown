@@ -14,7 +14,6 @@ import {
   useRoomPhaseTransitions,
   useRoundVotes,
 } from "../hooks";
-import { GameLogo } from "../layout/GameLogo/GameLogo";
 import { leaveRoom } from "../services/rooms/leaveRoom";
 import { useGameStore } from "../store/gameStore";
 import { GameScreenContainer } from "./GameScreenContainer";
@@ -139,7 +138,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     return (
       <main className={lobbyStyles.main}>
         <section className={lobbyStyles.frameSection}>
-          <GameLogo />
           <RoleScreen
             role={role}
             hasAcknowledged={hasAcknowledged}
