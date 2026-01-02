@@ -1,7 +1,7 @@
 .button {
   background: transparent;
   border: 0;
-  padding: 0;
+  padding: 1rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -9,8 +9,8 @@
 }
 
 .icon {
-  width: 48px;   /* välj dina mått */
+  width: 48px;
   height: 36px;
   display: block;
-  image-rendering: pixelated; /* nice om det är pixel-art */
+  image-rendering: pixelated;
 }

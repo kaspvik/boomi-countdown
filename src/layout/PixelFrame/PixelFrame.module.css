@@ -1,5 +1,4 @@
 .pixelFrame {
-  margin: 3rem auto 0;
   display: block;
   box-sizing: border-box;
 
@@ -18,8 +17,8 @@
 
 @keyframes framePunch {
   0%   { transform: scale(1); opacity: 1; }
-  35%  { transform: scale(0.92); opacity: 0.85; } /* snabb krymp */
-  100% { transform: scale(1); opacity: 1; }       /* expand */
+  35%  { transform: scale(0.92); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .content {

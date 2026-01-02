@@ -10,7 +10,9 @@
 .content {
   flex: 1;
   display: grid;
-  place-items: center; 
+  justify-items: center;
+  align-content: start;
+  padding-top: 5rem;
 }
 
 .contentInner {
@@ -20,9 +22,5 @@
 @media (max-height: 700px) {
   .main {
     padding: 0.5rem 0.75rem;
-  }
-
-  .content {
-    align-items: start;
   }
 }

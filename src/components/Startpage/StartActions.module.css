@@ -23,11 +23,12 @@
 .frameWrap {
   position: relative;
   display: inline-block;
+  margin-top: 4rem;
 }
 
 .boomiBadge {
   position: absolute;
-  top: -50px;
+  top: -100px;
   right: 18px;
   z-index: 5;
   pointer-events: none;
@@ -36,5 +37,11 @@
 @media (prefers-reduced-motion: reduce) {
   .boomiBadge {
     display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .frameWrap {
+    margin-top: 2rem;
   }
 }

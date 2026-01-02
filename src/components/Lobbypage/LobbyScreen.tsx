@@ -29,38 +29,39 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
     <main className={styles.main}>
       <section className={styles.frameSection}>
         <BoomiHeader variant="lobby" />
+        <div className={styles.frameWrapper}>
+          <PixelFrame>
+            <h2 className="text-title">GAME PIN:</h2>
 
-        <PixelFrame>
-          <h2 className="text-title">GAME PIN:</h2>
+            <div className={panelStyles.headerBox}>
+              <h3 className={panelStyles.headerText}>
+                <span className={panelStyles.headerValue}>{room.code}</span>
+              </h3>
+            </div>
 
-          <div className={panelStyles.headerBox}>
-            <h3 className={panelStyles.headerText}>
-              <span className={panelStyles.headerValue}>{room.code}</span>
-            </h3>
-          </div>
+            <h2 className="text-title">PLAYERS:</h2>
 
-          <h2 className="text-title">PLAYERS:</h2>
+            {playersLoading && (
+              <p className="text-subtitle">LOADING PLAYERS...</p>
+            )}
+            {playersError && <p style={{ color: "red" }}>{playersError}</p>}
+            {!playersLoading && players.length === 0 && !playersError && (
+              <p className="text-subtitle">NO PLAYERS IN THIS ROOM YET.</p>
+            )}
 
-          {playersLoading && (
-            <p className="text-subtitle">LOADING PLAYERS...</p>
-          )}
-          {playersError && <p style={{ color: "red" }}>{playersError}</p>}
-          {!playersLoading && players.length === 0 && !playersError && (
-            <p className="text-subtitle">NO PLAYERS IN THIS ROOM YET.</p>
-          )}
-
-          {players.length > 0 && (
-            <ul
-              className={`${panelStyles.playersGrid} ${styles.playersFadeIn}`}>
-              {players.map((player) => (
-                <li key={player.id} className={panelStyles.playerItem}>
-                  {player.name}
-                  {player.isHost && " (host)"}
-                </li>
-              ))}
-            </ul>
-          )}
-        </PixelFrame>
+            {players.length > 0 && (
+              <ul
+                className={`${panelStyles.playersGrid} ${styles.playersFadeIn}`}>
+                {players.map((player) => (
+                  <li key={player.id} className={panelStyles.playerItem}>
+                    {player.name}
+                    {player.isHost && " (host)"}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </PixelFrame>
+        </div>
       </section>
 
       <div className={panelStyles.buttonRow}>

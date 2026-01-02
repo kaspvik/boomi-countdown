@@ -4,6 +4,12 @@
   align-items: center;
 }
 
+.frameWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
 .frameSection {
   width: 100%;
   max-width: 480px;

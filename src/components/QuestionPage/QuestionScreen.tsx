@@ -1,5 +1,7 @@
+import React from "react";
 import { PixelFrame } from "../../layout/PixelFrame/PixelFrame";
 import type { Player, Room } from "../../types/game";
+import { BoomiHeader } from "../BoomiHeader/BoomiHeader";
 import styles from "../QuestionPage/QuestionScreen.module.css";
 import { QuestionForm } from "./QuestionForm";
 
@@ -22,6 +24,8 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
 }) => {
   return (
     <main className={styles.main}>
+      <BoomiHeader variant="lobby" />
+
       <section className={styles.content}>
         <div className={styles.contentInner}>
           <PixelFrame>
