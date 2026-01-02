@@ -4,7 +4,7 @@ Ett snabbt, socialt partyspel (4–12 spelare) där ni ansluter via mobil/dator 
 
 ## Länkar
 
-- **Live (Vercel):** <https://boomi-countdown-9uzo.vercel.app/>
+- **Live (Vercel):** <https://boomi-countdown.vercel.app/>
 - **Repo (GitHub):** <https://github.com/kaspvik/boomi-countdown/tree/main>
 
 ---
