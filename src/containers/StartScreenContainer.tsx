@@ -13,12 +13,12 @@ import { useGameStore } from "../store/gameStore";
 type StartView = "start" | "howToPlay";
 
 export const StartScreenContainer: React.FC = () => {
-  const [view, setView] = useState<StartView>("start"); // ✅ NY
+  const [view, setView] = useState<StartView>("start");
 
   const [roomCodeInput, setRoomCodeInput] = useState("");
   const [playerNameInput, setPlayerNameInput] = useState("");
   const [pendingAction, setPendingAction] = useState<PendingAction>("idle");
-  const [status, setStatus] = useState<string | null>(null);
+  const [, setStatus] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const enterLobby = useGameStore((s) => s.enterLobby);
@@ -74,8 +74,6 @@ export const StartScreenContainer: React.FC = () => {
         setStatus("Please enter a room code first.");
         return;
       }
-
-      setStatus(`Searching for room with code ${trimmedCode}...`);
 
       try {
         const room = await findRoomByCode(trimmedCode);
@@ -144,10 +142,6 @@ export const StartScreenContainer: React.FC = () => {
         onCancelName={handleCancelName}
         onHowToPlay={() => setView("howToPlay")}
       />
-
-      {status && (
-        <p style={{ padding: "0 2rem", fontFamily: "handjet" }}>{status}</p>
-      )}
     </>
   );
 };
