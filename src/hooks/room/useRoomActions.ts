@@ -1,4 +1,4 @@
-import { doc, increment, updateDoc } from "firebase/firestore";
+import { doc, increment, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useCallback } from "react";
 import { db } from "../../firebase";
 import {
@@ -54,6 +54,15 @@ export function useRoomActions(params: {
       await updateDoc(roomRef, {
         phase: "round",
         currentBombHolder: topImposterTarget ? topImposterTarget.id : null,
+
+        // ✅ timer start (new round)
+        timerStartedAt: serverTimestamp(),
+        timerRound: room.round, // här är det samma round som redan gäller
+        roundTimePenaltySeconds: 0,
+
+        // (valfritt men ofta bra)
+        roundResultsStep: null,
+        lastKilledPlayerId: null,
       });
     } catch (err) {
       console.error("Failed to set phase=round + currentBombHolder", err);
@@ -74,6 +83,10 @@ export function useRoomActions(params: {
           winner,
           lastKilledPlayerId: room.lastKilledPlayerId ?? null,
           roundResultsStep: null,
+
+          // ✅ stop/clear timer
+          timerStartedAt: null,
+          timerRound: null,
         });
       } else {
         await updateDoc(roomRef, {
@@ -83,6 +96,10 @@ export function useRoomActions(params: {
           roundResultsStep: null,
           passCardUsedThisRound: false,
           roundTimePenaltySeconds: 0,
+
+          // ✅ clear timer so next round can't reuse it
+          timerStartedAt: null,
+          timerRound: null,
         });
       }
     } catch (err) {

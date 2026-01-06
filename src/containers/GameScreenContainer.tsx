@@ -1,16 +1,7 @@
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { GameScreen } from "../components/GamePage/GameScreen";
-import { db } from "../firebase";
 import { useRoundUiState, useTimeoutKillPlayer } from "../hooks";
 import { killPlayer } from "../services/gameplay/killPlayer";
-import { startRoomTimer } from "../services/rooms/startRoomTimer";
 import type { Player, Room } from "../types/game";
 import { CardPanelContainer } from "./CardPanelContainer";
 
@@ -38,29 +29,15 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     [players, room.currentBombHolder]
   );
 
-  const timerKey = `${room.round}-${room.currentBombHolder ?? "none"}`;
+  const startedAtKey = room.timerStartedAt
+    ? room.timerStartedAt.seconds
+    : "nostart";
+  const timerKey = `${room.round}-${
+    room.currentBombHolder ?? "none"
+  }-${startedAtKey}`;
   const durationSeconds = 60;
 
   const [secondsLeft, setSecondsLeft] = useState<number>(durationSeconds);
-
-  useEffect(() => {
-    if (room.phase !== "round") return;
-    if (room.roundResultsStep !== null) return;
-    if (room.timerStartedAt) return;
-    if (!currentPlayer?.isHost) return;
-
-    const roomRef = doc(db, "rooms", roomId);
-    updateDoc(roomRef, {
-      timerStartedAt: serverTimestamp(),
-      roundTimePenaltySeconds: 0,
-    }).catch((e) => console.error("Failed to set timerStartedAt", e));
-  }, [
-    room.phase,
-    room.roundResultsStep,
-    room.timerStartedAt,
-    currentPlayer?.isHost,
-    roomId,
-  ]);
 
   const passHere =
     !!currentPlayer &&
@@ -152,16 +129,6 @@ export const GameScreenContainer: React.FC<GameScreenContainerProps> = ({
     : ticking
     ? `tick-${timerKey}`
     : `idle-${timerKey}`;
-
-  useEffect(() => {
-    if (room.phase !== "round") return;
-    if (room.timerStartedAt) return;
-    if (!currentPlayer?.isHost) return;
-
-    startRoomTimer(roomId).catch((e) =>
-      console.error("Failed to start room timer", e)
-    );
-  }, [room.phase, room.timerStartedAt, currentPlayer?.isHost, roomId]);
 
   return (
     <GameScreen
