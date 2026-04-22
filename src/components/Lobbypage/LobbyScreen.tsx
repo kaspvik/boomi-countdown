@@ -65,11 +65,11 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = ({
       </section>
 
       <div className={panelStyles.buttonRow}>
-        <PixelButton onClick={handleLeave} className="text-button" size="md">
+        <PixelButton onClick={handleLeave} className="text-button" size="sm">
           Leave Lobby
         </PixelButton>
         {canStartGame && (
-          <PixelButton onClick={onStartGame} className="text-button">
+          <PixelButton onClick={onStartGame} className="text-button" size="md">
             Start Game
           </PixelButton>
         )}

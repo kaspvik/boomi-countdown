@@ -48,7 +48,8 @@ export const StartNameField: React.FC<StartNameFieldProps> = ({
         <div className={styles.buttonsRow}>
           <PixelButton
             onClick={onCancelName}
-            className={`text-button ${styles.button}`}>
+            className={`text-button ${styles.button}`}
+            size="sm">
             Go Back
           </PixelButton>
           <PixelButton

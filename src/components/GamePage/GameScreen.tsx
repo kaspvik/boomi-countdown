@@ -295,6 +295,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             <PixelButton
               onClick={() => (isGuessOpen ? onCancelGuess() : onOpenGuess())}
               className="text-button"
+              size="sm"
               disabled={isPassPanelOpen}>
               {isGuessOpen ? "Go back" : "Guess"}
             </PixelButton>
@@ -307,6 +308,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           {isAlive ? (
             <PixelButton
               className="text-button"
+              size="sm"
               onClick={() =>
                 isPassPanelOpen ? onCancelPassPanel() : onOpenPassPanel()
               }

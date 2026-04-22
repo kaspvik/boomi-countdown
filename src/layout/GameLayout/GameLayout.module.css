@@ -16,7 +16,7 @@
   display: flex;
   justify-content: center;
 
-  background-image: url("/bg-tile.svg");
+  background-image: url("/bg-tile.webp");
   background-repeat: repeat-x;
   background-position: center;
   background-size: auto 100%;
