@@ -38,6 +38,14 @@
   transform: translateY(-50px); 
 }
 
+@media (max-width: 600px) {
+  .left,
+  .right {
+    transform: translateY(0);
+    align-self: start;
+  }
+}
+
 .leftPlaceholder {
   display: inline-block;
   width: clamp(64px, 18vw, 110px);
