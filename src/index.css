@@ -33,7 +33,8 @@
 }
 
 h1, h2, h3, h4, h5, h6, p {
-  margin: 0;}
+  margin: 0;
+}
 
 /* Stora spelets titel */
 .text-display {
@@ -58,7 +59,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 .text-subtitle {
   font-family: var(--font-main);
-  font-size: var( --font-size-subtitle);
+  font-size: var(--font-size-subtitle);
   font-weight: var(--font-weight-medium);
 }
 
@@ -86,7 +87,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 /* Textinput-fält */
- .text-input {
+.text-input {
   font-family: var(--font-main);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-regular);

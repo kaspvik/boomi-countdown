@@ -59,7 +59,7 @@
 .allReadyText {
   text-align: center;
   margin: 1rem;
-    font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 @media (max-width: 600px) {
@@ -75,8 +75,6 @@
   }
 
   .frameWrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 5rem;
-}
+    margin-top: 5rem;
+  }
 }

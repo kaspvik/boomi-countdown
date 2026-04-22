@@ -29,31 +29,3 @@
   min-width: 120px;
 }
 
-.wrap {
-  position: relative;
-}
-
-.boomi {
-  position: absolute;
-  right: -60px;
-  top: -40px;
-
-  pointer-events: none;
-  z-index: 2;
-
-  opacity: 0.18;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .boomi {
-    display: none;
-  }
-}
-
-
-@media (max-width: 380px) {
-
-  .frameWrap {
-  margin-top: 1rem;
-}
-}

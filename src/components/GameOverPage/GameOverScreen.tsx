@@ -7,7 +7,6 @@ import styles from "./GameOverScreen.module.css";
 
 interface GameOverScreenProps {
   room: Room;
-  players: Player[];
   currentPlayer: Player;
   onLeave: () => void;
 }

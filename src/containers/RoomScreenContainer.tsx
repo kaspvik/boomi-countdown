@@ -220,7 +220,6 @@ export const RoomScreenContainer: React.FC<RoomScreenContainerProps> = ({
     return (
       <GameOverScreen
         room={room}
-        players={players}
         currentPlayer={currentPlayer}
         onLeave={handleLeaveGame}
       />
